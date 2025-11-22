@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>DIGIY DRIVER — Commander une course</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Commandez votre VTC au Sénégal - Prix justes, chauffeurs pros, 0% commission">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --card: #1a1a1a;
+      --card-light: #252525;
+      --gold: #FFD700;
+      --gold-dark: #C7A008;
+      --white: #ffffff;
+      --gray: #888888;
+      --gray-light: #b0b0b0;
+      --green: #00C853;
+      --red: #FF5252;
+      --blue: #2196F3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes ripple {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(3); opacity: 0; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    @keyframes gpsWave {
+      0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.6); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+    }
+
+    /* ===== APP CONTAINER ===== */
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(135deg, #1a1a1a, #252525);
+      padding: 15px 20px;
+      border-bottom: 2px solid var(--gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo {
+      font-size: 24px;
+      color: var(--gold);
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .header-sub {
+      font-size: 11px;
+      color: var(--gray);
+    }
+
+    .header-badge {
+      background: var(--gold);
+      color: var(--bg);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ===== MAP ===== */
+    .map-container {
+      flex: 1;
+      position: relative;
+      min-height: 250px;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .my-location-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: var(--gold);
+      border: none;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+      z-index: 500;
+      animation: gpsWave 2s infinite;
+    }
+
+    /* ===== BOOKING PANEL ===== */
+    .booking-panel {
+      background: var(--card);
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+      padding: 20px;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+      animation: slideUp 0.5s ease;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .panel-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--gray);
+      border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+
+    .panel-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gold);
+    }
+
+    /* ===== SECTION TITLES ===== */
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title .icon {
+      font-size: 18px;
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      color: var(--gray);
+      margin-bottom: 10px;
+    }
+
+    /* ===== GPS STATUS ===== */
+    .gps-status {
+      background: var(--card-light);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .gps-icon {
+      width: 45px;
+      height: 45px;
+      background: rgba(255, 215, 0, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .gps-icon.active {
+      background: rgba(0, 200, 83, 0.2);
+    }
+
+    .gps-info {
+      flex: 1;
+    }
+
+    .gps-label {
+      font-size: 13px;
+      color: var(--gray);
+    }
+
+    .gps-coords {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--gold);
+      margin-top: 3px;
+    }
+
+    .gps-precision {
+      font-size: 11px;
+      color: var(--green);
+      margin-top: 2px;
+    }
+
+    .gps-btn {
+      background: var(--gold);
+      color: var(--bg);
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ===== POINTS DE REPÈRE ===== */
+    .reperes-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .repere-btn {
+      background: var(--card-light);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 10px 5px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .repere-btn:hover {
+      border-color: var(--gray);
+    }
+
+    .repere-btn.selected {
+      border-color: var(--gold);
+      background: rgba(255, 215, 0, 0.15);
+    }
+
+    .repere-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .repere-name {
+      font-size: 10px;
+      color: var(--gray-light);
+    }
+
+    .repere-btn.selected .repere-name {
+      color: var(--gold);
+    }
+
+    /* ===== INDICATIONS TEXTUELLES ===== */
+    .indications-section {
+      margin-bottom: 15px;
+    }
+
+    .indications-input {
+      width: 100%;
+      background: var(--card-light);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 14px;
+      color: var(--white);
+      font-size: 14px;
+      resize: none;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .indications-input:focus {
+      border-color: var(--gold);
+    }
+
+    .indications-input::placeholder {
+      color: var(--gray);
+    }
+
+    /* ===== COULEURS PORTAIL ===== */
+    .couleurs-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .couleur-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .couleur-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .couleur-btn.selected {
+      border-color: var(--gold);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .couleur-btn.blanc { background: #f5f5f5; }
+    .couleur-btn.vert { background: #22c55e; }
+    .couleur-btn.bleu { background: #3b82f6; }
+    .couleur-btn.rouge { background: #ef4444; }
+    .couleur-btn.jaune { background: #eab308; }
+    .couleur-btn.noir { background: #1f2937; border: 2px solid #555; }
+    .couleur-btn.orange { background: #f97316; }
+    .couleur-btn.marron { background: #92400e; }
+
+    /* ===== PHOTO DU LIEU ===== */
+    .photo-section {
+      margin-bottom: 15px;
+    }
+
+    .photo-upload-btn {
+      width: 100%;
+      background: var(--card-light);
+      border: 2px dashed var(--gray);
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .photo-upload-btn:hover {
+      border-color: var(--gold);
+      background: rgba(255, 215, 0, 0.05);
+    }
+
+    .photo-upload-btn.has-photo {
+      border-style: solid;
+      border-color: var(--green);
+      padding: 10px;
+    }
+
+    .photo-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .photo-text {
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .photo-preview {
+      width: 100%;
+      max-height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .photo-remove {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: var(--red);
+      color: white;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .photo-container {
+      position: relative;
+    }
+
+    /* ===== RÉSUMÉ POSITION ===== */
+    .position-summary {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
+      border: 1px solid var(--gold);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .position-summary-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .position-summary-text {
+      font-size: 13px;
+      color: var(--white);
+      line-height: 1.5;
+    }
+
+    .position-summary-photo {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--green);
+    }
+
+    /* ===== INPUT FIELDS ===== */
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      background: var(--card-light);
+      border-radius: 12px;
+      padding: 12px 15px;
+      gap: 12px;
+    }
+
+    .input-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .input-icon.pickup {
+      background: rgba(0, 200, 83, 0.2);
+      color: var(--green);
+    }
+
+    .input-icon.dropoff {
+      background: rgba(255, 215, 0, 0.2);
+      color: var(--gold);
+    }
+
+    .input-field {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 15px;
+      outline: none;
+    }
+
+    .input-field::placeholder {
+      color: var(--gray);
+    }
+
+    .input-divider {
+      width: 2px;
+      height: 20px;
+      background: var(--gray);
+      margin-left: 17px;
+    }
+
+    /* ===== VEHICLE OPTIONS ===== */
+    .vehicle-options {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+
+    .vehicle-option {
+      flex: 1;
+      min-width: 80px;
+      background: var(--card-light);
+      border: 2px solid transparent;
+      border-radius: 15px;
+      padding: 12px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .vehicle-option:hover {
+      border-color: var(--gray);
+    }
+
+    .vehicle-option.selected {
+      border-color: var(--gold);
+      background: rgba(255, 215, 0, 0.1);
+    }
+
+    .vehicle-icon {
+      font-size: 26px;
+      margin-bottom: 5px;
+    }
+
+    .vehicle-name {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .vehicle-price {
+      font-size: 13px;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .vehicle-time {
+      font-size: 10px;
+      color: var(--gray);
+    }
+
+    /* ===== PRICE SUMMARY ===== */
+    .price-summary {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
+      border: 1px solid var(--gold);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .price-summary.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--gray-light);
+    }
+
+    .price-row.total {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold);
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 215, 0, 0.3);
+      margin-top: 10px;
+    }
+
+    /* ===== CONFIRM BUTTON ===== */
+    .confirm-btn {
+      width: 100%;
+      padding: 18px;
+      background: var(--gold);
+      color: var(--bg);
+      border: none;
+      border-radius: 15px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .confirm-btn:hover {
+      background: var(--gold-dark);
+      transform: scale(1.02);
+    }
+
+    .confirm-btn:disabled {
+      background: var(--gray);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ===== SEARCHING MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--card);
+      border: 2px solid var(--gold);
+      border-radius: 25px;
+      padding: 30px 25px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    /* ===== SEARCHING STATE ===== */
+    .searching-animation {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 25px;
+    }
+
+    .searching-car {
+      font-size: 50px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    .searching-ripple {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      border: 3px solid var(--gold);
+      border-radius: 50%;
+      animation: ripple 1.5s infinite;
+    }
+
+    .searching-ripple:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+
+    .searching-ripple:nth-child(3) {
+      animation-delay: 1s;
+    }
+
+    .searching-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .searching-sub {
+      color: var(--gray);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    /* Position partagée dans modal */
+    .shared-position {
+      background: var(--card-light);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .shared-position-title {
+      font-size: 11px;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .shared-position-text {
+      font-size: 12px;
+      color: var(--gray-light);
+      line-height: 1.4;
+    }
+
+    .shared-position-photo {
+      font-size: 11px;
+      color: var(--green);
+      margin-top: 5px;
+    }
+
+    .searching-drivers {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .driver-dot {
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse 1s infinite;
+    }
+
+    .driver-dot:nth-child(2) { animation-delay: 0.2s; }
+    .driver-dot:nth-child(3) { animation-delay: 0.4s; }
+    .driver-dot:nth-child(4) { animation-delay: 0.6s; }
+    .driver-dot:nth-child(5) { animation-delay: 0.8s; }
+
+    .cancel-search-btn {
+      background: var(--card-light);
+      border: 2px solid var(--red);
+      color: var(--red);
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .cancel-search-btn:hover {
+      background: var(--red);
+      color: var(--white);
+    }
+
+    /* ===== DRIVER FOUND ===== */
+    .driver-found {
+      display: none;
+    }
+
+    .driver-found.show {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .driver-avatar {
+      width: 80px;
+      height: 80px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 15px;
+    }
+
+    .driver-name {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .driver-rating {
+      color: var(--gold);
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .driver-vehicle {
+      color: var(--gray);
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .driver-eta {
+      background: var(--card-light);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .eta-label {
+      font-size: 12px;
+      color: var(--gray);
+      margin-bottom: 5px;
+    }
+
+    .eta-time {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    .driver-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .driver-action-btn {
+      flex: 1;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .driver-action-btn.call {
+      background: var(--green);
+      color: var(--white);
+      border: none;
+    }
+
+    .driver-action-btn.cancel {
+      background: var(--card-light);
+      color: var(--red);
+      border: 2px solid var(--red);
+    }
+
+    /* ===== NO COMMISSION BADGE ===== */
+    .commission-badge {
+      background: rgba(0, 200, 83, 0.1);
+      border: 1px solid var(--green);
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 15px;
+      font-size: 12px;
+      color: var(--green);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer-note {
+      text-align: center;
+      padding: 10px;
+      font-size: 11px;
+      color: var(--gray);
+    }
+
+    .footer-note a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-height: 700px) {
+      .booking-panel {
+        padding: 15px;
+      }
+      
+      .reperes-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <span class="header-logo">∞</span>
+      <div>
+        <div class="header-title">DIGIY DRIVER</div>
+        <div class="header-sub">VTC Sénégal • Prix justes</div>
+      </div>
+    </div>
+    <div class="header-badge">0% Commission</div>
+  </header>
+
+  <!-- MAP -->
+  <div class="map-container">
+    <div id="map"></div>
+    <button class="my-location-btn" onclick="centerOnMyLocation()">📍</button>
+  </div>
+
+  <!-- BOOKING PANEL -->
+  <div class="booking-panel">
+    <div class="panel-handle"></div>
+    
+    <div class="panel-title">
+      <span>🚕</span>
+      <span>Jàmm ak jàmm ! Où allez-vous ?</span>
+    </div>
+
+    <!-- GPS STATUS -->
+    <div class="gps-status" id="gpsStatus">
+      <div class="gps-icon" id="gpsIcon">📍</div>
+      <div class="gps-info">
+        <div class="gps-label" id="gpsLabel">Position non détectée</div>
+        <div class="gps-coords" id="gpsCoords">En attente...</div>
+        <div class="gps-precision" id="gpsPrecision"></div>
+      </div>
+      <button class="gps-btn" onclick="centerOnMyLocation()">🎯 Localiser</button>
+    </div>
+
+    <!-- POINTS DE REPÈRE -->
+    <div class="section-title">
+      <span class="icon">🏛️</span>
+      Points de repère proches
+    </div>
+    <div class="section-subtitle">Sélectionnez ce qui est près de vous pour aider le chauffeur</div>
+    
+    <div class="reperes-grid" id="reperesGrid">
+      <button class="repere-btn" data-repere="mosquee" onclick="toggleRepere(this)">
+        <div class="repere-icon">🕌</div>
+        <div class="repere-name">Mosquée</div>
+      </button>
+      <button class="repere-btn" data-repere="eglise" onclick="toggleRepere(this)">
+        <div class="repere-icon">⛪</div>
+        <div class="repere-name">Église</div>
+      </button>
+      <button class="repere-btn" data-repere="ecole" onclick="toggleRepere(this)">
+        <div class="repere-icon">🏫</div>
+        <div class="repere-name">École</div>
+      </button>
+      <button class="repere-btn" data-repere="hopital" onclick="toggleRepere(this)">
+        <div class="repere-icon">🏥</div>
+        <div class="repere-name">Hôpital</div>
+      </button>
+      <button class="repere-btn" data-repere="pharmacie" onclick="toggleRepere(this)">
+        <div class="repere-icon">💊</div>
+        <div class="repere-name">Pharmacie</div>
+      </button>
+      <button class="repere-btn" data-repere="station" onclick="toggleRepere(this)">
+        <div class="repere-icon">⛽</div>
+        <div class="repere-name">Station</div>
+      </button>
+      <button class="repere-btn" data-repere="marche" onclick="toggleRepere(this)">
+        <div class="repere-icon">🏪</div>
+        <div class="repere-name">Marché</div>
+      </button>
+      <button class="repere-btn" data-repere="boutique" onclick="toggleRepere(this)">
+        <div class="repere-icon">🛒</div>
+        <div class="repere-name">Boutique</div>
+      </button>
+      <button class="repere-btn" data-repere="restaurant" onclick="toggleRepere(this)">
+        <div class="repere-icon">🍽️</div>
+        <div class="repere-name">Restaurant</div>
+      </button>
+      <button class="repere-btn" data-repere="banque" onclick="toggleRepere(this)">
+        <div class="repere-icon">🏦</div>
+        <div class="repere-name">Banque</div>
+      </button>
+      <button class="repere-btn" data-repere="rondpoint" onclick="toggleRepere(this)">
+        <div class="repere-icon">🔄</div>
+        <div class="repere-name">Rond-point</div>
+      </button>
+      <button class="repere-btn" data-repere="arbre" onclick="toggleRepere(this)">
+        <div class="repere-icon">🌳</div>
+        <div class="repere-name">Grand arbre</div>
+      </button>
+    </div>
+
+    <!-- INDICATIONS TEXTUELLES -->
+    <div class="indications-section">
+      <div class="section-title">
+        <span class="icon">✍️</span>
+        Décrivez votre lieu
+      </div>
+      <textarea 
+        class="indications-input" 
+        id="indicationsInput"
+        placeholder="Ex: Portail vert, 3ème maison après la mosquée, face au grand manguier..."
+        rows="2"
+      ></textarea>
+      
+      <div class="section-subtitle" style="margin-top: 10px;">Couleur du portail :</div>
+      <div class="couleurs-row" id="couleursRow">
+        <button class="couleur-btn vert" data-couleur="vert" onclick="selectCouleur(this)" title="Vert"></button>
+        <button class="couleur-btn bleu" data-couleur="bleu" onclick="selectCouleur(this)" title="Bleu"></button>
+        <button class="couleur-btn rouge" data-couleur="rouge" onclick="selectCouleur(this)" title="Rouge"></button>
+        <button class="couleur-btn jaune" data-couleur="jaune" onclick="selectCouleur(this)" title="Jaune"></button>
+        <button class="couleur-btn blanc" data-couleur="blanc" onclick="selectCouleur(this)" title="Blanc"></button>
+        <button class="couleur-btn noir" data-couleur="noir" onclick="selectCouleur(this)" title="Noir"></button>
+        <button class="couleur-btn orange" data-couleur="orange" onclick="selectCouleur(this)" title="Orange"></button>
+        <button class="couleur-btn marron" data-couleur="marron" onclick="selectCouleur(this)" title="Marron"></button>
+      </div>
+    </div>
+
+    <!-- PHOTO DU LIEU -->
+    <div class="photo-section">
+      <div class="section-title">
+        <span class="icon">📸</span>
+        Photo du lieu <span style="font-weight: 400; color: var(--gray); font-size: 12px;">(optionnel)</span>
+      </div>
+      <div class="section-subtitle">Aide le chauffeur à vous trouver plus facilement</div>
+      
+      <div class="photo-container" id="photoContainer">
+        <div class="photo-upload-btn" id="photoUploadBtn" onclick="document.getElementById('photoInput').click()">
+          <div class="photo-icon">📷</div>
+          <div class="photo-text">Prendre ou choisir une photo</div>
+        </div>
+      </div>
+      <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhoto(this)">
+    </div>
+
+    <!-- RÉSUMÉ POSITION -->
+    <div class="position-summary" id="positionSummary" style="display: none;">
+      <div class="position-summary-title">
+        <span>📋</span>
+        Résumé de votre position
+      </div>
+      <div class="position-summary-text" id="positionSummaryText"></div>
+      <div class="position-summary-photo" id="positionSummaryPhoto" style="display: none;">📸 Photo ajoutée</div>
+    </div>
+
+    <!-- DESTINATION -->
+    <div class="input-group">
+      <div class="section-title">
+        <span class="icon">🎯</span>
+        Votre destination
+      </div>
+      <div class="input-row">
+        <div class="input-icon dropoff">🏁</div>
+        <input type="text" class="input-field" id="dropoffInput" placeholder="Où allez-vous ?" onclick="openLocationPicker('dropoff')">
+      </div>
+    </div>
+
+    <!-- VEHICLE OPTIONS -->
+    <div class="vehicle-options">
+      <div class="vehicle-option selected" data-type="eco" data-multiplier="1" onclick="selectVehicle(this)">
+        <div class="vehicle-icon">🚗</div>
+        <div class="vehicle-name">Éco</div>
+        <div class="vehicle-price" id="priceEco">—</div>
+        <div class="vehicle-time">3 min</div>
+      </div>
+      <div class="vehicle-option" data-type="confort" data-multiplier="1.3" onclick="selectVehicle(this)">
+        <div class="vehicle-icon">🚙</div>
+        <div class="vehicle-name">Confort</div>
+        <div class="vehicle-price" id="priceConfort">—</div>
+        <div class="vehicle-time">5 min</div>
+      </div>
+      <div class="vehicle-option" data-type="premium" data-multiplier="1.8" onclick="selectVehicle(this)">
+        <div class="vehicle-icon">🚘</div>
+        <div class="vehicle-name">Premium</div>
+        <div class="vehicle-price" id="pricePremium">—</div>
+        <div class="vehicle-time">8 min</div>
+      </div>
+      <div class="vehicle-option" data-type="moto" data-multiplier="0.7" onclick="selectVehicle(this)">
+        <div class="vehicle-icon">🏍️</div>
+        <div class="vehicle-name">Moto</div>
+        <div class="vehicle-price" id="priceMoto">—</div>
+        <div class="vehicle-time">2 min</div>
+      </div>
+    </div>
+
+    <!-- PRICE SUMMARY -->
+    <div class="price-summary" id="priceSummary">
+      <div class="price-row">
+        <span>Distance estimée</span>
+        <span id="summaryDistance">— km</span>
+      </div>
+      <div class="price-row">
+        <span>Durée estimée</span>
+        <span id="summaryDuration">— min</span>
+      </div>
+      <div class="price-row">
+        <span>Type de véhicule</span>
+        <span id="summaryVehicle">Éco</span>
+      </div>
+      <div class="price-row total">
+        <span>Total à payer</span>
+        <span id="summaryTotal">— FCFA</span>
+      </div>
+    </div>
+
+    <!-- CONFIRM BUTTON -->
+    <button class="confirm-btn" id="confirmBtn" onclick="confirmBooking()" disabled>
+      <span>🚕</span>
+      <span>Commander ma course</span>
+    </button>
+
+    <!-- FOOTER NOTE -->
+    <div class="footer-note">
+      💰 Paiement en espèces au chauffeur • <a href="https://digiylyfe.com/page-inscription-digiy/">Devenir chauffeur</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- SEARCHING MODAL -->
+<div class="modal-overlay" id="searchingModal">
+  <div class="modal-card">
+    
+    <!-- SEARCHING STATE -->
+    <div id="searchingState">
+      <div class="searching-animation">
+        <div class="searching-ripple"></div>
+        <div class="searching-ripple"></div>
+        <div class="searching-ripple"></div>
+        <div class="searching-car">🚗</div>
+      </div>
+      
+      <div class="searching-title">Recherche d'un chauffeur...</div>
+      <div class="searching-sub">
+        Envoi de votre demande aux chauffeurs DIGIY à proximité
+      </div>
+      
+      <!-- Position partagée avec le chauffeur -->
+      <div class="shared-position" id="sharedPosition">
+        <div class="shared-position-title">📍 Infos envoyées au chauffeur :</div>
+        <div class="shared-position-text" id="sharedPositionText">Position GPS uniquement</div>
+        <div class="shared-position-photo" id="sharedPositionPhoto" style="display: none;">📸 Photo du lieu incluse</div>
+      </div>
+      
+      <div class="searching-drivers">
+        <div class="driver-dot"></div>
+        <div class="driver-dot"></div>
+        <div class="driver-dot"></div>
+        <div class="driver-dot"></div>
+        <div class="driver-dot"></div>
+      </div>
+      
+      <button class="cancel-search-btn" onclick="cancelSearch()">
+        ✕ Annuler la recherche
+      </button>
+    </div>
+
+    <!-- DRIVER FOUND STATE -->
+    <div class="driver-found" id="driverFoundState">
+      <div class="driver-avatar">👤</div>
+      <div class="driver-name" id="foundDriverName">Mamadou D.</div>
+      <div class="driver-rating">⭐ <span id="foundDriverRating">4.9</span> • <span id="foundDriverTrips">156</span> courses</div>
+      <div class="driver-vehicle" id="foundDriverVehicle">Toyota Corolla • Blanc • DK-1234-AB</div>
+      
+      <div class="driver-eta">
+        <div class="eta-label">Arrivée dans</div>
+        <div class="eta-time" id="foundDriverETA">3 min</div>
+      </div>
+      
+      <div class="driver-actions">
+        <button class="driver-action-btn call" onclick="callDriver()">
+          📞 Appeler
+        </button>
+        <button class="driver-action-btn cancel" onclick="cancelRide()">
+          ✕ Annuler
+        </button>
+      </div>
+      
+      <div class="commission-badge">
+        💚 0% commission — Le chauffeur garde 100% de vos <span id="foundPrice">2 800</span> FCFA
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LEAFLET JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  // ===== CONFIGURATION =====
+  const API_URL = 'https://digiylyfe-api.onrender.com';
+  const PRICE_PER_KM = 400; // FCFA par km (base)
+  const MIN_PRICE = 1000; // Prix minimum
+  
+  // ===== QUARTIERS DE DAKAR (pour démo) =====
+  const LOCATIONS = {
+    'Médina': { lat: 14.6907, lng: -17.4559 },
+    'Plateau': { lat: 14.6695, lng: -17.4390 },
+    'Almadies': { lat: 14.7445, lng: -17.5095 },
+    'Ouakam': { lat: 14.7228, lng: -17.4789 },
+    'Yoff': { lat: 14.7615, lng: -17.4685 },
+    'Parcelles Assainies': { lat: 14.7678, lng: -17.4234 },
+    'Grand Dakar': { lat: 14.6989, lng: -17.4467 },
+    'Liberté 6': { lat: 14.7156, lng: -17.4612 },
+    'Sacré-Cœur': { lat: 14.7234, lng: -17.4523 },
+    'Mermoz': { lat: 14.7012, lng: -17.4712 },
+    'Point E': { lat: 14.6923, lng: -17.4634 },
+    'Fann': { lat: 14.6845, lng: -17.4656 },
+    'Ngor': { lat: 14.7512, lng: -17.5156 },
+    'Mamelles': { lat: 14.7289, lng: -17.4934 },
+    'Sicap': { lat: 14.7123, lng: -17.4556 }
+  };
+
+  // ===== FAKE DRIVERS (pour simulation PULSE) =====
+  const DRIVERS = [
+    { id: 1, name: 'Mamadou D.', rating: 4.9, trips: 156, vehicle: 'Toyota Corolla', color: 'Blanc', plate: 'DK-1234-AB', phone: '+221771234567', lat: 14.6928, lng: -17.4467 },
+    { id: 2, name: 'Ibrahima N.', rating: 4.8, trips: 89, vehicle: 'Peugeot 308', color: 'Gris', plate: 'DK-5678-CD', phone: '+221782345678', lat: 14.7156, lng: -17.4612 },
+    { id: 3, name: 'Cheikh M.', rating: 4.7, trips: 234, vehicle: 'Renault Clio', color: 'Noir', plate: 'DK-9012-EF', phone: '+221773456789', lat: 14.7289, lng: -17.4867 },
+    { id: 4, name: 'Ousmane F.', rating: 4.9, trips: 312, vehicle: 'Hyundai i10', color: 'Bleu', plate: 'DK-3456-GH', phone: '+221764567890', lat: 14.7445, lng: -17.5095 },
+    { id: 5, name: 'Aliou S.', rating: 4.6, trips: 67, vehicle: 'Dacia Logan', color: 'Blanc', plate: 'DK-7890-IJ', phone: '+221775678901', lat: 14.6989, lng: -17.4467 }
+  ];
+
+  // ===== STATE =====
+  let map = null;
+  let pickupMarker = null;
+  let dropoffMarker = null;
+  let routeLine = null;
+  let driverMarkers = [];
+  let myPosition = null;
+  
+  let booking = {
+    pickup: null,
+    dropoff: null,
+    vehicleType: 'eco',
+    multiplier: 1,
+    distance: 0,
+    duration: 0,
+    price: 0,
+    // NOUVEAU: Système de localisation sénégalais
+    reperes: [],
+    indications: '',
+    couleurPortail: null,
+    photo: null
+  };
+
+  let searchTimeout = null;
+  let selectedDriver = null;
+
+  // ===== INIT MAP =====
+  function initMap() {
+    const DAKAR_CENTER = [14.6928, -17.4467];
+    
+    map = L.map('map').setView(DAKAR_CENTER, 13);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© DIGIY DRIVER'
+    }).addTo(map);
+
+    // Afficher les chauffeurs disponibles
+    showAvailableDrivers();
+
+    // Essayer d'obtenir la position de l'utilisateur
+    centerOnMyLocation();
+  }
+
+  // ===== SHOW AVAILABLE DRIVERS ON MAP =====
+  function showAvailableDrivers() {
+    DRIVERS.forEach(driver => {
+      const icon = L.divIcon({
+        className: 'driver-marker',
+        html: `<div style="
+          background: #FFD700;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+          border: 2px solid #0a0a0a;
+          box-shadow: 0 2px 10px rgba(255, 215, 0, 0.5);
+        ">🚗</div>`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
+      });
+
+      const marker = L.marker([driver.lat, driver.lng], { icon }).addTo(map);
+      marker.bindPopup(`<b>${driver.name}</b><br>⭐ ${driver.rating} • ${driver.vehicle}`);
+      driverMarkers.push(marker);
+    });
+  }
+
+  // ===== CENTER ON MY LOCATION =====
+  function centerOnMyLocation() {
+    const gpsIcon = document.getElementById('gpsIcon');
+    const gpsLabel = document.getElementById('gpsLabel');
+    const gpsCoords = document.getElementById('gpsCoords');
+    const gpsPrecision = document.getElementById('gpsPrecision');
+    
+    gpsLabel.textContent = 'Recherche GPS...';
+    gpsCoords.textContent = 'Veuillez patienter...';
+    
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          const precision = position.coords.accuracy;
+          
+          map.setView([lat, lng], 15);
+          
+          myPosition = { lat, lng, precision };
+          booking.pickup = myPosition;
+          
+          // Mise à jour UI GPS
+          gpsIcon.classList.add('active');
+          gpsIcon.textContent = '✅';
+          gpsLabel.textContent = 'Position GPS obtenue';
+          gpsCoords.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+          gpsPrecision.textContent = `Précision: ±${Math.round(precision)}m`;
+          
+          addPickupMarker(lat, lng);
+          updatePositionSummary();
+          checkIfReady();
+        },
+        (error) => {
+          gpsIcon.textContent = '⚠️';
+          gpsLabel.textContent = 'Erreur de localisation';
+          gpsCoords.textContent = 'Cliquez pour réessayer';
+          gpsPrecision.textContent = '';
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      );
+    } else {
+      gpsLabel.textContent = 'GPS non disponible';
+      gpsCoords.textContent = 'Votre appareil ne supporte pas le GPS';
+    }
+  }
+
+  // ===== TOGGLE REPÈRE =====
+  function toggleRepere(btn) {
+    const repere = btn.dataset.repere;
+    const repereNom = btn.querySelector('.repere-name').textContent;
+    const repereIcon = btn.querySelector('.repere-icon').textContent;
+    
+    if (btn.classList.contains('selected')) {
+      btn.classList.remove('selected');
+      booking.reperes = booking.reperes.filter(r => r.id !== repere);
+    } else {
+      btn.classList.add('selected');
+      booking.reperes.push({ id: repere, nom: repereNom, icon: repereIcon });
+    }
+    
+    updatePositionSummary();
+  }
+
+  // ===== SELECT COULEUR PORTAIL =====
+  function selectCouleur(btn) {
+    // Désélectionner tous
+    document.querySelectorAll('.couleur-btn').forEach(b => b.classList.remove('selected'));
+    
+    // Sélectionner celui-ci
+    btn.classList.add('selected');
+    booking.couleurPortail = btn.dataset.couleur;
+    
+    updatePositionSummary();
+  }
+
+  // ===== HANDLE PHOTO =====
+  function handlePhoto(input) {
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      booking.photo = file;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const container = document.getElementById('photoContainer');
+        container.innerHTML = `
+          <div class="photo-upload-btn has-photo" style="position: relative;">
+            <img src="${e.target.result}" class="photo-preview" alt="Photo du lieu">
+            <button class="photo-remove" onclick="removePhoto(event)">✕</button>
+          </div>
+        `;
+        
+        document.getElementById('positionSummaryPhoto').style.display = 'block';
+        updatePositionSummary();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // ===== REMOVE PHOTO =====
+  function removePhoto(event) {
+    event.stopPropagation();
+    booking.photo = null;
+    
+    const container = document.getElementById('photoContainer');
+    container.innerHTML = `
+      <div class="photo-upload-btn" onclick="document.getElementById('photoInput').click()">
+        <div class="photo-icon">📷</div>
+        <div class="photo-text">Prendre ou choisir une photo</div>
+      </div>
+    `;
+    
+    document.getElementById('positionSummaryPhoto').style.display = 'none';
+    updatePositionSummary();
+  }
+
+  // ===== UPDATE POSITION SUMMARY =====
+  function updatePositionSummary() {
+    const summary = document.getElementById('positionSummary');
+    const summaryText = document.getElementById('positionSummaryText');
+    const summaryPhoto = document.getElementById('positionSummaryPhoto');
+    
+    let parts = [];
+    
+    // Repères
+    if (booking.reperes.length > 0) {
+      parts.push('Près de: ' + booking.reperes.map(r => `${r.icon} ${r.nom}`).join(', '));
+    }
+    
+    // Couleur portail
+    if (booking.couleurPortail) {
+      parts.push(`Portail ${booking.couleurPortail}`);
+    }
+    
+    // Indications textuelles
+    const indications = document.getElementById('indicationsInput').value.trim();
+    if (indications) {
+      booking.indications = indications;
+      parts.push(indications);
+    }
+    
+    if (parts.length > 0 || booking.photo) {
+      summary.style.display = 'block';
+      summaryText.textContent = parts.join(' • ') || 'Position GPS uniquement';
+      summaryPhoto.style.display = booking.photo ? 'block' : 'none';
+    } else {
+      summary.style.display = 'none';
+    }
+  }
+
+  // ===== GENERATE POSITION INFO FOR DRIVER =====
+  function getPositionInfo() {
+    let info = [];
+    
+    if (booking.reperes.length > 0) {
+      info.push('Près de: ' + booking.reperes.map(r => r.nom).join(', '));
+    }
+    
+    if (booking.couleurPortail) {
+      info.push(`Portail ${booking.couleurPortail}`);
+    }
+    
+    const indications = document.getElementById('indicationsInput').value.trim();
+    if (indications) {
+      info.push(indications);
+    }
+    
+    return info.length > 0 ? info.join(' • ') : 'Position GPS uniquement';
+  }
+
+  // ===== LOCATION PICKER (simplified for demo) =====
+  function openLocationPicker(type) {
+    const locations = Object.keys(LOCATIONS);
+    const selected = prompt(
+      `Choisissez un quartier:\n\n${locations.map((l, i) => `${i + 1}. ${l}`).join('\n')}\n\nEntrez le numéro:`
+    );
+    
+    const index = parseInt(selected) - 1;
+    if (index >= 0 && index < locations.length) {
+      const locationName = locations[index];
+      const coords = LOCATIONS[locationName];
+      
+      if (type === 'pickup') {
+        booking.pickup = coords;
+        addPickupMarker(coords.lat, coords.lng);
+      } else {
+        booking.dropoff = coords;
+        document.getElementById('dropoffInput').value = locationName;
+        addDropoffMarker(coords.lat, coords.lng);
+      }
+      
+      checkIfReady();
+    }
+  }
+
+  // ===== ADD MARKERS =====
+  function addPickupMarker(lat, lng) {
+    if (pickupMarker) map.removeLayer(pickupMarker);
+    
+    const icon = L.divIcon({
+      className: 'pickup-marker',
+      html: `<div style="
+        background: #00C853;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 4px solid #fff;
+        box-shadow: 0 2px 15px rgba(0, 200, 83, 0.6);
+      "></div>`,
+      iconSize: [24, 24],
+      iconAnchor: [12, 12]
+    });
+    
+    pickupMarker = L.marker([lat, lng], { icon }).addTo(map);
+  }
+
+  function addDropoffMarker(lat, lng) {
+    if (dropoffMarker) map.removeLayer(dropoffMarker);
+    
+    const icon = L.divIcon({
+      className: 'dropoff-marker',
+      html: `<div style="
+        background: #FFD700;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 4px solid #fff;
+        box-shadow: 0 2px 15px rgba(255, 215, 0, 0.6);
+      "></div>`,
+      iconSize: [24, 24],
+      iconAnchor: [12, 12]
+    });
+    
+    dropoffMarker = L.marker([lat, lng], { icon }).addTo(map);
+  }
+
+  // ===== CHECK IF READY TO BOOK =====
+  function checkIfReady() {
+    if (booking.pickup && booking.dropoff) {
+      calculateRoute();
+    }
+  }
+
+  // ===== CALCULATE ROUTE & PRICE =====
+  function calculateRoute() {
+    // Calculer la distance (formule de Haversine simplifiée)
+    const R = 6371; // Rayon de la Terre en km
+    const dLat = (booking.dropoff.lat - booking.pickup.lat) * Math.PI / 180;
+    const dLng = (booking.dropoff.lng - booking.pickup.lng) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(booking.pickup.lat * Math.PI / 180) * Math.cos(booking.dropoff.lat * Math.PI / 180) *
+              Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    let distance = R * c;
+    
+    // Ajouter 30% pour les routes réelles (pas en ligne droite)
+    distance = distance * 1.3;
+    booking.distance = distance;
+    
+    // Estimer la durée (30 km/h en moyenne à Dakar)
+    booking.duration = Math.round(distance / 30 * 60);
+    
+    // Calculer les prix pour chaque type de véhicule
+    updatePrices();
+    
+    // Tracer la route sur la carte
+    drawRoute();
+    
+    // Afficher le résumé
+    showPriceSummary();
+    
+    // Activer le bouton
+    document.getElementById('confirmBtn').disabled = false;
+  }
+
+  function updatePrices() {
+    const basePrice = Math.max(MIN_PRICE, Math.round(booking.distance * PRICE_PER_KM / 100) * 100);
+    
+    document.getElementById('priceEco').textContent = basePrice.toLocaleString() + ' F';
+    document.getElementById('priceConfort').textContent = Math.round(basePrice * 1.3 / 100) * 100 + ' F';
+    document.getElementById('pricePremium').textContent = Math.round(basePrice * 1.8 / 100) * 100 + ' F';
+    document.getElementById('priceMoto').textContent = Math.round(basePrice * 0.7 / 100) * 100 + ' F';
+    
+    // Calculer le prix actuel
+    booking.price = Math.round(basePrice * booking.multiplier / 100) * 100;
+  }
+
+  function drawRoute() {
+    if (routeLine) map.removeLayer(routeLine);
+    
+    routeLine = L.polyline([
+      [booking.pickup.lat, booking.pickup.lng],
+      [booking.dropoff.lat, booking.dropoff.lng]
+    ], {
+      color: '#FFD700',
+      weight: 4,
+      opacity: 0.8,
+      dashArray: '10, 10'
+    }).addTo(map);
+    
+    // Ajuster la vue
+    map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
+  }
+
+  function showPriceSummary() {
+    document.getElementById('summaryDistance').textContent = booking.distance.toFixed(1) + ' km';
+    document.getElementById('summaryDuration').textContent = booking.duration + ' min';
+    document.getElementById('summaryTotal').textContent = booking.price.toLocaleString() + ' FCFA';
+    document.getElementById('priceSummary').classList.add('show');
+  }
+
+  // ===== SELECT VEHICLE =====
+  function selectVehicle(element) {
+    // Désélectionner tous
+    document.querySelectorAll('.vehicle-option').forEach(el => el.classList.remove('selected'));
+    // Sélectionner celui-ci
+    element.classList.add('selected');
+    
+    booking.vehicleType = element.dataset.type;
+    booking.multiplier = parseFloat(element.dataset.multiplier);
+    
+    // Mettre à jour le résumé
+    document.getElementById('summaryVehicle').textContent = element.querySelector('.vehicle-name').textContent;
+    
+    // Recalculer le prix
+    if (booking.distance > 0) {
+      const basePrice = Math.max(MIN_PRICE, Math.round(booking.distance * PRICE_PER_KM / 100) * 100);
+      booking.price = Math.round(basePrice * booking.multiplier / 100) * 100;
+      document.getElementById('summaryTotal').textContent = booking.price.toLocaleString() + ' FCFA';
+    }
+  }
+
+  // ===== CONFIRM BOOKING (PULSE!) =====
+  function confirmBooking() {
+    // Mettre à jour les infos dans le modal
+    document.getElementById('sharedPositionText').textContent = getPositionInfo();
+    document.getElementById('sharedPositionPhoto').style.display = booking.photo ? 'block' : 'none';
+    
+    // Afficher le modal de recherche
+    document.getElementById('searchingModal').classList.add('show');
+    document.getElementById('searchingState').style.display = 'block';
+    document.getElementById('driverFoundState').classList.remove('show');
+    
+    // Envoyer le PULSE aux chauffeurs (simulation)
+    sendPulseToDrivers();
+    
+    // Simuler la recherche (3-6 secondes)
+    const searchTime = 3000 + Math.random() * 3000;
+    searchTimeout = setTimeout(() => {
+      driverFound();
+    }, searchTime);
+  }
+
+  // ===== PULSE SYSTEM =====
+  async function sendPulseToDrivers() {
+    console.log('🔔 PULSE envoyé aux chauffeurs !');
+    console.log('Course:', {
+      pickup: booking.pickup,
+      dropoff: booking.dropoff,
+      price: booking.price,
+      vehicleType: booking.vehicleType,
+      // NOUVEAU: Infos de localisation sénégalaises
+      reperes: booking.reperes,
+      indications: booking.indications,
+      couleurPortail: booking.couleurPortail,
+      hasPhoto: !!booking.photo
+    });
+    
+    // Envoyer à l'API (quand connectée)
+    try {
+      const formData = new FormData();
+      formData.append('pickup', JSON.stringify(booking.pickup));
+      formData.append('dropoff', JSON.stringify(booking.dropoff));
+      formData.append('dropoffName', document.getElementById('dropoffInput').value);
+      formData.append('distance', booking.distance);
+      formData.append('duration', booking.duration);
+      formData.append('price', booking.price);
+      formData.append('vehicleType', booking.vehicleType);
+      formData.append('reperes', JSON.stringify(booking.reperes));
+      formData.append('indications', booking.indications);
+      formData.append('couleurPortail', booking.couleurPortail || '');
+      formData.append('timestamp', Date.now());
+      
+      if (booking.photo) {
+        formData.append('photo', booking.photo);
+      }
+      
+      await fetch(`${API_URL}/api/courses/new`, {
+        method: 'POST',
+        body: formData
+      });
+      console.log('✅ PULSE envoyé au serveur');
+    } catch (error) {
+      console.log('⚠️ Mode démo - PULSE local');
+    }
+  }
+
+  // ===== DRIVER FOUND =====
+  function driverFound() {
+    // Sélectionner un chauffeur aléatoire
+    selectedDriver = DRIVERS[Math.floor(Math.random() * DRIVERS.length)];
+    
+    // Calculer l'ETA (1-5 min)
+    const eta = Math.floor(Math.random() * 4) + 2;
+    
+    // Afficher les infos du chauffeur
+    document.getElementById('foundDriverName').textContent = selectedDriver.name;
+    document.getElementById('foundDriverRating').textContent = selectedDriver.rating;
+    document.getElementById('foundDriverTrips').textContent = selectedDriver.trips;
+    document.getElementById('foundDriverVehicle').textContent = `${selectedDriver.vehicle} • ${selectedDriver.color} • ${selectedDriver.plate}`;
+    document.getElementById('foundDriverETA').textContent = `${eta} min`;
+    document.getElementById('foundPrice').textContent = booking.price.toLocaleString();
+    
+    // Passer à l'état "chauffeur trouvé"
+    document.getElementById('searchingState').style.display = 'none';
+    document.getElementById('driverFoundState').classList.add('show');
+    
+    console.log('✅ Chauffeur trouvé:', selectedDriver.name);
+  }
+
+  // ===== CANCEL SEARCH =====
+  function cancelSearch() {
+    clearTimeout(searchTimeout);
+    document.getElementById('searchingModal').classList.remove('show');
+  }
+
+  // ===== CANCEL RIDE =====
+  function cancelRide() {
+    if (confirm('Êtes-vous sûr de vouloir annuler cette course ?')) {
+      document.getElementById('searchingModal').classList.remove('show');
+      selectedDriver = null;
+    }
+  }
+
+  // ===== CALL DRIVER =====
+  function callDriver() {
+    if (selectedDriver) {
+      window.open(`tel:${selectedDriver.phone}`);
+    }
+  }
+
+  // ===== LISTEN TO INDICATIONS INPUT =====
+  document.addEventListener('DOMContentLoaded', function() {
+    initMap();
+    
+    // Écouter les changements dans le champ indications
+    document.getElementById('indicationsInput').addEventListener('input', function() {
+      updatePositionSummary();
+    });
+  });
+</script>
+
+</body>
+</html>
