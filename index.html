@@ -1178,135 +1178,157 @@
   // ===== CONFIGURATION =====
   const API_URL = 'https://digiylyfe-api.onrender.com';
   const PRICE_PER_KM = 400; // FCFA par km (base)
-  const MIN_PRICE = 1000;   // Prix minimum
+  const MIN_PRICE = 1000; // Prix minimum
   const EMERGENCY_NUMBER = 'tel:17'; // Police Sénégal
+  const GPS_UPDATE_INTERVAL = 5000; // 5 secondes
   
-  // ===== QUARTIERS DE DAKAR / SÉNÉGAL =====
+  // ===== QUARTIERS DE DAKAR (pour démo) =====
   const LOCATIONS = {
-    'Aéroport International Blaise Diagne (AIBD)': { lat: 14.6700, lng: -17.0733 },
-    'AIBD Départs': { lat: 14.6712, lng: -17.0745 },
-    'AIBD Arrivées': { lat: 14.6689, lng: -17.0723 },
-    'AIBD Zone Hôtels': { lat: 14.6734, lng: -17.0778 },
-    'Diass': { lat: 14.6234, lng: -17.0567 },
-    'Ndiass': { lat: 14.6156, lng: -17.0489 },
-    'Médina': { lat: 14.6907, lng: -17.4559 },
-    'Plateau': { lat: 14.6695, lng: -17.4390 },
-    'Gare Routière Pompiers': { lat: 14.6756, lng: -17.4445 },
-    'Port de Dakar': { lat: 14.6734, lng: -17.4267 },
-    'Gare Ferroviaire Dakar': { lat: 14.6712, lng: -17.4378 },
-    'Almadies': { lat: 14.7445, lng: -17.5095 },
-    'Ouakam': { lat: 14.7228, lng: -17.4789 },
-    'Yoff': { lat: 14.7615, lng: -17.4685 },
-    'Yoff Virage': { lat: 14.7567, lng: -17.4623 },
-    'Yoff Layenne': { lat: 14.7634, lng: -17.4712 },
-    'Aéroport Léopold Sédar Senghor (LSS)': { lat: 14.7397, lng: -17.4902 },
-    'Yoff Aéroport': { lat: 14.7423, lng: -17.4867 },
-    'Parcelles Assainies': { lat: 14.7678, lng: -17.4234 },
-    'Parcelles U1': { lat: 14.7623, lng: -17.4289 },
-    'Parcelles U10': { lat: 14.7712, lng: -17.4178 },
-    'Parcelles U20': { lat: 14.7745, lng: -17.4123 },
-    'Grand Dakar': { lat: 14.6989, lng: -17.4467 },
-    'Liberté 6': { lat: 14.7156, lng: -17.4612 },
-    'Sacré-Cœur': { lat: 14.7234, lng: -17.4523 },
-    'Mermoz': { lat: 14.7012, lng: -17.4712 },
-    'Point E': { lat: 14.6923, lng: -17.4634 },
-    'Fann': { lat: 14.6845, lng: -17.4656 },
-    'Fann Résidence': { lat: 14.6812, lng: -17.4689 },
-    'Ngor': { lat: 14.7512, lng: -17.5156 },
-    'Ngor Plage': { lat: 14.7545, lng: -17.5189 },
-    'Mamelles': { lat: 14.7289, lng: -17.4934 },
-    'Sicap': { lat: 14.7123, lng: -17.4556 },
-    'Sicap Baobab': { lat: 14.7089, lng: -17.4589 },
-    'Sicap Liberté': { lat: 14.7167, lng: -17.4523 },
-    'HLM': { lat: 14.7345, lng: -17.4456 },
-    'HLM Grand Yoff': { lat: 14.7389, lng: -17.4489 },
-    'HLM Grand Médine': { lat: 14.7412, lng: -17.4423 },
-    'Keur Massar': { lat: 14.7834, lng: -17.3234 },
-    'Malika': { lat: 14.7956, lng: -17.3678 },
-    'Guédiawaye': { lat: 14.7689, lng: -17.4134 },
-    'Guédiawaye Golf Sud': { lat: 14.7723, lng: -17.4089 },
-    'Guédiawaye Médina Gounass': { lat: 14.7656, lng: -17.4167 },
-    'Guédiawaye Sam Notaire': { lat: 14.7701, lng: -17.4123 },
-    'Guédiawaye Ndiarème Limamoulaye': { lat: 14.7745, lng: -17.4201 },
-    'Guédiawaye Wakhinane Nimzatt': { lat: 14.7689, lng: -17.4089 },
-    'Pikine': { lat: 14.7645, lng: -17.3967 },
-    'Pikine Rue 10': { lat: 14.7612, lng: -17.3923 },
-    'Pikine Tally Boubess': { lat: 14.7678, lng: -17.3889 },
-    'Pikine Guinaw Rail': { lat: 14.7589, lng: -17.4012 },
-    'Pikine Thiaroye': { lat: 14.7534, lng: -17.3756 },
-    'Thiaroye Gare': { lat: 14.7489, lng: -17.3712 },
-    'Thiaroye sur Mer': { lat: 14.7423, lng: -17.3534 },
-    'Diamaguène': { lat: 14.7712, lng: -17.3834 },
-    'Yeumbeul': { lat: 14.7867, lng: -17.3556 },
-    'Yeumbeul Nord': { lat: 14.7912, lng: -17.3512 },
-    'Yeumbeul Sud': { lat: 14.7823, lng: -17.3589 },
-    'Mbao': { lat: 14.7289, lng: -17.3167 },
-    'Rufisque': { lat: 14.7167, lng: -17.2667 },
-    'Rufisque Est': { lat: 14.7201, lng: -17.2589 },
-    'Rufisque Ouest': { lat: 14.7134, lng: -17.2723 },
-    'Bargny': { lat: 14.6978, lng: -17.2234 },
-    'Sendou': { lat: 14.6834, lng: -17.1978 },
-    'Diamniadio': { lat: 14.7234, lng: -17.1834 },
-    'Sebikotane': { lat: 14.7456, lng: -17.1456 },
-    'Thiès Centre': { lat: 14.7886, lng: -16.9317 },
-    'Thiès Gare': { lat: 14.7956, lng: -16.9256 },
-    'Thiès Escale': { lat: 14.7812, lng: -16.9389 },
-    'Mbour Centre': { lat: 14.4167, lng: -16.9667 },
-    'Mbour Plage': { lat: 14.4234, lng: -16.9756 },
-    'Mbour Sérère': { lat: 14.4089, lng: -16.9589 },
-    'Mbour Gare Routière': { lat: 14.4145, lng: -16.9623 },
-    'Mbour Thiocé': { lat: 14.4201, lng: -16.9534 },
-    'Mbour Dialaw': { lat: 14.4712, lng: -17.0345 },
-    'Mbour Toubab Dialaw': { lat: 14.4823, lng: -17.0456 },
-    'Joal-Fadiouth': { lat: 14.1667, lng: -16.8333 },
-    'Joal Centre': { lat: 14.1623, lng: -16.8289 },
-    'Fadiouth Île': { lat: 14.1689, lng: -16.8378 },
-    'Nguékhokh': { lat: 14.5167, lng: -16.9500 },
-    'Saly Centre': { lat: 14.4500, lng: -16.9833 },
-    'Saly Portudal': { lat: 14.4456, lng: -17.0012 },
-    'Saly Niakh Niakhal': { lat: 14.4589, lng: -16.9756 },
-    'Saly Joseph': { lat: 14.4523, lng: -16.9801 },
-    'Saly Carrefour': { lat: 14.4478, lng: -16.9867 },
-    'Saly Tapée': { lat: 14.4412, lng: -16.9789 },
-    'Saly Koulang': { lat: 14.4567, lng: -16.9823 },
-    'Ngaparou': { lat: 14.4634, lng: -17.0089 },
-    'Ngaparou Plage': { lat: 14.4656, lng: -17.0123 },
-    'Somone': { lat: 14.4823, lng: -17.0678 },
-    'Somone Plage': { lat: 14.4867, lng: -17.0734 },
-    'Somone Lagune': { lat: 14.4789, lng: -17.0712 },
-    'Nianing': { lat: 14.4289, lng: -16.9534 },
-    'Nianing Plage': { lat: 14.4312, lng: -16.9567 },
-    'Malicounda': { lat: 14.5234, lng: -17.1234 },
-    'Popenguine': { lat: 14.5445, lng: -17.1267 },
-    'Warang': { lat: 14.4156, lng: -16.9423 },
-    'Sindia': { lat: 14.5012, lng: -16.9234 },
-    'Saint-Louis Centre': { lat: 16.0167, lng: -16.5000 },
-    'Saint-Louis Île': { lat: 16.0267, lng: -16.4934 },
-    'Sor': { lat: 16.0045, lng: -16.4812 },
-    'Kaolack Centre': { lat: 14.1500, lng: -16.0667 },
-    'Kaolack Médina': { lat: 14.1456, lng: -16.0712 },
-    'Ziguinchor Centre': { lat: 12.5833, lng: -16.2667 },
-    'Ziguinchor Kandé': { lat: 12.5789, lng: -16.2734 },
-    'Touba Centre': { lat: 14.8500, lng: -15.8833 },
-    'Touba Darou Khoudoss': { lat: 14.8567, lng: -15.8767 },
-    'Louga Centre': { lat: 15.6167, lng: -16.2167 },
-    'Tambacounda Centre': { lat: 13.7667, lng: -13.6667 },
-    'Kolda Centre': { lat: 12.9000, lng: -14.9500 },
-    'Matam Centre': { lat: 15.6500, lng: -13.2500 },
-    'Diourbel Centre': { lat: 14.6667, lng: -16.2333 },
-    'Fatick Centre': { lat: 14.3333, lng: -16.4167 },
-    'Kaffrine Centre': { lat: 14.1000, lng: -15.5500 },
-    'Kédougou Centre': { lat: 12.5600, lng: -12.1750 },
-    'Sédhiou Centre': { lat: 12.7083, lng: -15.5569 }
+    // === AÉROPORT ET ZONE (CRITIQUE!) ===
+    "Aéroport International Blaise Diagne (AIBD)": { lat: 14.6700, lng: -17.0733 },
+    "AIBD Départs": { lat: 14.6712, lng: -17.0745 },
+    "AIBD Arrivées": { lat: 14.6689, lng: -17.0723 },
+    "AIBD Zone Hôtels": { lat: 14.6734, lng: -17.0778 },
+    "Diass": { lat: 14.6234, lng: -17.0567 },
+    "Ndiass": { lat: 14.6156, lng: -17.0489 },
+    // === DAKAR ET BANLIEUE ===
+    "Médina": { lat: 14.6907, lng: -17.4559 },
+    "Plateau": { lat: 14.6695, lng: -17.4390 },
+    "Gare Routière Pompiers": { lat: 14.6756, lng: -17.4445 },
+    "Port de Dakar": { lat: 14.6734, lng: -17.4267 },
+    "Gare Ferroviaire Dakar": { lat: 14.6712, lng: -17.4378 },
+    "Almadies": { lat: 14.7445, lng: -17.5095 },
+    "Ouakam": { lat: 14.7228, lng: -17.4789 },
+    "Yoff": { lat: 14.7615, lng: -17.4685 },
+    "Yoff Virage": { lat: 14.7567, lng: -17.4623 },
+    "Yoff Layenne": { lat: 14.7634, lng: -17.4712 },
+    "Aéroport Léopold Sédar Senghor (LSS)": { lat: 14.7397, lng: -17.4902 },
+    "Yoff Aéroport": { lat: 14.7423, lng: -17.4867 },
+    "Parcelles Assainies": { lat: 14.7678, lng: -17.4234 },
+    "Parcelles U1": { lat: 14.7623, lng: -17.4289 },
+    "Parcelles U10": { lat: 14.7712, lng: -17.4178 },
+    "Parcelles U20": { lat: 14.7745, lng: -17.4123 },
+    "Grand Dakar": { lat: 14.6989, lng: -17.4467 },
+    "Liberté 6": { lat: 14.7156, lng: -17.4612 },
+    "Sacré-Cœur": { lat: 14.7234, lng: -17.4523 },
+    "Mermoz": { lat: 14.7012, lng: -17.4712 },
+    "Point E": { lat: 14.6923, lng: -17.4634 },
+    "Fann": { lat: 14.6845, lng: -17.4656 },
+    "Fann Résidence": { lat: 14.6812, lng: -17.4689 },
+    "Ngor": { lat: 14.7512, lng: -17.5156 },
+    "Ngor Plage": { lat: 14.7545, lng: -17.5189 },
+    "Mamelles": { lat: 14.7289, lng: -17.4934 },
+    "Sicap": { lat: 14.7123, lng: -17.4556 },
+    "Sicap Baobab": { lat: 14.7089, lng: -17.4589 },
+    "Sicap Liberté": { lat: 14.7167, lng: -17.4523 },
+    "HLM": { lat: 14.7345, lng: -17.4456 },
+    "HLM Grand Yoff": { lat: 14.7389, lng: -17.4489 },
+    "HLM Grand Médine": { lat: 14.7412, lng: -17.4423 },
+    "Keur Massar": { lat: 14.7834, lng: -17.3234 },
+    "Malika": { lat: 14.7956, lng: -17.3678 },
+    // === GUÉDIAWAYE ===
+    "Guédiawaye": { lat: 14.7689, lng: -17.4134 },
+    "Guédiawaye Golf Sud": { lat: 14.7723, lng: -17.4089 },
+    "Guédiawaye Médina Gounass": { lat: 14.7656, lng: -17.4167 },
+    "Guédiawaye Sam Notaire": { lat: 14.7701, lng: -17.4123 },
+    "Guédiawaye Ndiarème Limamoulaye": { lat: 14.7745, lng: -17.4201 },
+    "Guédiawaye Wakhinane Nimzatt": { lat: 14.7689, lng: -17.4089 },
+    // === PIKINE ===
+    "Pikine": { lat: 14.7645, lng: -17.3967 },
+    "Pikine Rue 10": { lat: 14.7612, lng: -17.3923 },
+    "Pikine Tally Boubess": { lat: 14.7678, lng: -17.3889 },
+    "Pikine Guinaw Rail": { lat: 14.7589, lng: -17.4012 },
+    "Pikine Thiaroye": { lat: 14.7534, lng: -17.3756 },
+    "Thiaroye Gare": { lat: 14.7489, lng: -17.3712 },
+    "Thiaroye sur Mer": { lat: 14.7423, lng: -17.3534 },
+    "Diamaguène": { lat: 14.7712, lng: -17.3834 },
+    "Yeumbeul": { lat: 14.7867, lng: -17.3556 },
+    "Yeumbeul Nord": { lat: 14.7912, lng: -17.3512 },
+    "Yeumbeul Sud": { lat: 14.7823, lng: -17.3589 },
+    "Mbao": { lat: 14.7289, lng: -17.3167 },
+    // === RUFISQUE ET ZONE ===
+    "Rufisque": { lat: 14.7167, lng: -17.2667 },
+    "Rufisque Est": { lat: 14.7201, lng: -17.2589 },
+    "Rufisque Ouest": { lat: 14.7134, lng: -17.2723 },
+    "Bargny": { lat: 14.6978, lng: -17.2234 },
+    "Sendou": { lat: 14.6834, lng: -17.1978 },
+    "Diamniadio": { lat: 14.7234, lng: -17.1834 },
+    "Sebikotane": { lat: 14.7456, lng: -17.1456 },
+    // === THIÈS ===
+    "Thiès Centre": { lat: 14.7886, lng: -16.9317 },
+    "Thiès Gare": { lat: 14.7956, lng: -16.9256 },
+    "Thiès Escale": { lat: 14.7812, lng: -16.9389 },
+    // === MBOUR ET ZONE ===
+    "Mbour Centre": { lat: 14.4167, lng: -16.9667 },
+    "Mbour Plage": { lat: 14.4234, lng: -16.9756 },
+    "Mbour Sérère": { lat: 14.4089, lng: -16.9589 },
+    "Mbour Gare Routière": { lat: 14.4145, lng: -16.9623 },
+    "Mbour Thiocé": { lat: 14.4201, lng: -16.9534 },
+    "Mbour Dialaw": { lat: 14.4712, lng: -17.0345 },
+    "Mbour Toubab Dialaw": { lat: 14.4823, lng: -17.0456 },
+    "Joal-Fadiouth": { lat: 14.1667, lng: -16.8333 },
+    "Joal Centre": { lat: 14.1623, lng: -16.8289 },
+    "Fadiouth Île": { lat: 14.1689, lng: -16.8378 },
+    "Nguékhokh": { lat: 14.5167, lng: -16.9500 },
+    // === SALY ET ENVIRONS ===
+    "Saly Centre": { lat: 14.4500, lng: -16.9833 },
+    "Saly Portudal": { lat: 14.4456, lng: -17.0012 },
+    "Saly Niakh Niakhal": { lat: 14.4589, lng: -16.9756 },
+    "Saly Joseph": { lat: 14.4523, lng: -16.9801 },
+    "Saly Carrefour": { lat: 14.4478, lng: -16.9867 },
+    "Saly Tapée": { lat: 14.4412, lng: -16.9789 },
+    "Saly Koulang": { lat: 14.4567, lng: -16.9823 },
+    "Ngaparou": { lat: 14.4634, lng: -17.0089 },
+    "Ngaparou Plage": { lat: 14.4656, lng: -17.0123 },
+    "Somone": { lat: 14.4823, lng: -17.0678 },
+    "Somone Plage": { lat: 14.4867, lng: -17.0734 },
+    "Somone Lagune": { lat: 14.4789, lng: -17.0712 },
+    "Nianing": { lat: 14.4289, lng: -16.9534 },
+    "Nianing Plage": { lat: 14.4312, lng: -16.9567 },
+    "Malicounda": { lat: 14.5234, lng: -17.1234 },
+    "Popenguine": { lat: 14.5445, lng: -17.1267 },
+    "Warang": { lat: 14.4156, lng: -16.9423 },
+    "Sindia": { lat: 14.5012, lng: -16.9234 },
+    // === SAINT-LOUIS ===
+    "Saint-Louis Centre": { lat: 16.0167, lng: -16.5000 },
+    "Saint-Louis Île": { lat: 16.0267, lng: -16.4934 },
+    "Sor": { lat: 16.0045, lng: -16.4812 },
+    // === KAOLACK ===
+    "Kaolack Centre": { lat: 14.1500, lng: -16.0667 },
+    "Kaolack Médina": { lat: 14.1456, lng: -16.0712 },
+    // === ZIGUINCHOR ===
+    "Ziguinchor Centre": { lat: 12.5833, lng: -16.2667 },
+    "Ziguinchor Kandé": { lat: 12.5789, lng: -16.2734 },
+    // === TOUBA ===
+    "Touba Centre": { lat: 14.8500, lng: -15.8833 },
+    "Touba Darou Khoudoss": { lat: 14.8567, lng: -15.8767 },
+    // === LOUGA ===
+    "Louga Centre": { lat: 15.6167, lng: -16.2167 },
+    // === TAMBACOUNDA ===
+    "Tambacounda Centre": { lat: 13.7667, lng: -13.6667 },
+    // === KOLDA ===
+    "Kolda Centre": { lat: 12.9000, lng: -14.9500 },
+    // === MATAM ===
+    "Matam Centre": { lat: 15.6500, lng: -13.2500 },
+    // === DIOURBEL ===
+    "Diourbel Centre": { lat: 14.6667, lng: -16.2333 },
+    // === FATICK ===
+    "Fatick Centre": { lat: 14.3333, lng: -16.4167 },
+    // === KAFFRINE ===
+    "Kaffrine Centre": { lat: 14.1000, lng: -15.5500 },
+    // === KÉDOUGOU ===
+    "Kédougou Centre": { lat: 12.5600, lng: -12.1750 },
+    // === SÉDHIOU ===
+    "Sédhiou Centre": { lat: 12.7083, lng: -15.5569 }
   };
 
-  // ===== FAKE DRIVERS (démo front) =====
+  // ===== FAKE DRIVERS (pour simulation de tracking si besoin) =====
   const DRIVERS = [
-    { id: 1, name: 'Mamadou D.', rating: 4.9, trips: 156, vehicle: 'Toyota Corolla', color: 'Blanc', plate: 'DK-1234-AB', phone: '+221771234567', lat: 14.6928, lng: -17.4467 },
-    { id: 2, name: 'Ibrahima N.', rating: 4.8, trips: 89, vehicle: 'Peugeot 308', color: 'Gris', plate: 'DK-5678-CD', phone: '+221782345678', lat: 14.7156, lng: -17.4612 },
-    { id: 3, name: 'Cheikh M.', rating: 4.7, trips: 234, vehicle: 'Renault Clio', color: 'Noir', plate: 'DK-9012-EF', phone: '+221773456789', lat: 14.7289, lng: -17.4867 },
-    { id: 4, name: 'Ousmane F.', rating: 4.9, trips: 312, vehicle: 'Hyundai i10', color: 'Bleu', plate: 'DK-3456-GH', phone: '+221764567890', lat: 14.7445, lng: -17.5095 },
-    { id: 5, name: 'Aliou S.', rating: 4.6, trips: 67, vehicle: 'Dacia Logan', color: 'Blanc', plate: 'DK-7890-IJ', phone: '+221775678901', lat: 14.6989, lng: -17.4467 }
+    { id: 1, name: "Mamadou D.", rating: 4.9, trips: 156, vehicle: "Toyota Corolla", color: "Blanc", plate: "DK-1234-AB", phone: "+221771234567", lat: 14.6928, lng: -17.4467 },
+    { id: 2, name: "Ibrahima N.", rating: 4.8, trips: 89, vehicle: "Peugeot 308", color: "Gris", plate: "DK-5678-CD", phone: "+221782345678", lat: 14.7156, lng: -17.4612 },
+    { id: 3, name: "Cheikh M.", rating: 4.7, trips: 234, vehicle: "Renault Clio", color: "Noir", plate: "DK-9012-EF", phone: "+221773456789", lat: 14.7289, lng: -17.4867 },
+    { id: 4, name: "Ousmane F.", rating: 4.9, trips: 312, vehicle: "Hyundai i10", color: "Bleu", plate: "DK-3456-GH", phone: "+221764567890", lat: 14.7445, lng: -17.5095 },
+    { id: 5, name: "Aliou S.", rating: 4.6, trips: 67, vehicle: "Dacia Logan", color: "Blanc", plate: "DK-7890-IJ", phone: "+221775678901", lat: 14.6989, lng: -17.4467 }
   ];
 
   // ===== STATE =====
@@ -1326,7 +1348,7 @@
   let booking = {
     pickup: null,
     dropoff: null,
-    vehicleType: 'eco',
+    vehicleType: "eco",
     multiplier: 1,
     distance: 0,
     duration: 0,
@@ -1342,35 +1364,35 @@
       firebase.initializeApp(firebaseConfig);
       firebaseDB = firebase.database();
       
-      const connectedRef = firebaseDB.ref('.info/connected');
-      connectedRef.on('value', (snap) => {
+      const connectedRef = firebaseDB.ref(".info/connected");
+      connectedRef.on("value", (snap) => {
         if (snap.val() === true) {
           updateFirebaseStatus(true);
-          console.log('🔥 Firebase connecté');
+          console.log("🔥 Firebase connecté");
         } else {
           updateFirebaseStatus(false);
-          console.log('⚠️ Firebase déconnecté');
+          console.log("⚠️ Firebase déconnecté");
         }
       });
       
     } catch (error) {
-      console.error('Erreur Firebase:', error);
+      console.error("Erreur Firebase:", error);
       updateFirebaseStatus(false);
     }
   }
 
   function updateFirebaseStatus(connected) {
-    const statusEl = document.getElementById('firebaseStatus');
-    const statusText = document.getElementById('firebaseStatusText');
+    const statusEl = document.getElementById("firebaseStatus");
+    const statusText = document.getElementById("firebaseStatusText");
     
     if (connected) {
-      statusEl.classList.remove('disconnected');
-      statusEl.classList.add('connected');
-      statusText.textContent = 'En ligne';
+      statusEl.classList.remove("disconnected");
+      statusEl.classList.add("connected");
+      statusText.textContent = "En ligne";
     } else {
-      statusEl.classList.remove('connected');
-      statusEl.classList.add('disconnected');
-      statusText.textContent = 'Hors ligne';
+      statusEl.classList.remove("connected");
+      statusEl.classList.add("disconnected");
+      statusText.textContent = "Hors ligne";
     }
   }
 
@@ -1385,7 +1407,7 @@
 
   function startGPSTracking() {
     if (!navigator.geolocation) {
-      alert('La géolocalisation n\'est pas supportée par votre navigateur');
+      alert("La géolocalisation n'est pas supportée par votre navigateur");
       return;
     }
 
@@ -1400,7 +1422,7 @@
         updateMyPosition(position);
       },
       (error) => {
-        console.error('Erreur GPS:', error);
+        console.error("Erreur GPS:", error);
         handleGPSError(error);
       },
       options
@@ -1408,8 +1430,8 @@
 
     isGPSTracking = true;
     updateGPSIndicator(true);
-    document.getElementById('locationBtn').classList.add('tracking');
-    console.log('🛰️ GPS tracking activé');
+    document.getElementById("locationBtn").classList.add("tracking");
+    console.log("🛰️ GPS tracking activé");
   }
 
   function stopGPSTracking() {
@@ -1420,9 +1442,8 @@
     
     isGPSTracking = false;
     updateGPSIndicator(false);
-    const btn = document.getElementById('locationBtn');
-    if (btn) btn.classList.remove('tracking');
-    console.log('🛰️ GPS tracking désactivé');
+    document.getElementById("locationBtn").classList.remove("tracking");
+    console.log("🛰️ GPS tracking désactivé");
   }
 
   function updateMyPosition(position) {
@@ -1436,34 +1457,10 @@
       myPositionMarker.setLatLng([lat, lng]);
     } else {
       const icon = L.divIcon({
-        className: 'my-position-marker',
-        html: `<div style="
-          position: relative;
-          width: 20px;
-          height: 20px;
-        ">
-          <div style="
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(33, 150, 243, 0.2);
-            border-radius: 50%;
-          "></div>
-          <div style="
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 16px;
-            height: 16px;
-            background: #2196F3;
-            border-radius: 50%;
-            border: 3px solid #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-          "></div>
+        className: "my-position-marker",
+        html: `<div style="position: relative;width: 20px;height: 20px;">
+          <div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 50px;height: 50px;background: rgba(33, 150, 243, 0.2);border-radius: 50%;"></div>
+          <div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 16px;height: 16px;background: #2196F3;border-radius: 50%;border: 3px solid #fff;box-shadow: 0 2px 10px rgba(0,0,0,0.3);"></div>
         </div>`,
         iconSize: [20, 20],
         iconAnchor: [10, 10]
@@ -1474,7 +1471,7 @@
 
     if (!booking.pickup) {
       booking.pickup = { lat, lng };
-      document.getElementById('pickupInput').value = 'Ma position actuelle';
+      document.getElementById("pickupInput").value = "Ma position actuelle";
       addPickupMarker(lat, lng);
     }
 
@@ -1501,42 +1498,37 @@
   }
 
   function handleGPSError(error) {
-    let message = '';
+    let message = "";
     switch(error.code) {
       case error.PERMISSION_DENIED:
-        message = 'Accès GPS refusé. Veuillez autoriser la géolocalisation pour utiliser la carte automatiquement.';
+        message = "Accès GPS refusé. Veuillez autoriser la géolocalisation.";
         break;
       case error.POSITION_UNAVAILABLE:
-        message = 'Position GPS indisponible.';
+        message = "Position GPS indisponible.";
         break;
       case error.TIMEOUT:
-        message = 'Délai d\'attente GPS dépassé.';
+        message = "Délai d'attente GPS dépassé.";
         break;
       default:
-        message = 'Erreur GPS inconnue.';
+        message = "Erreur GPS inconnue.";
     }
     
-    isGPSTracking = false;
     updateGPSIndicator(false);
-    const btn = document.getElementById('locationBtn');
-    if (btn) btn.classList.remove('tracking');
-    
     console.error(message);
-    alert(message);
   }
 
   function updateGPSIndicator(active) {
-    const indicator = document.getElementById('gpsIndicator');
-    const status = document.getElementById('gpsStatus');
+    const indicator = document.getElementById("gpsIndicator");
+    const status = document.getElementById("gpsStatus");
     
     if (active) {
-      indicator.classList.remove('inactive');
-      indicator.classList.add('active');
-      status.textContent = 'GPS ON';
+      indicator.classList.remove("inactive");
+      indicator.classList.add("active");
+      status.textContent = "GPS ON";
     } else {
-      indicator.classList.remove('active');
-      indicator.classList.add('inactive');
-      status.textContent = 'GPS OFF';
+      indicator.classList.remove("active");
+      indicator.classList.add("inactive");
+      status.textContent = "GPS OFF";
     }
   }
 
@@ -1546,8 +1538,8 @@
       const lat = position.lat;
       const lng = position.lng;
       
-      document.getElementById('sosModal').classList.add('show');
-      document.getElementById('sosCoords').textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+      document.getElementById("sosModal").classList.add("show");
+      document.getElementById("sosCoords").textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
       
       sendSOSAlert(lat, lng);
       
@@ -1555,12 +1547,12 @@
         navigator.vibrate([500, 200, 500, 200, 500]);
       }
       
-      console.log('🆘 SOS DÉCLENCHÉ !');
+      console.log("🆘 SOS DÉCLENCHÉ !");
       
     }).catch(error => {
-      document.getElementById('sosModal').classList.add('show');
-      document.getElementById('sosCoords').textContent = 'Position non disponible';
-      console.error('Erreur SOS:', error);
+      document.getElementById("sosModal").classList.add("show");
+      document.getElementById("sosCoords").textContent = "Position non disponible";
+      console.error("Erreur SOS:", error);
     });
   }
 
@@ -1580,7 +1572,7 @@
           { enableHighAccuracy: true, timeout: 10000 }
         );
       } else {
-        reject(new Error('Géolocalisation non supportée'));
+        reject(new Error("Géolocalisation non supportée"));
       }
     });
   }
@@ -1597,10 +1589,10 @@
         phone: selectedDriver.phone,
         vehicle: `${selectedDriver.vehicle} ${selectedDriver.color} ${selectedDriver.plate}`
       } : null,
-      status: 'active'
+      status: "active"
     };
     
-    const sosRef = firebaseDB.ref('sos_alerts').push();
+    const sosRef = firebaseDB.ref("sos_alerts").push();
     sosRef.set(sosData);
     
     if (currentRideId) {
@@ -1610,7 +1602,7 @@
       });
     }
     
-    console.log('🆘 Alerte SOS envoyée à Firebase');
+    console.log("🆘 Alerte SOS envoyée à Firebase");
   }
 
   function callEmergency() {
@@ -1625,26 +1617,22 @@
       
       if (navigator.share) {
         navigator.share({
-          title: '🆘 URGENCE - Ma position',
+          title: "🆘 URGENCE - Ma position",
           text: `J'ai besoin d'aide ! Ma position actuelle:\n${lat.toFixed(6)}, ${lng.toFixed(6)}`,
           url: mapsUrl
         });
-      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      } else {
         navigator.clipboard.writeText(
           `🆘 URGENCE - Ma position:\n${lat.toFixed(6)}, ${lng.toFixed(6)}\n${mapsUrl}`
         ).then(() => {
-          alert('Position copiée dans le presse-papier !');
-        }).catch(() => {
-          alert('Impossible de copier la position. Copiez manuellement ce lien : ' + mapsUrl);
+          alert("Position copiée dans le presse-papier !");
         });
-      } else {
-        alert('Partage non supporté. Copiez ce lien : ' + mapsUrl);
       }
     });
   }
 
   function closeSOS() {
-    document.getElementById('sosModal').classList.remove('show');
+    document.getElementById("sosModal").classList.remove("show");
     
     if (currentRideId && firebaseDB) {
       firebaseDB.ref(`rides/${currentRideId}`).update({
@@ -1657,7 +1645,7 @@
   function initMap() {
     const SENEGAL_CENTER = [14.4974, -14.4524];
     
-    map = L.map('map', {
+    map = L.map("map", {
       center: SENEGAL_CENTER,
       zoom: 8,
       dragging: true,
@@ -1669,8 +1657,8 @@
       zoomControl: true
     });
     
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© DIGIY DRIVER',
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© DIGIY DRIVER",
       maxZoom: 19,
       minZoom: 6
     }).addTo(map);
@@ -1683,19 +1671,8 @@
   function showAvailableDrivers() {
     DRIVERS.forEach(driver => {
       const icon = L.divIcon({
-        className: 'driver-marker',
-        html: `<div style="
-          background: #00C853;
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 16px;
-          border: 2px solid #fff;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        ">🚗</div>`,
+        className: "driver-marker",
+        html: `<div style="background: #00C853;width: 30px;height: 30px;border-radius: 50%;display: flex;align-items: center;justify-content: center;font-size: 16px;border: 2px solid #fff;box-shadow: 0 2px 10px rgba(0,0,0,0.3);">🚗</div>`,
         iconSize: [30, 30],
         iconAnchor: [15, 15]
       });
@@ -1706,12 +1683,11 @@
     });
   }
 
-  // Écouter les chauffeurs depuis Firebase
   function listenToDrivers() {
     if (!firebaseDB) return;
     
-    const driversRef = firebaseDB.ref('drivers_online');
-    driversRef.on('value', (snapshot) => {
+    const driversRef = firebaseDB.ref("drivers_online");
+    driversRef.on("value", (snapshot) => {
       driverMarkers.forEach(m => map.removeLayer(m));
       driverMarkers = [];
       
@@ -1729,19 +1705,8 @@
 
   function addDriverMarker(driver) {
     const icon = L.divIcon({
-      className: 'driver-marker',
-      html: `<div style="
-        background: #00C853;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        border: 2px solid #fff;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      ">🚗</div>`,
+      className: "driver-marker",
+      html: `<div style="background: #00C853;width: 30px;height: 30px;border-radius: 50%;display: flex;align-items: center;justify-content: center;font-size: 16px;border: 2px solid #fff;box-shadow: 0 2px 10px rgba(0,0,0,0.3);">🚗</div>`,
       iconSize: [30, 30],
       iconAnchor: [15, 15]
     });
@@ -1749,6 +1714,155 @@
     const marker = L.marker([driver.position.lat, driver.position.lng], { icon }).addTo(map);
     marker.bindPopup(`<b>${driver.name}</b><br>⭐ ${driver.rating} • ${driver.vehicle}`);
     driverMarkers.push(marker);
+  }
+
+  // ===== CENTER ON MY LOCATION =====
+  function centerOnMyLocation() {
+    if (myPosition) {
+      map.setView([myPosition.lat, myPosition.lng], 15);
+    } else if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          map.setView([lat, lng], 15);
+          
+          myPosition = { lat, lng };
+          booking.pickup = myPosition;
+          document.getElementById("pickupInput").value = "Ma position actuelle";
+          
+          addPickupMarker(lat, lng);
+          checkIfReady();
+        },
+        () => {
+          alert("Impossible d'obtenir votre position. Veuillez entrer votre adresse.");
+        }
+      );
+    }
+  }
+
+  // ===== LOCATION PICKER =====
+  function openLocationPicker(type) {
+    const zones = [
+      "✈️ AÉROPORTS",
+      "🏖️ SALY & PETITE CÔTE", 
+      "🏙️ MBOUR & JOAL",
+      "🏙️ DAKAR CENTRE",
+      "🏘️ DAKAR BANLIEUE",
+      "🏙️ THIÈS",
+      "🏛️ SAINT-LOUIS",
+      "🏙️ AUTRES VILLES"
+    ];
+    
+    const zoneSelected = prompt(
+      `Choisissez d'abord une ZONE:\n\n${zones.map((z, i) => `${i + 1}. ${z}`).join("\n")}\n\nEntrez le numéro:`
+    );
+    
+    const zoneIndex = parseInt(zoneSelected) - 1;
+    if (zoneIndex < 0 || zoneIndex >= zones.length) return;
+    
+    let filteredLocations = [];
+    
+    if (zoneIndex === 0) {
+      filteredLocations = Object.keys(LOCATIONS).filter(l => 
+        l.includes("Aéroport") || l.includes("AIBD") || l.includes("LSS") || l.includes("Diass")
+      );
+    } else if (zoneIndex === 1) {
+      filteredLocations = Object.keys(LOCATIONS).filter(l => 
+        l.includes("Saly") || l.includes("Somone") || l.includes("Ngaparou") || 
+        l.includes("Nianing") || l.includes("Malicounda") || l.includes("Popenguine") ||
+        l.includes("Warang") || l.includes("Sindia")
+      );
+    } else if (zoneIndex === 2) {
+      filteredLocations = Object.keys(LOCATIONS).filter(l => 
+        l.includes("Mbour") || l.includes("Joal") || l.includes("Fadiouth") || 
+        l.includes("Dialaw") || l.includes("Nguékhokh")
+      );
+    } else if (zoneIndex === 3) {
+      filteredLocations = Object.keys(LOCATIONS).filter(l => 
+        l.includes("Médina") || l.includes("Plateau") || l.includes("Almadies") ||
+        l.includes("Ouakam") || l.includes("Yoff") || l.includes("Ngor") ||
+        l.includes("Sacré") || l.includes("Mermoz") || l.includes("Point E") ||
+        l.includes("Fann") || l.includes("Sicap") || l.includes("HLM") ||
+        l.includes("Liberté") || l.includes("Mamelles") || l.includes("Gare") ||
+        l.includes("Port")
+      );
+    } else if (zoneIndex === 4) {
+      filteredLocations = Object.keys(LOCATIONS).filter(l => 
+        l.includes("Guédiawaye") || l.includes("Pikine") || l.includes("Parcelles") ||
+        l.includes("Rufisque") || l.includes("Thiaroye") || l.includes("Yeumbeul") ||
+        l.includes("Keur Massar") || l.includes("Malika") || l.includes("Diamaguène") ||
+        l.includes("Mbao") || l.includes("Bargny") || l.includes("Sendou") ||
+        l.includes("Diamniadio") || l.includes("Sebikotane")
+      );
+    } else if (zoneIndex === 5) {
+      filteredLocations = Object.keys(LOCATIONS).filter(l => l.includes("Thiès"));
+    } else if (zoneIndex === 6) {
+      filteredLocations = Object.keys(LOCATIONS).filter(l => 
+        l.includes("Saint-Louis") || l.includes("Sor")
+      );
+    } else {
+      filteredLocations = Object.keys(LOCATIONS).filter(l => 
+        l.includes("Kaolack") || l.includes("Ziguinchor") || l.includes("Touba") ||
+        l.includes("Louga") || l.includes("Tambacounda") || l.includes("Kolda") ||
+        l.includes("Matam") || l.includes("Diourbel") || l.includes("Fatick") ||
+        l.includes("Kaffrine") || l.includes("Kédougou") || l.includes("Sédhiou")
+      );
+    }
+    
+    if (filteredLocations.length === 0) {
+      alert("Aucun lieu trouvé dans cette zone");
+      return;
+    }
+    
+    const locationSelected = prompt(
+      `${zones[zoneIndex]} - Choisissez le lieu:\n\n${filteredLocations.map((l, i) => `${i + 1}. ${l}`).join("\n")}\n\nEntrez le numéro:`
+    );
+    
+    const locationIndex = parseInt(locationSelected) - 1;
+    if (locationIndex >= 0 && locationIndex < filteredLocations.length) {
+      const locationName = filteredLocations[locationIndex];
+      const coords = LOCATIONS[locationName];
+      
+      if (type === "pickup") {
+        booking.pickup = coords;
+        document.getElementById("pickupInput").value = locationName;
+        addPickupMarker(coords.lat, coords.lng);
+      } else {
+        booking.dropoff = coords;
+        document.getElementById("dropoffInput").value = locationName;
+        addDropoffMarker(coords.lat, coords.lng);
+      }
+      
+      checkIfReady();
+    }
+  }
+
+  // ===== ADD MARKERS =====
+  function addPickupMarker(lat, lng) {
+    if (pickupMarker) map.removeLayer(pickupMarker);
+    
+    const icon = L.divIcon({
+      className: "pickup-marker",
+      html: `<div style="background: #00C853;width: 20px;height: 20px;border-radius: 50%;border: 3px solid #fff;box-shadow: 0 2px 10px rgba(0,0,0,0.3);"></div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
+    });
+    
+    pickupMarker = L.marker([lat, lng], { icon }).addTo(map);
+  }
+
+  function addDropoffMarker(lat, lng) {
+    if (dropoffMarker) map.removeLayer(dropoffMarker);
+    
+    const icon = L.divIcon({
+      className: "dropoff-marker",
+      html: `<div style="background: #FFD700;width: 20px;height: 20px;border-radius: 50%;border: 3px solid #fff;box-shadow: 0 2px 10px rgba(0,0,0,0.3);"></div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
+    });
+    
+    dropoffMarker = L.marker([lat, lng], { icon }).addTo(map);
   }
 
   // ===== CHECK IF READY TO BOOK =====
@@ -1778,16 +1892,16 @@
     drawRoute();
     showPriceSummary();
     
-    document.getElementById('confirmBtn').disabled = false;
+    document.getElementById("confirmBtn").disabled = false;
   }
 
   function updatePrices() {
     const basePrice = Math.max(MIN_PRICE, Math.round(booking.distance * PRICE_PER_KM / 100) * 100);
     
-    document.getElementById('priceEco').textContent = basePrice.toLocaleString() + ' F';
-    document.getElementById('priceConfort').textContent = Math.round(basePrice * 1.3 / 100) * 100 + ' F';
-    document.getElementById('pricePremium').textContent = Math.round(basePrice * 1.8 / 100) * 100 + ' F';
-    document.getElementById('priceMoto').textContent = Math.round(basePrice * 0.7 / 100) * 100 + ' F';
+    document.getElementById("priceEco").textContent = basePrice.toLocaleString() + " F";
+    document.getElementById("priceConfort").textContent = Math.round(basePrice * 1.3 / 100) * 100 + " F";
+    document.getElementById("pricePremium").textContent = Math.round(basePrice * 1.8 / 100) * 100 + " F";
+    document.getElementById("priceMoto").textContent = Math.round(basePrice * 0.7 / 100) * 100 + " F";
     
     booking.price = Math.round(basePrice * booking.multiplier / 100) * 100;
   }
@@ -1799,232 +1913,91 @@
       [booking.pickup.lat, booking.pickup.lng],
       [booking.dropoff.lat, booking.dropoff.lng]
     ], {
-      color: '#FFD700',
+      color: "#FFD700",
       weight: 4,
       opacity: 0.8,
-      dashArray: '10, 10'
+      dashArray: "10, 10"
     }).addTo(map);
     
     map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
   }
 
   function showPriceSummary() {
-    document.getElementById('summaryDistance').textContent = booking.distance.toFixed(1) + ' km';
-    document.getElementById('summaryDuration').textContent = booking.duration + ' min';
-    document.getElementById('summaryTotal').textContent = booking.price.toLocaleString() + ' FCFA';
-    document.getElementById('priceSummary').classList.add('show');
+    document.getElementById("summaryDistance").textContent = booking.distance.toFixed(1) + " km";
+    document.getElementById("summaryDuration").textContent = booking.duration + " min";
+    document.getElementById("summaryTotal").textContent = booking.price.toLocaleString() + " FCFA";
+    document.getElementById("priceSummary").classList.add("show");
   }
 
-  // ===== VEHICLE SELECTION =====
+  // ===== SELECT VEHICLE =====
   function selectVehicle(element) {
-    document.querySelectorAll('.vehicle-option').forEach(el => el.classList.remove('selected'));
-    element.classList.add('selected');
+    document.querySelectorAll(".vehicle-option").forEach(el => el.classList.remove("selected"));
+    element.classList.add("selected");
     
     booking.vehicleType = element.dataset.type;
     booking.multiplier = parseFloat(element.dataset.multiplier);
     
-    document.getElementById('summaryVehicle').textContent = element.querySelector('.vehicle-name').textContent;
+    document.getElementById("summaryVehicle").textContent = element.querySelector(".vehicle-name").textContent;
     
     if (booking.distance > 0) {
       const basePrice = Math.max(MIN_PRICE, Math.round(booking.distance * PRICE_PER_KM / 100) * 100);
       booking.price = Math.round(basePrice * booking.multiplier / 100) * 100;
-      document.getElementById('summaryTotal').textContent = booking.price.toLocaleString() + ' FCFA';
+      document.getElementById("summaryTotal").textContent = booking.price.toLocaleString() + " FCFA";
     }
   }
 
-  // ===== LOCATION PICKER =====
-  function openLocationPicker(type) {
-    const zones = [
-      '✈️ AÉROPORTS',
-      '🏖️ SALY & PETITE CÔTE', 
-      '🏙️ MBOUR & JOAL',
-      '🏙️ DAKAR CENTRE',
-      '🏘️ DAKAR BANLIEUE',
-      '🏙️ THIÈS',
-      '🏛️ SAINT-LOUIS',
-      '🏙️ AUTRES VILLES'
-    ];
-    
-    const zoneSelected = prompt(
-      `Choisissez d'abord une ZONE:\n\n${zones.map((z, i) => `${i + 1}. ${z}`).join('\n')}\n\nEntrez le numéro:`
-    );
-    
-    const zoneIndex = parseInt(zoneSelected, 10) - 1;
-    if (isNaN(zoneIndex) || zoneIndex < 0 || zoneIndex >= zones.length) return;
-    
-    let filteredLocations = [];
-    
-    if (zoneIndex === 0) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Aéroport') || l.includes('AIBD') || l.includes('LSS') || l.includes('Diass')
-      );
-    } else if (zoneIndex === 1) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Saly') || l.includes('Somone') || l.includes('Ngaparou') || 
-        l.includes('Nianing') || l.includes('Malicounda') || l.includes('Popenguine') ||
-        l.includes('Warang') || l.includes('Sindia')
-      );
-    } else if (zoneIndex === 2) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Mbour') || l.includes('Joal') || l.includes('Fadiouth') || 
-        l.includes('Dialaw') || l.includes('Nguékhokh')
-      );
-    } else if (zoneIndex === 3) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Médina') || l.includes('Plateau') || l.includes('Almadies') ||
-        l.includes('Ouakam') || l.includes('Yoff') || l.includes('Ngor') ||
-        l.includes('Sacré') || l.includes('Mermoz') || l.includes('Point E') ||
-        l.includes('Fann') || l.includes('Sicap') || l.includes('HLM') ||
-        l.includes('Liberté') || l.includes('Mamelles') || l.includes('Gare') ||
-        l.includes('Port')
-      );
-    } else if (zoneIndex === 4) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Guédiawaye') || l.includes('Pikine') || l.includes('Parcelles') ||
-        l.includes('Rufisque') || l.includes('Thiaroye') || l.includes('Yeumbeul') ||
-        l.includes('Keur Massar') || l.includes('Malika') || l.includes('Diamaguène') ||
-        l.includes('Mbao') || l.includes('Bargny') || l.includes('Sendou') ||
-        l.includes('Diamniadio') || l.includes('Sebikotane')
-      );
-    } else if (zoneIndex === 5) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => l.includes('Thiès'));
-    } else if (zoneIndex === 6) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Saint-Louis') || l.includes('Sor')
-      );
-    } else {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Kaolack') || l.includes('Ziguinchor') || l.includes('Touba') ||
-        l.includes('Louga') || l.includes('Tambacounda') || l.includes('Kolda') ||
-        l.includes('Matam') || l.includes('Diourbel') || l.includes('Fatick') ||
-        l.includes('Kaffrine') || l.includes('Kédougou') || l.includes('Sédhiou')
-      );
-    }
-    
-    if (filteredLocations.length === 0) {
-      alert('Aucun lieu trouvé dans cette zone');
-      return;
-    }
-    
-    const locationSelected = prompt(
-      `${zones[zoneIndex]} - Choisissez le lieu:\n\n${filteredLocations.map((l, i) => `${i + 1}. ${l}`).join('\n')}\n\nEntrez le numéro:`
-    );
-    
-    const locationIndex = parseInt(locationSelected, 10) - 1;
-    if (isNaN(locationIndex) || locationIndex < 0 || locationIndex >= filteredLocations.length) return;
-    
-    const locationName = filteredLocations[locationIndex];
-    const coords = LOCATIONS[locationName];
-      
-    if (type === 'pickup') {
-      booking.pickup = coords;
-      document.getElementById('pickupInput').value = locationName;
-      addPickupMarker(coords.lat, coords.lng);
-    } else {
-      booking.dropoff = coords;
-      document.getElementById('dropoffInput').value = locationName;
-      addDropoffMarker(coords.lat, coords.lng);
-    }
-      
-    checkIfReady();
-  }
-
-  // ===== ADD MARKERS =====
-  function addPickupMarker(lat, lng) {
-    if (pickupMarker) map.removeLayer(pickupMarker);
-    
-    const icon = L.divIcon({
-      className: 'pickup-marker',
-      html: `<div style="
-        background: #00C853;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      "></div>`,
-      iconSize: [20, 20],
-      iconAnchor: [10, 10]
-    });
-    
-    pickupMarker = L.marker([lat, lng], { icon }).addTo(map);
-  }
-
-  function addDropoffMarker(lat, lng) {
-    if (dropoffMarker) map.removeLayer(dropoffMarker);
-    
-    const icon = L.divIcon({
-      className: 'dropoff-marker',
-      html: `<div style="
-        background: #FFD700;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      "></div>`,
-      iconSize: [20, 20],
-      iconAnchor: [10, 10]
-    });
-    
-    dropoffMarker = L.marker([lat, lng], { icon }).addTo(map);
-  }
-
-  // ===== CONFIRM BOOKING (PULSE) =====
+  // ===== CONFIRM BOOKING (PULSE, SANS JEU VIDÉO) =====
   function confirmBooking() {
-    document.getElementById('searchingModal').classList.add('show');
-    document.getElementById('searchingState').style.display = 'block';
-    document.getElementById('driverFoundState').classList.remove('show');
-    
+    document.getElementById("searchingModal").classList.add("show");
+    document.getElementById("searchingState").style.display = "block";
+    document.getElementById("driverFoundState").classList.remove("show");
+
+    // On envoie la demande dans Firebase / API
+    // et on attend qu'un chauffeur / dispatch l'accepte
     sendPulseToDrivers();
-    
-    const searchTime = 3000 + Math.random() * 3000;
-    searchTimeout = setTimeout(() => {
-      driverFound();
-    }, searchTime);
   }
 
   // ===== PULSE SYSTEM WITH FIREBASE =====
   async function sendPulseToDrivers() {
     const rideData = {
       pickup: booking.pickup,
-      pickupName: document.getElementById('pickupInput').value,
+      pickupName: document.getElementById("pickupInput").value,
       dropoff: booking.dropoff,
-      dropoffName: document.getElementById('dropoffInput').value,
+      dropoffName: document.getElementById("dropoffInput").value,
       distance: booking.distance,
       duration: booking.duration,
       price: booking.price,
       vehicleType: booking.vehicleType,
-      status: 'searching',
+      status: "searching",
       timestamp: firebase.database.ServerValue.TIMESTAMP,
       clientPosition: myPosition || booking.pickup
     };
 
-    console.log('🔔 PULSE envoyé !', rideData);
+    console.log("🔔 PULSE envoyé !", rideData);
     
     if (firebaseDB) {
       try {
-        const newRideRef = firebaseDB.ref('rides').push();
+        const newRideRef = firebaseDB.ref("rides").push();
         currentRideId = newRideRef.key;
         await newRideRef.set(rideData);
         
         listenToRideUpdates(currentRideId);
         
-        console.log('✅ Course créée dans Firebase:', currentRideId);
+        console.log("✅ Course créée dans Firebase:", currentRideId);
       } catch (error) {
-        console.error('Erreur Firebase:', error);
+        console.error("Erreur Firebase:", error);
       }
     }
     
     try {
       await fetch(`${API_URL}/api/courses/new`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(rideData)
       });
-      console.log('✅ PULSE envoyé à l\'API');
+      console.log("✅ PULSE envoyé à l'API");
     } catch (error) {
-      console.log('⚠️ Mode démo - API non disponible');
+      console.log("⚠️ Mode démo - API non disponible");
     }
   }
 
@@ -2032,28 +2005,28 @@
     if (!firebaseDB) return;
     
     currentRideRef = firebaseDB.ref(`rides/${rideId}`);
-    currentRideRef.on('value', (snapshot) => {
+    currentRideRef.on("value", (snapshot) => {
       const ride = snapshot.val();
       if (!ride) return;
       
-      console.log('📡 Mise à jour course:', ride.status);
+      console.log("📡 Mise à jour course:", ride.status);
       
       switch(ride.status) {
-        case 'accepted':
+        case "accepted":
           if (ride.driver) {
             handleDriverAccepted(ride.driver);
           }
           break;
-        case 'arrived':
-          updateRideStatus('Le chauffeur est arrivé !');
+        case "arrived":
+          updateRideStatus("Le chauffeur est arrivé !");
           break;
-        case 'in_progress':
-          updateRideStatus('Course en cours');
+        case "in_progress":
+          updateRideStatus("Course en cours");
           break;
-        case 'completed':
+        case "completed":
           handleRideCompleted(ride);
           break;
-        case 'cancelled':
+        case "cancelled":
           handleRideCancelled();
           break;
       }
@@ -2070,7 +2043,7 @@
   }
 
   function updateRideStatus(status) {
-    document.getElementById('rideStatus').textContent = status;
+    document.getElementById("rideStatus").textContent = status;
   }
 
   function handleRideCompleted(ride) {
@@ -2079,7 +2052,7 @@
   }
 
   function handleRideCancelled() {
-    alert('La course a été annulée.');
+    alert("La course a été annulée.");
     resetBooking();
   }
 
@@ -2089,74 +2062,46 @@
     }
   }
 
-  // ===== DRIVER FOUND (SIMU) =====
+  // ===== DRIVER FOUND (RÉEL) =====
   function driverFound() {
+    // En mode réel, cette fonction est appelée quand un chauffeur a accepté dans Firebase
     if (!selectedDriver) {
-      selectedDriver = DRIVERS[Math.floor(Math.random() * DRIVERS.length)];
+      console.warn("driverFound() appelé sans chauffeur sélectionné");
+      return;
     }
-    
+
     const eta = Math.floor(Math.random() * 4) + 2;
-    
-    document.getElementById('foundDriverName').textContent = selectedDriver.name;
-    document.getElementById('foundDriverRating').textContent = selectedDriver.rating;
-    document.getElementById('foundDriverTrips').textContent = selectedDriver.trips;
-    document.getElementById('foundDriverVehicle').textContent = `${selectedDriver.vehicle} • ${selectedDriver.color} • ${selectedDriver.plate}`;
-    document.getElementById('foundDriverETA').textContent = `${eta} min`;
-    document.getElementById('foundPrice').textContent = booking.price.toLocaleString();
-    
-    document.getElementById('searchingState').style.display = 'none';
-    document.getElementById('driverFoundState').classList.add('show');
-    
-    document.getElementById('trackingDriverName').textContent = selectedDriver.name;
-    document.getElementById('trackingVehicle').textContent = `${selectedDriver.vehicle} • ${selectedDriver.plate}`;
-    document.getElementById('trackingETA').textContent = `${eta} min`;
-    document.getElementById('trackingPrice').textContent = `${booking.price.toLocaleString()} FCFA`;
-    
-    if (currentRideId && firebaseDB) {
-      firebaseDB.ref(`rides/${currentRideId}`).update({
-        status: 'accepted',
-        driver: {
-          id: selectedDriver.id,
-          name: selectedDriver.name,
-          phone: selectedDriver.phone,
-          vehicle: selectedDriver.vehicle,
-          color: selectedDriver.color,
-          plate: selectedDriver.plate
-        }
-      });
-    }
-    
-    console.log('✅ Chauffeur trouvé:', selectedDriver.name);
-    
-    setTimeout(() => {
-      confirmRideStart();
-    }, 3000);
-  }
-  
-  function confirmRideStart() {
-    document.getElementById('searchingModal').classList.remove('show');
-    document.getElementById('bookingPanel').style.display = 'none';
-    document.getElementById('trackingPanel').classList.add('show');
-    
-    if (currentRideId && firebaseDB) {
-      firebaseDB.ref(`rides/${currentRideId}`).update({
-        status: 'in_progress',
-        startedAt: firebase.database.ServerValue.TIMESTAMP
-      });
-    }
-    
-    console.log('🚗 Course démarrée');
+
+    document.getElementById("foundDriverName").textContent = selectedDriver.name;
+    document.getElementById("foundDriverRating").textContent = selectedDriver.rating || "5.0";
+    document.getElementById("foundDriverTrips").textContent = selectedDriver.trips || "—";
+    document.getElementById("foundDriverVehicle").textContent =
+      `${selectedDriver.vehicle} • ${selectedDriver.color || ""} • ${selectedDriver.plate || ""}`;
+    document.getElementById("foundDriverETA").textContent = `${eta} min`;
+    document.getElementById("foundPrice").textContent = booking.price.toLocaleString();
+
+    document.getElementById("searchingState").style.display = "none";
+    document.getElementById("driverFoundState").classList.add("show");
+
+    document.getElementById("trackingDriverName").textContent = selectedDriver.name;
+    document.getElementById("trackingVehicle").textContent =
+      `${selectedDriver.vehicle} • ${selectedDriver.plate || ""}`;
+    document.getElementById("trackingETA").textContent = `${eta} min`;
+    document.getElementById("trackingPrice").textContent =
+      `${booking.price.toLocaleString()} FCFA`;
+
+    console.log("✅ Chauffeur accepté:", selectedDriver.name);
   }
 
-  // ===== CANCEL SEARCH / RIDE =====
+  // ===== CANCEL SEARCH =====
   function cancelSearch() {
     clearTimeout(searchTimeout);
-    document.getElementById('searchingModal').classList.remove('show');
+    document.getElementById("searchingModal").classList.remove("show");
     
     if (currentRideId && firebaseDB) {
       firebaseDB.ref(`rides/${currentRideId}`).update({
-        status: 'cancelled',
-        cancelledBy: 'client',
+        status: "cancelled",
+        cancelledBy: "client",
         cancelledAt: firebase.database.ServerValue.TIMESTAMP
       });
     }
@@ -2164,16 +2109,17 @@
     currentRideId = null;
   }
 
+  // ===== CANCEL RIDE =====
   function cancelRide() {
-    if (confirm('Êtes-vous sûr de vouloir annuler cette course ?')) {
-      document.getElementById('searchingModal').classList.remove('show');
-      document.getElementById('trackingPanel').classList.remove('show');
-      document.getElementById('bookingPanel').style.display = 'block';
+    if (confirm("Êtes-vous sûr de vouloir annuler cette course ?")) {
+      document.getElementById("searchingModal").classList.remove("show");
+      document.getElementById("trackingPanel").classList.remove("show");
+      document.getElementById("bookingPanel").style.display = "block";
       
       if (currentRideId && firebaseDB) {
         firebaseDB.ref(`rides/${currentRideId}`).update({
-          status: 'cancelled',
-          cancelledBy: 'client',
+          status: "cancelled",
+          cancelledBy: "client",
           cancelledAt: firebase.database.ServerValue.TIMESTAMP
         });
         
@@ -2188,9 +2134,9 @@
   }
 
   function resetBooking() {
-    document.getElementById('searchingModal').classList.remove('show');
-    document.getElementById('trackingPanel').classList.remove('show');
-    document.getElementById('bookingPanel').style.display = 'block';
+    document.getElementById("searchingModal").classList.remove("show");
+    document.getElementById("trackingPanel").classList.remove("show");
+    document.getElementById("bookingPanel").style.display = "block";
     
     selectedDriver = null;
     currentRideId = null;
@@ -2208,7 +2154,7 @@
   }
 
   // ===== INIT =====
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     initFirebase();
     initMap();
     listenToDrivers();
