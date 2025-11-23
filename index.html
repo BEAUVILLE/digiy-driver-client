@@ -8,19 +8,6 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="description" content="Commandez votre VTC au Sénégal - Prix justes, chauffeurs pros, 0% commission">
   
-  <!-- 
-  🔥 DIGIY DRIVER CLIENT - VERSION COMPLÈTE
-  ✅ GPS temps réel
-  ✅ Bouton SOS
-  ✅ Firebase connecté
-  ✅ 140+ destinations incluant:
-      - Aéroport AIBD + LSS
-      - SALY complet (18 zones)
-      - Mbour, Somone, Ngaparou, Nianing
-      - Dakar + toute la banlieue (60+ zones)
-      - Toutes les régions du Sénégal
-  -->
-  
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   
@@ -54,7 +41,6 @@
       overflow-x: hidden;
     }
 
-    /* ===== ANIMATIONS ===== */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -90,14 +76,12 @@
       50% { opacity: 0.5; }
     }
 
-    /* ===== APP CONTAINER ===== */
     .app {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    /* ===== HEADER ===== */
     .header {
       background: linear-gradient(135deg, #1a1a1a, #252525);
       padding: 15px 20px;
@@ -177,7 +161,6 @@
       cursor: pointer;
     }
 
-    /* ===== SOS BUTTON ===== */
     .sos-btn {
       background: var(--red);
       border: none;
@@ -200,7 +183,6 @@
       transform: scale(0.95);
     }
 
-    /* ===== MAP ===== */
     .map-container {
       flex: 1;
       position: relative;
@@ -241,7 +223,6 @@
       color: white;
     }
 
-    /* ===== FIREBASE STATUS ===== */
     .firebase-status {
       position: absolute;
       top: 10px;
@@ -271,7 +252,6 @@
       background: var(--red);
     }
 
-    /* ===== BOOKING PANEL ===== */
     .booking-panel {
       background: var(--card);
       border-top-left-radius: 25px;
@@ -298,7 +278,6 @@
       gap: 10px;
     }
 
-    /* ===== INPUT FIELDS ===== */
     .input-group {
       margin-bottom: 15px;
     }
@@ -353,7 +332,6 @@
       margin-left: 17px;
     }
 
-    /* ===== VEHICLE OPTIONS ===== */
     .vehicle-options {
       display: flex;
       gap: 10px;
@@ -405,7 +383,6 @@
       color: var(--gray);
     }
 
-    /* ===== PRICE SUMMARY ===== */
     .price-summary {
       background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
       border: 1px solid var(--gold);
@@ -437,7 +414,6 @@
       margin-top: 10px;
     }
 
-    /* ===== CONFIRM BUTTON ===== */
     .confirm-btn {
       width: 100%;
       padding: 18px;
@@ -466,7 +442,6 @@
       transform: none;
     }
 
-    /* ===== SEARCHING MODAL ===== */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -496,7 +471,6 @@
       animation: fadeIn 0.5s ease;
     }
 
-    /* ===== SEARCHING STATE ===== */
     .searching-animation {
       position: relative;
       width: 120px;
@@ -581,7 +555,6 @@
       color: var(--white);
     }
 
-    /* ===== DRIVER FOUND ===== */
     .driver-found {
       display: none;
     }
@@ -678,7 +651,6 @@
       animation: sosPulse 2s infinite;
     }
 
-    /* ===== NO COMMISSION BADGE ===== */
     .commission-badge {
       background: rgba(0, 200, 83, 0.1);
       border: 1px solid var(--green);
@@ -689,7 +661,6 @@
       color: var(--green);
     }
 
-    /* ===== SOS MODAL ===== */
     .sos-modal {
       display: none;
       position: fixed;
@@ -800,7 +771,6 @@
       margin-top: 10px;
     }
 
-    /* ===== RIDE TRACKING PANEL ===== */
     .tracking-panel {
       display: none;
       background: var(--card);
@@ -875,7 +845,6 @@
       gap: 10px;
     }
 
-    /* ===== FOOTER ===== */
     .footer-note {
       text-align: center;
       padding: 10px;
@@ -888,7 +857,6 @@
       text-decoration: none;
     }
 
-    /* ===== RESPONSIVE ===== */
     @media (max-height: 700px) {
       .booking-panel {
         padding: 15px;
@@ -904,7 +872,6 @@
 <body>
 <div class="app">
 
-  <!-- HEADER -->
   <header class="header">
     <div class="header-left">
       <span class="header-logo">🚗</span>
@@ -925,23 +892,19 @@
     </div>
   </header>
 
-  <!-- MAP -->
   <div class="map-container">
     <div id="map"></div>
     
-    <!-- Firebase Status -->
     <div class="firebase-status disconnected" id="firebaseStatus">
       <span class="status-dot"></span>
       <span id="firebaseStatusText">Hors ligne</span>
     </div>
     
-    <!-- Map Buttons -->
     <div class="map-buttons">
       <button class="my-location-btn" id="locationBtn" onclick="toggleGPSTracking()">📍</button>
     </div>
   </div>
 
-  <!-- BOOKING PANEL -->
   <div class="booking-panel" id="bookingPanel">
     <div class="panel-handle"></div>
     
@@ -950,7 +913,6 @@
       <span>Où allez-vous ?</span>
     </div>
 
-    <!-- INPUT FIELDS -->
     <div class="input-group">
       <div class="input-row">
         <div class="input-icon pickup">📍</div>
@@ -963,7 +925,6 @@
       </div>
     </div>
 
-    <!-- VEHICLE OPTIONS -->
     <div class="vehicle-options">
       <div class="vehicle-option selected" data-type="eco" data-multiplier="1" onclick="selectVehicle(this)">
         <div class="vehicle-icon">🚗</div>
@@ -991,7 +952,6 @@
       </div>
     </div>
 
-    <!-- PRICE SUMMARY -->
     <div class="price-summary" id="priceSummary">
       <div class="price-row">
         <span>Distance estimée</span>
@@ -1011,19 +971,16 @@
       </div>
     </div>
 
-    <!-- CONFIRM BUTTON -->
     <button class="confirm-btn" id="confirmBtn" onclick="confirmBooking()" disabled>
       <span>🚕</span>
       <span>Commander ma course</span>
     </button>
 
-    <!-- FOOTER NOTE -->
     <div class="footer-note">
       💰 Paiement en espèces au chauffeur • <a href="https://digiylyfe.com/page-inscription-digiy/">Devenir chauffeur</a>
     </div>
   </div>
 
-  <!-- TRACKING PANEL (shown during ride) -->
   <div class="tracking-panel" id="trackingPanel">
     <div class="panel-handle"></div>
     
@@ -1066,11 +1023,8 @@
 
 </div>
 
-<!-- SEARCHING MODAL -->
 <div class="modal-overlay" id="searchingModal">
   <div class="modal-card">
-    
-    <!-- SEARCHING STATE -->
     <div id="searchingState">
       <div class="searching-animation">
         <div class="searching-ripple"></div>
@@ -1097,7 +1051,6 @@
       </button>
     </div>
 
-    <!-- DRIVER FOUND STATE -->
     <div class="driver-found" id="driverFoundState">
       <div class="driver-avatar">👤</div>
       <div class="driver-name" id="foundDriverName">Mamadou D.</div>
@@ -1130,7 +1083,6 @@
   </div>
 </div>
 
-<!-- SOS MODAL -->
 <div class="sos-modal" id="sosModal">
   <div class="sos-card">
     <div class="sos-icon">🆘</div>
@@ -1156,11 +1108,8 @@
   </div>
 </div>
 
-<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
-
-<!-- LEAFLET JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
@@ -1175,20 +1124,149 @@
     appId: "1:1007962643384:web:20d26881e87f0dc37d0d4d"
   };
 
-  // ===== CONFIGURATION =====
+  // ===== CONFIG =====
   const API_URL = 'https://digiylyfe-api.onrender.com';
   const PRICE_PER_KM = 400;
   const MIN_PRICE = 1000;
   const EMERGENCY_NUMBER = 'tel:17';
-  const GPS_UPDATE_INTERVAL = 5000;
 
-  // ===== QUARTIERS / LIEUX =====
+  // ===== LOCATIONS =====
   const LOCATIONS = {
-    // ... (la grande liste LOCATIONS que tu as déjà, tu peux la laisser telle quelle)
-    "Aéroport International Blaise Diagne (AIBD)": { lat: 14.6700, lng: -17.0733 },
-    "AIBD Départs": { lat: 14.6712, lng: -17.0745 },
-    // (garde tout le reste identique ici)
-    "Sédhiou Centre": { lat: 12.7083, lng: -15.5569 }
+    'Aéroport International Blaise Diagne (AIBD)': { lat: 14.6700, lng: -17.0733 },
+    'AIBD Départs': { lat: 14.6712, lng: -17.0745 },
+    'AIBD Arrivées': { lat: 14.6689, lng: -17.0723 },
+    'AIBD Zone Hôtels': { lat: 14.6734, lng: -17.0778 },
+    'Diass': { lat: 14.6234, lng: -17.0567 },
+    'Ndiass': { lat: 14.6156, lng: -17.0489 },
+
+    'Médina': { lat: 14.6907, lng: -17.4559 },
+    'Plateau': { lat: 14.6695, lng: -17.4390 },
+    'Gare Routière Pompiers': { lat: 14.6756, lng: -17.4445 },
+    'Port de Dakar': { lat: 14.6734, lng: -17.4267 },
+    'Gare Ferroviaire Dakar': { lat: 14.6712, lng: -17.4378 },
+    'Almadies': { lat: 14.7445, lng: -17.5095 },
+    'Ouakam': { lat: 14.7228, lng: -17.4789 },
+    'Yoff': { lat: 14.7615, lng: -17.4685 },
+    'Yoff Virage': { lat: 14.7567, lng: -17.4623 },
+    'Yoff Layenne': { lat: 14.7634, lng: -17.4712 },
+    'Aéroport Léopold Sédar Senghor (LSS)': { lat: 14.7397, lng: -17.4902 },
+    'Yoff Aéroport': { lat: 14.7423, lng: -17.4867 },
+    'Parcelles Assainies': { lat: 14.7678, lng: -17.4234 },
+    'Parcelles U1': { lat: 14.7623, lng: -17.4289 },
+    'Parcelles U10': { lat: 14.7712, lng: -17.4178 },
+    'Parcelles U20': { lat: 14.7745, lng: -17.4123 },
+    'Grand Dakar': { lat: 14.6989, lng: -17.4467 },
+    'Liberté 6': { lat: 14.7156, lng: -17.4612 },
+    'Sacré-Cœur': { lat: 14.7234, lng: -17.4523 },
+    'Mermoz': { lat: 14.7012, lng: -17.4712 },
+    'Point E': { lat: 14.6923, lng: -17.4634 },
+    'Fann': { lat: 14.6845, lng: -17.4656 },
+    'Fann Résidence': { lat: 14.6812, lng: -17.4689 },
+    'Ngor': { lat: 14.7512, lng: -17.5156 },
+    'Ngor Plage': { lat: 14.7545, lng: -17.5189 },
+    'Mamelles': { lat: 14.7289, lng: -17.4934 },
+    'Sicap': { lat: 14.7123, lng: -17.4556 },
+    'Sicap Baobab': { lat: 14.7089, lng: -17.4589 },
+    'Sicap Liberté': { lat: 14.7167, lng: -17.4523 },
+    'HLM': { lat: 14.7345, lng: -17.4456 },
+    'HLM Grand Yoff': { lat: 14.7389, lng: -17.4489 },
+    'HLM Grand Médine': { lat: 14.7412, lng: -17.4423 },
+    'Keur Massar': { lat: 14.7834, lng: -17.3234 },
+    'Malika': { lat: 14.7956, lng: -17.3678 },
+
+    'Guédiawaye': { lat: 14.7689, lng: -17.4134 },
+    'Guédiawaye Golf Sud': { lat: 14.7723, lng: -17.4089 },
+    'Guédiawaye Médina Gounass': { lat: 14.7656, lng: -17.4167 },
+    'Guédiawaye Sam Notaire': { lat: 14.7701, lng: -17.4123 },
+    'Guédiawaye Ndiarème Limamoulaye': { lat: 14.7745, lng: -17.4201 },
+    'Guédiawaye Wakhinane Nimzatt': { lat: 14.7689, lng: -17.4089 },
+
+    'Pikine': { lat: 14.7645, lng: -17.3967 },
+    'Pikine Rue 10': { lat: 14.7612, lng: -17.3923 },
+    'Pikine Tally Boubess': { lat: 14.7678, lng: -17.3889 },
+    'Pikine Guinaw Rail': { lat: 14.7589, lng: -17.4012 },
+    'Pikine Thiaroye': { lat: 14.7534, lng: -17.3756 },
+    'Thiaroye Gare': { lat: 14.7489, lng: -17.3712 },
+    'Thiaroye sur Mer': { lat: 14.7423, lng: -17.3534 },
+    'Diamaguène': { lat: 14.7712, lng: -17.3834 },
+    'Yeumbeul': { lat: 14.7867, lng: -17.3556 },
+    'Yeumbeul Nord': { lat: 14.7912, lng: -17.3512 },
+    'Yeumbeul Sud': { lat: 14.7823, lng: -17.3589 },
+    'Mbao': { lat: 14.7289, lng: -17.3167 },
+
+    'Rufisque': { lat: 14.7167, lng: -17.2667 },
+    'Rufisque Est': { lat: 14.7201, lng: -17.2589 },
+    'Rufisque Ouest': { lat: 14.7134, lng: -17.2723 },
+    'Bargny': { lat: 14.6978, lng: -17.2234 },
+    'Sendou': { lat: 14.6834, lng: -17.1978 },
+    'Diamniadio': { lat: 14.7234, lng: -17.1834 },
+    'Sebikotane': { lat: 14.7456, lng: -17.1456 },
+
+    'Thiès Centre': { lat: 14.7886, lng: -16.9317 },
+    'Thiès Gare': { lat: 14.7956, lng: -16.9256 },
+    'Thiès Escale': { lat: 14.7812, lng: -16.9389 },
+
+    'Mbour Centre': { lat: 14.4167, lng: -16.9667 },
+    'Mbour Plage': { lat: 14.4234, lng: -16.9756 },
+    'Mbour Sérère': { lat: 14.4089, lng: -16.9589 },
+    'Mbour Gare Routière': { lat: 14.4145, lng: -16.9623 },
+    'Mbour Thiocé': { lat: 14.4201, lng: -16.9534 },
+    'Mbour Dialaw': { lat: 14.4712, lng: -17.0345 },
+    'Mbour Toubab Dialaw': { lat: 14.4823, lng: -17.0456 },
+    'Joal-Fadiouth': { lat: 14.1667, lng: -16.8333 },
+    'Joal Centre': { lat: 14.1623, lng: -16.8289 },
+    'Fadiouth Île': { lat: 14.1689, lng: -16.8378 },
+    'Nguékhokh': { lat: 14.5167, lng: -16.9500 },
+
+    'Saly Centre': { lat: 14.4500, lng: -16.9833 },
+    'Saly Portudal': { lat: 14.4456, lng: -17.0012 },
+    'Saly Niakh Niakhal': { lat: 14.4589, lng: -16.9756 },
+    'Saly Joseph': { lat: 14.4523, lng: -16.9801 },
+    'Saly Carrefour': { lat: 14.4478, lng: -16.9867 },
+    'Saly Tapée': { lat: 14.4412, lng: -16.9789 },
+    'Saly Koulang': { lat: 14.4567, lng: -16.9823 },
+    'Ngaparou': { lat: 14.4634, lng: -17.0089 },
+    'Ngaparou Plage': { lat: 14.4656, lng: -17.0123 },
+    'Somone': { lat: 14.4823, lng: -17.0678 },
+    'Somone Plage': { lat: 14.4867, lng: -17.0734 },
+    'Somone Lagune': { lat: 14.4789, lng: -17.0712 },
+    'Nianing': { lat: 14.4289, lng: -16.9534 },
+    'Nianing Plage': { lat: 14.4312, lng: -16.9567 },
+    'Malicounda': { lat: 14.5234, lng: -17.1234 },
+    'Popenguine': { lat: 14.5445, lng: -17.1267 },
+    'Warang': { lat: 14.4156, lng: -16.9423 },
+    'Sindia': { lat: 14.5012, lng: -16.9234 },
+
+    'Saint-Louis Centre': { lat: 16.0167, lng: -16.5000 },
+    'Saint-Louis Île': { lat: 16.0267, lng: -16.4934 },
+    'Sor': { lat: 16.0045, lng: -16.4812 },
+
+    'Kaolack Centre': { lat: 14.1500, lng: -16.0667 },
+    'Kaolack Médina': { lat: 14.1456, lng: -16.0712 },
+
+    'Ziguinchor Centre': { lat: 12.5833, lng: -16.2667 },
+    'Ziguinchor Kandé': { lat: 12.5789, lng: -16.2734 },
+
+    'Touba Centre': { lat: 14.8500, lng: -15.8833 },
+    'Touba Darou Khoudoss': { lat: 14.8567, lng: -15.8767 },
+
+    'Louga Centre': { lat: 15.6167, lng: -16.2167 },
+
+    'Tambacounda Centre': { lat: 13.7667, lng: -13.6667 },
+
+    'Kolda Centre': { lat: 12.9000, lng: -14.9500 },
+
+    'Matam Centre': { lat: 15.6500, lng: -13.2500 },
+
+    'Diourbel Centre': { lat: 14.6667, lng: -16.2333 },
+
+    'Fatick Centre': { lat: 14.3333, lng: -16.4167 },
+
+    'Kaffrine Centre': { lat: 14.1000, lng: -15.5500 },
+
+    'Kédougou Centre': { lat: 12.5600, lng: -12.1750 },
+
+    'Sédhiou Centre': { lat: 12.7083, lng: -15.5569 }
   };
 
   // ===== STATE =====
@@ -1196,7 +1274,6 @@
   let pickupMarker = null;
   let dropoffMarker = null;
   let routeLine = null;
-  let driverMarkers = [];
   let myPositionMarker = null;
   let myPosition = null;
   let gpsWatchId = null;
@@ -1215,10 +1292,9 @@
     price: 0
   };
 
-  let searchTimeout = null;
   let selectedDriver = null;
 
-  // ===== FIREBASE INITIALIZATION =====
+  // ===== FIREBASE INIT =====
   function initFirebase() {
     try {
       firebase.initializeApp(firebaseConfig);
@@ -1249,7 +1325,7 @@
     }
   }
 
-  // ===== GPS TRACKING =====
+  // ===== GPS =====
   function toggleGPSTracking() {
     if (isGPSTracking) {
       stopGPSTracking();
@@ -1363,7 +1439,7 @@
     }
   }
 
-  // ===== SOS SYSTEM =====
+  // ===== SOS =====
   function triggerSOS() {
     getCurrentPosition().then(position => {
       const lat = position.lat;
@@ -1409,7 +1485,7 @@
       driver: selectedDriver ? {
         name: selectedDriver.name,
         phone: selectedDriver.phone,
-        vehicle: `${selectedDriver.vehicle} ${selectedDriver.color || ''} ${selectedDriver.plate || ''}`.trim()
+        vehicle: `${selectedDriver.vehicle || ''} ${selectedDriver.color || ''} ${selectedDriver.plate || ''}`.trim()
       } : null,
       status: 'active'
     };
@@ -1455,7 +1531,7 @@
     }
   }
 
-  // ===== MAP INIT =====
+  // ===== MAP =====
   function initMap() {
     const SENEGAL_CENTER = [14.4974, -14.4524];
     map = L.map('map', {
@@ -1479,32 +1555,11 @@
     startGPSTracking();
   }
 
-  // ===== CENTER ON LOCATION =====
-  function centerOnMyLocation() {
-    if (myPosition) {
-      map.setView([myPosition.lat, myPosition.lng], 15);
-    } else if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          map.setView([lat, lng], 15);
-          myPosition = { lat, lng };
-          booking.pickup = myPosition;
-          document.getElementById('pickupInput').value = 'Ma position actuelle';
-          addPickupMarker(lat, lng);
-          checkIfReady();
-        },
-        () => alert('Impossible d\'obtenir votre position. Veuillez entrer votre adresse.')
-      );
-    }
-  }
-
   // ===== LOCATION PICKER =====
   function openLocationPicker(type) {
     const zones = [
       '✈️ AÉROPORTS',
-      '🏖️ SALY & PETITE CÔTE',
+      '🏖️ SALY & PETITE CÔTE', 
       '🏙️ MBOUR & JOAL',
       '🏙️ DAKAR CENTRE',
       '🏘️ DAKAR BANLIEUE',
@@ -1512,46 +1567,98 @@
       '🏛️ SAINT-LOUIS',
       '🏙️ AUTRES VILLES'
     ];
-
+    
     const zoneSelected = prompt(
-      `Choisissez d'abord une ZONE:\n\n${zones.map((z, i) => `${i + 1}. ${z}`).join('\n')}\n\nEntrez le numéro:`
+      `Choisissez d'abord une ZONE:\n\n` +
+      zones.map((z, i) => `${i + 1}. ${z}`).join('\n') +
+      `\n\nEntrez le numéro:`
     );
-    const zoneIndex = parseInt(zoneSelected) - 1;
-    if (zoneIndex < 0 || zoneIndex >= zones.length) return;
-
-    let filteredLocations = [];
-    // (logique de filtrage identique à ta version, je ne la réécris pas ici pour gagner de la place)
-    // Garde exactement ton code LOCATIONS + filtres ici.
-
-    // ... copie ton bloc de filtrage zones -> filteredLocations ...
-
-    if (filteredLocations.length === 0) {
-      alert('Aucun lieu trouvé dans cette zone');
+    
+    const zoneIndex = parseInt(zoneSelected, 10) - 1;
+    if (isNaN(zoneIndex) || zoneIndex < 0 || zoneIndex >= zones.length) {
       return;
     }
+    
+    let filteredLocations = [];
+    const allNames = Object.keys(LOCATIONS);
 
+    if (zoneIndex === 0) { // AÉROPORTS
+      filteredLocations = allNames.filter(l => 
+        l.includes('Aéroport') || l.includes('AIBD') || l.includes('LSS') || l.includes('Diass')
+      );
+    } else if (zoneIndex === 1) { // SALY & PETITE CÔTE
+      filteredLocations = allNames.filter(l => 
+        l.includes('Saly') || l.includes('Somone') || l.includes('Ngaparou') || 
+        l.includes('Nianing') || l.includes('Malicounda') || l.includes('Popenguine') ||
+        l.includes('Warang') || l.includes('Sindia')
+      );
+    } else if (zoneIndex === 2) { // MBOUR & JOAL
+      filteredLocations = allNames.filter(l => 
+        l.includes('Mbour') || l.includes('Joal') || l.includes('Fadiouth') || 
+        l.includes('Dialaw') || l.includes('Nguékhokh')
+      );
+    } else if (zoneIndex === 3) { // DAKAR CENTRE
+      filteredLocations = allNames.filter(l => 
+        l.includes('Médina') || l.includes('Plateau') || l.includes('Almadies') ||
+        l.includes('Ouakam') || l.includes('Yoff') || l.includes('Ngor') ||
+        l.includes('Sacré') || l.includes('Mermoz') || l.includes('Point E') ||
+        l.includes('Fann') || l.includes('Sicap') || l.includes('HLM') ||
+        l.includes('Liberté') || l.includes('Mamelles') || l.includes('Gare') ||
+        l.includes('Port')
+      );
+    } else if (zoneIndex === 4) { // DAKAR BANLIEUE
+      filteredLocations = allNames.filter(l => 
+        l.includes('Guédiawaye') || l.includes('Pikine') || l.includes('Parcelles') ||
+        l.includes('Rufisque') || l.includes('Thiaroye') || l.includes('Yeumbeul') ||
+        l.includes('Keur Massar') || l.includes('Malika') || l.includes('Diamaguène') ||
+        l.includes('Mbao') || l.includes('Bargny') || l.includes('Sendou') ||
+        l.includes('Diamniadio') || l.includes('Sebikotane')
+      );
+    } else if (zoneIndex === 5) { // THIÈS
+      filteredLocations = allNames.filter(l => l.includes('Thiès'));
+    } else if (zoneIndex === 6) { // SAINT-LOUIS
+      filteredLocations = allNames.filter(l => 
+        l.includes('Saint-Louis') || l.includes('Sor')
+      );
+    } else { // AUTRES VILLES
+      filteredLocations = allNames.filter(l => 
+        l.includes('Kaolack') || l.includes('Ziguinchor') || l.includes('Touba') ||
+        l.includes('Louga') || l.includes('Tambacounda') || l.includes('Kolda') ||
+        l.includes('Matam') || l.includes('Diourbel') || l.includes('Fatick') ||
+        l.includes('Kaffrine') || l.includes('Kédougou') || l.includes('Sédhiou')
+      );
+    }
+
+    if (filteredLocations.length === 0) {
+      filteredLocations = allNames;
+    }
+    
     const locationSelected = prompt(
       `${zones[zoneIndex]} - Choisissez le lieu:\n\n` +
       filteredLocations.map((l, i) => `${i + 1}. ${l}`).join('\n') +
       `\n\nEntrez le numéro:`
     );
-
-    const locationIndex = parseInt(locationSelected) - 1;
-    if (locationIndex >= 0 && locationIndex < filteredLocations.length) {
-      const locationName = filteredLocations[locationIndex];
-      const coords = LOCATIONS[locationName];
-
-      if (type === 'pickup') {
-        booking.pickup = coords;
-        document.getElementById('pickupInput').value = locationName;
-        addPickupMarker(coords.lat, coords.lng);
-      } else {
-        booking.dropoff = coords;
-        document.getElementById('dropoffInput').value = locationName;
-        addDropoffMarker(coords.lat, coords.lng);
-      }
-      checkIfReady();
+    
+    const locationIndex = parseInt(locationSelected, 10) - 1;
+    if (isNaN(locationIndex) || locationIndex < 0 || locationIndex >= filteredLocations.length) {
+      return;
     }
+    
+    const locationName = filteredLocations[locationIndex];
+    const coords = LOCATIONS[locationName];
+    if (!coords) return;
+    
+    if (type === 'pickup') {
+      booking.pickup = coords;
+      document.getElementById('pickupInput').value = locationName;
+      addPickupMarker(coords.lat, coords.lng);
+    } else {
+      booking.dropoff = coords;
+      document.getElementById('dropoffInput').value = locationName;
+      addDropoffMarker(coords.lat, coords.lng);
+    }
+    
+    checkIfReady();
   }
 
   // ===== MARKERS =====
@@ -1579,7 +1686,7 @@
     dropoffMarker = L.marker([lat, lng], { icon }).addTo(map);
   }
 
-  // ===== CHECK READY =====
+  // ===== READY CHECK =====
   function checkIfReady() {
     if (booking.pickup && booking.dropoff) {
       calculateRoute();
@@ -1637,12 +1744,14 @@
       booking.distance.toFixed(1) + ' km';
     document.getElementById('summaryDuration').textContent =
       booking.duration + ' min';
+    document.getElementById('summaryVehicle').textContent =
+      document.querySelector('.vehicle-option.selected .vehicle-name').textContent;
     document.getElementById('summaryTotal').textContent =
       booking.price.toLocaleString() + ' FCFA';
     document.getElementById('priceSummary').classList.add('show');
   }
 
-  // ===== VEHICLE SELECT =====
+  // ===== VEHICLE =====
   function selectVehicle(element) {
     document.querySelectorAll('.vehicle-option').forEach(el => el.classList.remove('selected'));
     element.classList.add('selected');
@@ -1671,8 +1780,6 @@
     document.getElementById('searchingState').style.display = 'block';
     document.getElementById('driverFoundState').classList.remove('show');
 
-    // 👉 On envoie seulement à Firebase / API
-    //    On ne simule plus de chauffeur côté client
     sendPulseToDrivers();
   }
 
@@ -1754,7 +1861,6 @@
           break;
 
         default:
-          // searching : on reste sur "Recherche d'un chauffeur..."
           break;
       }
 
@@ -1764,7 +1870,7 @@
     });
   }
 
-  // ===== DRIVER ACCEPTED (réel) =====
+  // ===== DRIVER ACCEPTED (RÉEL) =====
   function handleDriverAccepted(ride) {
     const driver = ride.driver || {};
     selectedDriver = driver;
@@ -1808,21 +1914,18 @@
   }
 
   function updateDriverPositionOnMap(position) {
-    // Optionnel: à connecter plus tard si tu veux voir le driver bouger sur la carte côté client
+    // À brancher plus tard si on veut suivre le chauffeur sur la carte côté client
   }
 
-  // ===== CONFIRM RIDE START (UI seulement) =====
+  // ===== UI START TRACKING =====
   function confirmRideStart() {
     document.getElementById('searchingModal').classList.remove('show');
     document.getElementById('bookingPanel').style.display = 'none';
     document.getElementById('trackingPanel').classList.add('show');
-    // ⚠️ On NE touche PAS au statut Firebase ici.
-    // C'est le chauffeur (driver.html) qui gère on_the_way / client_onboard / completed.
   }
 
-  // ===== CANCEL SEARCH / RIDE =====
+  // ===== CANCEL =====
   function cancelSearch() {
-    clearTimeout(searchTimeout);
     document.getElementById('searchingModal').classList.remove('show');
 
     if (currentRideId && firebaseDB) {
