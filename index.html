@@ -1901,35 +1901,58 @@
   }
 
   async function sendPulseToDrivers() {
-    const phoneInput = document.getElementById('clientPhone');
-    const clientPhone = phoneInput ? phoneInput.value.trim() : "";
+  // 🔵 ON RÉCUPÈRE LE TÉLÉPHONE DU CLIENT
+  const phoneInput = document.getElementById('clientPhone');
+  const clientPhone = phoneInput ? phoneInput.value.trim() : "";
 
-    const rideData = {
-      pickup: booking.pickup,
-      pickupName: document.getElementById('pickupInput').value,
-      dropoff: booking.dropoff,
-      dropoffName: document.getElementById('dropoffInput').value,
-      distance: booking.distance,
-      duration: booking.duration,
-      price: booking.price,
-      vehicleType: booking.vehicleType,
-      status: 'searching',
-      timestamp: firebase.database.ServerValue.TIMESTAMP,
-      clientPosition: myPosition || booking.pickup,
-      clientPhone: clientPhone || null   // 🔵 TÉLÉPHONE ENVOYÉ ICI
-    };
+  const rideData = {
+    pickup: booking.pickup,
+    pickupName: document.getElementById('pickupInput').value,
+    dropoff: booking.dropoff,
+    dropoffName: document.getElementById('dropoffInput').value,
+    distance: booking.distance,
+    duration: booking.duration,
+    price: booking.price,
+    vehicleType: booking.vehicleType,
+    status: 'searching',
+    timestamp: firebase.database.ServerValue.TIMESTAMP,
 
-    if (firebaseDB) {
-      try {
-        const newRideRef = firebaseDB.ref('rides').push();
-        currentRideId = newRideRef.key;
-        await newRideRef.set(rideData);
+    // 🔵 POSITION ACTUELLE CLIENT
+    clientPosition: myPosition || booking.pickup,
 
-        listenToRideUpdates(currentRideId);
-      } catch (error) {
-        console.error('Erreur Firebase:', error);
-      }
+    // 🔵 TÉLÉPHONE CLIENT (LE PLUS IMPORTANT)
+    clientPhone: clientPhone || null
+  };
+
+  // 🔥 ENVOI FIREBASE — VERSION DIGIY DRIVER OFFICIELLE
+  if (firebaseDB) {
+    try {
+      const newRideRef = firebaseDB.ref('rides').push();
+      currentRideId = newRideRef.key;
+
+      // 🔥 ON SAUVEGARDE LE TÉLÉPHONE DANS FIREBASE (correct, persistant)
+      await newRideRef.set(rideData);
+
+      // 🔥 ON ÉCOUTE LA COURSE EN TEMPS RÉEL
+      listenToRideUpdates(currentRideId);
+
+    } catch (error) {
+      console.error('Erreur Firebase:', error);
     }
+  }
+
+  // Option API externe (pas obligatoire)
+  try {
+    await fetch(`${API_URL}/api/courses/new`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rideData)
+    });
+  } catch (error) {
+    console.log('Mode démo - API non disponible');
+  }
+}
+
 
     try {
       await fetch(`${API_URL}/api/courses/new`, {
