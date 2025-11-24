@@ -1887,12 +1887,17 @@
     }
   }
 
-  function confirmBooking() {
-    document.getElementById('searchingModal').classList.add('show');
-    document.getElementById('searchingState').style.display = 'block';
-    document.getElementById('driverFoundState').classList.remove('show');
+ function confirmBooking() {
+  document.getElementById('searchingModal').classList.add('show');
+  document.getElementById('searchingState').style.display = 'block';
+  document.getElementById('driverFoundState').classList.remove('show');
 
-    sendPulseToDrivers();
+  // On envoie la demande aux chauffeurs (Firebase + API)
+  sendPulseToDrivers();
+
+  // ❌ On ne lance PLUS de "faux chauffeur" côté client.
+  // On attend qu'un VRAI chauffeur accepte via Firebase (listenToRideUpdates).
+}
 
     const searchTime = 3000 + Math.random() * 3000;
     searchTimeout = setTimeout(() => {
