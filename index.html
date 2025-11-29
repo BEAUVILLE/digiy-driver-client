@@ -849,6 +849,111 @@
       .booking-panel { padding: 15px; }
       .vehicle-option { padding: 10px 8px; }
     }
+
+    /* 🔥 OVERLAY PLEIN ÉCRAN POUR LES EMPLACEMENTS */
+    .location-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.97);
+      z-index: 2500;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .location-overlay.show {
+      display: flex;
+    }
+    .location-panel {
+      width: 100%;
+      max-width: 500px;
+      max-height: 100vh;
+      background: #111;
+      border-top-left-radius: 22px;
+      border-top-right-radius: 22px;
+      padding: 16px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      animation: slideUp 0.3s ease;
+    }
+    .location-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .location-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--gold);
+    }
+    .location-close {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .location-zones {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    .zone-pill {
+      flex-shrink: 0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      border: 1px solid #444;
+      background: #1a1a1a;
+      color: #fff;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .zone-pill.active {
+      border-color: var(--gold);
+      background: rgba(255,215,0,0.15);
+      color: var(--gold);
+    }
+    .location-list {
+      flex: 1;
+      overflow-y: auto;
+      margin-top: 6px;
+      border-radius: 14px;
+      background: #151515;
+      padding: 6px;
+    }
+    .location-item {
+      width: 100%;
+      text-align: left;
+      background: #202020;
+      border-radius: 10px;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      cursor: pointer;
+    }
+    .location-item span {
+      display: block;
+    }
+    .location-item:hover {
+      border-color: var(--gold);
+      background: #252525;
+    }
+    .location-helper {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
   </style>
 </head>
 
@@ -899,23 +1004,25 @@
     <div class="input-group">
       <div class="input-row">
         <div class="input-icon pickup">📍</div>
-        <input type="text" class="input-field" id="pickupInput" placeholder="Point de départ" onclick="openLocationPicker('pickup')">
+        <input type="text" class="input-field" id="pickupInput" placeholder="Point de départ" readonly onclick="openLocationPicker('pickup')">
       </div>
       <div class="input-divider"></div>
       <div class="input-row">
         <div class="input-icon dropoff">🏁</div>
-        <input type="text" class="input-field" id="dropoffInput" placeholder="Destination" onclick="openLocationPicker('dropoff')">
+        <input type="text" class="input-field" id="dropoffInput" placeholder="Destination" readonly onclick="openLocationPicker('dropoff')">
       </div>
-      <!-- 🔵 TÉLÉPHONE CLIENT -->
+      <!-- 🔵 TÉLÉPHONE CLIENT AVEC CLAVIER CHIFFRES -->
       <div class="input-row" style="margin-top:8px;">
         <div class="input-icon" style="background:rgba(59,130,246,0.2);color:#3b82f6;">
           📞
         </div>
         <input
           type="tel"
+          inputmode="tel"
+          autocomplete="tel"
           class="input-field"
           id="clientPhone"
-          placeholder="Téléphone (WhatsApp) pour le chauffeur"
+          placeholder="Téléphone WhatsApp du client"
         >
       </div>
     </div>
@@ -1016,6 +1123,21 @@
     </div>
   </div>
 
+</div>
+
+<!-- 🔥 OVERLAY FULLSCREEN POUR CHOIX D’EMPLACEMENT -->
+<div class="location-overlay" id="locationOverlay">
+  <div class="location-panel">
+    <div class="location-header">
+      <div class="location-title" id="locationTitle">Choisir un lieu</div>
+      <button class="location-close" onclick="closeLocationOverlay()">✕</button>
+    </div>
+    <div class="location-helper">
+      Tape sur une zone, puis choisis ton point exact. Grand texte lisible sur téléphone 👀
+    </div>
+    <div class="location-zones" id="locationZones"></div>
+    <div class="location-list" id="locationList"></div>
+  </div>
 </div>
 
 <div class="modal-overlay" id="searchingModal">
@@ -1287,6 +1409,149 @@
 
   let searchTimeout = null;
   let selectedDriver = null;
+
+  // 🔥 OVERLAY EMPLACEMENTS
+  let currentLocationType = 'pickup';
+
+  const ZONES_CONFIG = [
+    { id: 'aeroports',  label: '✈️ AÉROPORTS' },
+    { id: 'saly',       label: '🏖️ Saly & Petite Côte' },
+    { id: 'mbour',      label: '🏙️ Mbour & Joal' },
+    { id: 'dakar',      label: '🏙️ Dakar Centre' },
+    { id: 'banlieue',   label: '🏘️ Dakar Banlieue' },
+    { id: 'thies',      label: '🏙️ Thiès' },
+    { id: 'saintlouis', label: '🏛️ Saint-Louis' },
+    { id: 'autres',     label: '🌍 Autres villes' }
+  ];
+
+  function buildZoneButtons() {
+    const zonesContainer = document.getElementById('locationZones');
+    zonesContainer.innerHTML = '';
+    ZONES_CONFIG.forEach((zone, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'zone-pill' + (index === 0 ? ' active' : '');
+      btn.textContent = zone.label;
+      btn.dataset.zoneId = zone.id;
+      btn.onclick = () => selectZone(zone.id);
+      zonesContainer.appendChild(btn);
+    });
+  }
+
+  function filterLocationsByZone(zoneId) {
+    const allNames = Object.keys(LOCATIONS);
+    if (zoneId === 'aeroports') {
+      return allNames.filter(l =>
+        l.includes('Aéroport') || l.includes('AIBD') || l.includes('LSS') || l.includes('Diass')
+      );
+    }
+    if (zoneId === 'saly') {
+      return allNames.filter(l =>
+        l.includes('Saly') || l.includes('Somone') || l.includes('Ngaparou') ||
+        l.includes('Nianing') || l.includes('Malicounda') || l.includes('Popenguine') ||
+        l.includes('Warang') || l.includes('Sindia')
+      );
+    }
+    if (zoneId === 'mbour') {
+      return allNames.filter(l =>
+        l.includes('Mbour') || l.includes('Joal') || l.includes('Fadiouth') ||
+        l.includes('Dialaw') || l.includes('Nguékhokh')
+      );
+    }
+    if (zoneId === 'dakar') {
+      return allNames.filter(l =>
+        l.includes('Médina') || l.includes('Plateau') || l.includes('Almadies') ||
+        l.includes('Ouakam') || l.includes('Yoff') || l.includes('Ngor') ||
+        l.includes('Sacré') || l.includes('Mermoz') || l.includes('Point E') ||
+        l.includes('Fann') || l.includes('Sicap') || l.includes('HLM') ||
+        l.includes('Liberté') || l.includes('Mamelles') || l.includes('Gare') ||
+        l.includes('Port')
+      );
+    }
+    if (zoneId === 'banlieue') {
+      return allNames.filter(l =>
+        l.includes('Guédiawaye') || l.includes('Pikine') || l.includes('Parcelles') ||
+        l.includes('Rufisque') || l.includes('Thiaroye') || l.includes('Yeumbeul') ||
+        l.includes('Keur Massar') || l.includes('Malika') || l.includes('Diamaguène') ||
+        l.includes('Mbao') || l.includes('Bargny') || l.includes('Sendou') ||
+        l.includes('Diamniadio') || l.includes('Sebikotane')
+      );
+    }
+    if (zoneId === 'thies') {
+      return allNames.filter(l => l.includes('Thiès'));
+    }
+    if (zoneId === 'saintlouis') {
+      return allNames.filter(l => l.includes('Saint-Louis') || l.includes('Sor'));
+    }
+    if (zoneId === 'autres') {
+      return allNames.filter(l =>
+        l.includes('Kaolack') || l.includes('Ziguinchor') || l.includes('Touba') ||
+        l.includes('Louga') || l.includes('Tambacounda') || l.includes('Kolda') ||
+        l.includes('Matam') || l.includes('Diourbel') || l.includes('Fatick') ||
+        l.includes('Kaffrine') || l.includes('Kédougou') || l.includes('Sédhiou')
+      );
+    }
+    return allNames;
+  }
+
+  function renderLocationList(names) {
+    const list = document.getElementById('locationList');
+    list.innerHTML = '';
+    if (!names.length) {
+      const empty = document.createElement('div');
+      empty.style.padding = '16px';
+      empty.style.color = '#aaa';
+      empty.textContent = 'Aucun lieu trouvé dans cette zone.';
+      list.appendChild(empty);
+      return;
+    }
+    names.forEach(name => {
+      const btn = document.createElement('button');
+      btn.className = 'location-item';
+      btn.innerHTML = `<span>${name}</span>`;
+      btn.onclick = () => chooseLocation(name);
+      list.appendChild(btn);
+    });
+  }
+
+  function selectZone(zoneId) {
+    const pills = document.querySelectorAll('.zone-pill');
+    pills.forEach(p => {
+      p.classList.toggle('active', p.dataset.zoneId === zoneId);
+    });
+    const locations = filterLocationsByZone(zoneId);
+    renderLocationList(locations);
+  }
+
+  function openLocationPicker(type) {
+    currentLocationType = type;
+    const title = document.getElementById('locationTitle');
+    title.textContent = type === 'pickup'
+      ? 'Choisir le point de départ'
+      : 'Choisir la destination';
+    document.getElementById('locationOverlay').classList.add('show');
+    selectZone(ZONES_CONFIG[0].id);
+  }
+
+  function closeLocationOverlay() {
+    document.getElementById('locationOverlay').classList.remove('show');
+  }
+
+  function chooseLocation(locationName) {
+    const coords = LOCATIONS[locationName];
+    if (!coords) return;
+
+    if (currentLocationType === 'pickup') {
+      booking.pickup = coords;
+      document.getElementById('pickupInput').value = locationName;
+      addPickupMarker(coords.lat, coords.lng);
+    } else {
+      booking.dropoff = coords;
+      document.getElementById('dropoffInput').value = locationName;
+      addDropoffMarker(coords.lat, coords.lng);
+    }
+    closeLocationOverlay();
+    checkIfReady();
+  }
 
   function initFirebase() {
     try {
@@ -1675,101 +1940,6 @@
     }
   }
 
-  function openLocationPicker(type) {
-    const zones = [
-      '✈️ AÉROPORTS',
-      '🏖️ SALY & PETITE CÔTE', 
-      '🏙️ MBOUR & JOAL',
-      '🏙️ DAKAR CENTRE',
-      '🏘️ DAKAR BANLIEUE',
-      '🏙️ THIÈS',
-      '🏛️ SAINT-LOUIS',
-      '🏙️ AUTRES VILLES'
-    ];
-
-    const zoneSelected = prompt(
-      `Choisissez d'abord une ZONE:\n\n${zones.map((z, i) => `${i + 1}. ${z}`).join('\n')}\n\nEntrez le numéro:`
-    );
-    const zoneIndex = parseInt(zoneSelected) - 1;
-    if (isNaN(zoneIndex) || zoneIndex < 0 || zoneIndex >= zones.length) return;
-
-    let filteredLocations = [];
-
-    if (zoneIndex === 0) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Aéroport') || l.includes('AIBD') || l.includes('LSS') || l.includes('Diass')
-      );
-    } else if (zoneIndex === 1) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Saly') || l.includes('Somone') || l.includes('Ngaparou') || 
-        l.includes('Nianing') || l.includes('Malicounda') || l.includes('Popenguine') ||
-        l.includes('Warang') || l.includes('Sindia')
-      );
-    } else if (zoneIndex === 2) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Mbour') || l.includes('Joal') || l.includes('Fadiouth') || 
-        l.includes('Dialaw') || l.includes('Nguékhokh')
-      );
-    } else if (zoneIndex === 3) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Médina') || l.includes('Plateau') || l.includes('Almadies') ||
-        l.includes('Ouakam') || l.includes('Yoff') || l.includes('Ngor') ||
-        l.includes('Sacré') || l.includes('Mermoz') || l.includes('Point E') ||
-        l.includes('Fann') || l.includes('Sicap') || l.includes('HLM') ||
-        l.includes('Liberté') || l.includes('Mamelles') || l.includes('Gare') ||
-        l.includes('Port')
-      );
-    } else if (zoneIndex === 4) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Guédiawaye') || l.includes('Pikine') || l.includes('Parcelles') ||
-        l.includes('Rufisque') || l.includes('Thiaroye') || l.includes('Yeumbeul') ||
-        l.includes('Keur Massar') || l.includes('Malika') || l.includes('Diamaguène') ||
-        l.includes('Mbao') || l.includes('Bargny') || l.includes('Sendou') ||
-        l.includes('Diamniadio') || l.includes('Sebikotane')
-      );
-    } else if (zoneIndex === 5) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => l.includes('Thiès'));
-    } else if (zoneIndex === 6) {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Saint-Louis') || l.includes('Sor')
-      );
-    } else {
-      filteredLocations = Object.keys(LOCATIONS).filter(l => 
-        l.includes('Kaolack') || l.includes('Ziguinchor') || l.includes('Touba') ||
-        l.includes('Louga') || l.includes('Tambacounda') || l.includes('Kolda') ||
-        l.includes('Matam') || l.includes('Diourbel') || l.includes('Fatick') ||
-        l.includes('Kaffrine') || l.includes('Kédougou') || l.includes('Sédhiou')
-      );
-    }
-
-    if (filteredLocations.length === 0) {
-      alert('Aucun lieu trouvé dans cette zone');
-      return;
-    }
-
-    const locationSelected = prompt(
-      `${zones[zoneIndex]} - Choisissez le lieu:\n\n${filteredLocations.map((l, i) => `${i + 1}. ${l}`).join('\n')}\n\nEntrez le numéro:`
-    );
-
-    const locationIndex = parseInt(locationSelected) - 1;
-    if (isNaN(locationIndex) || locationIndex < 0 || locationIndex >= filteredLocations.length) return;
-
-    const locationName = filteredLocations[locationIndex];
-    const coords = LOCATIONS[locationName];
-
-    if (type === 'pickup') {
-      booking.pickup = coords;
-      document.getElementById('pickupInput').value = locationName;
-      addPickupMarker(coords.lat, coords.lng);
-    } else {
-      booking.dropoff = coords;
-      document.getElementById('dropoffInput').value = locationName;
-      addDropoffMarker(coords.lat, coords.lng);
-    }
-
-    checkIfReady();
-  }
-
   function addPickupMarker(lat, lng) {
     if (pickupMarker) map.removeLayer(pickupMarker);
 
@@ -1888,17 +2058,12 @@
     }
   }
 
-  // 🔵 VERSION SANS FAUX CHAUFFEURS
   function confirmBooking() {
     document.getElementById('searchingModal').classList.add('show');
     document.getElementById('searchingState').style.display = 'block';
     document.getElementById('driverFoundState').classList.remove('show');
 
-    // Envoie la demande aux chauffeurs (Firebase + API)
     sendPulseToDrivers();
-
-    // On n'appelle plus driverFound() ici :
-    // on attend qu'un vrai chauffeur accepte via Firebase (handleDriverAccepted).
   }
 
   async function sendPulseToDrivers() {
@@ -1917,7 +2082,7 @@
       status: 'searching',
       timestamp: firebase.database.ServerValue.TIMESTAMP,
       clientPosition: myPosition || booking.pickup,
-      clientPhone: clientPhone || null   // 🔵 TÉLÉPHONE ENVOYÉ ICI
+      clientPhone: clientPhone || null
     };
 
     if (firebaseDB) {
@@ -2002,7 +2167,6 @@
     }
   }
 
-  // 🔵 driverFound = affichage quand VRAI chauffeur accepté
   function driverFound() {
     if (!selectedDriver) {
       document.getElementById('searchingModal').classList.remove('show');
@@ -2030,7 +2194,6 @@
     document.getElementById('trackingPrice').textContent =
       `${booking.price.toLocaleString()} FCFA`;
 
-    // On ne réécrit plus Firebase ici : le panel chauffeur l'a déjà fait.
     setTimeout(() => {
       confirmRideStart();
     }, 3000);
@@ -2109,6 +2272,7 @@
     initFirebase();
     initMap();
     listenToDrivers();
+    buildZoneButtons();
   });
 </script>
 
