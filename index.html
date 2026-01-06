@@ -1,383 +1,560 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <title>Réservation rapide — DIGIYLYFE</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#16a34a" />
-  <meta name="description" content="Réservez sans compte - VTC, restaurant, logement, livraison" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DIGIY DRIVER - Commander un VTC</title>
+  <meta name="theme-color" content="#16a34a">
+  <meta name="description" content="Commandez votre VTC au Sénégal - 0% commission">
+  
   <style>
-    :root{ --green:#16a34a; --gold:#facc15; --orange:#f97316; }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:system-ui,-apple-system,sans-serif;
-      background:
-        radial-gradient(circle at 20% 10%, rgba(250,204,21,0.15), transparent 50%),
-        radial-gradient(circle at 80% 90%, rgba(22,163,74,0.12), transparent 50%),
-        linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
-      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+    :root {
+      --green: #16a34a;
+      --gold: #facc15;
+      --orange: #f97316;
+      --dark: #0f172a;
+      --gray: #64748b;
     }
-    .box{
-      background:#ffffff; padding:40px; border-radius:24px;
-      box-shadow:0 20px 60px rgba(0,0,0,.12);
-      max-width:500px; width:100%;
-      border:1px solid rgba(148,163,184,0.2);
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .logo{
-      width:64px; height:64px; border-radius:20px;
-      background:linear-gradient(135deg,var(--gold),var(--orange));
-      display:flex; align-items:center; justify-content:center;
-      font-size:32px; margin:0 auto 20px;
-      box-shadow:0 12px 32px rgba(249,115,22,0.25);
+    
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+      min-height: 100vh;
+      padding: 20px;
     }
-    h1{
-      margin:0 0 10px; font-size:28px; text-align:center;
-      background:linear-gradient(135deg,var(--green),var(--gold));
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-      font-weight:900;
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    .sub{
-      color:#64748b; margin:0 0 28px; font-size:15px; line-height:1.6;
-      text-align:center; font-weight:600;
+    
+    /* Header */
+    .header {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .sub strong{color:#0f172a}
-    .badge{
-      background:linear-gradient(135deg, #dcfce7, #d1fae5);
-      border:2px solid #22c55e;
-      padding:10px 16px; border-radius:12px; margin-bottom:28px;
-      font-weight:800; color:#065f46; text-align:center;
-      font-size:12px; letter-spacing:.08em;
-      display:inline-block;
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--green);
     }
-    .form-group{margin-bottom:18px}
-    label{
-      display:block; margin-bottom:8px; font-weight:800; 
-      font-size:14px; color:#0f172a;
-      display:flex; align-items:center; gap:8px;
+    
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--gold), var(--orange));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
     }
-    input{
-      width:100%; padding:14px 16px;
-      border:2px solid #e2e8f0; border-radius:12px;
-      font-size:15px; background:#ffffff; color:#0f172a; font-weight:600;
-      transition:all .2s;
+    
+    .header-actions {
+      display: flex;
+      gap: 12px;
     }
-    input:focus{outline:none; border-color:var(--green); box-shadow:0 0 0 3px rgba(22,163,74,0.1)}
-    input::placeholder{color:#94a3b8}
-    .btn{
-      width:100%; padding:16px;
-      background:linear-gradient(135deg,var(--green),#22c55e);
-      color:#fff; border:none; border-radius:12px;
-      font-weight:900; font-size:16px; cursor:pointer;
-      letter-spacing:.05em;
-      box-shadow:0 8px 20px rgba(22,163,74,0.3);
-      transition:all .2s;
+    
+    .btn-header {
+      padding: 10px 20px;
+      border: 2px solid var(--green);
+      background: white;
+      color: var(--green);
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
     }
-    .btn:hover{transform:translateY(-2px); box-shadow:0 12px 28px rgba(22,163,74,0.4)}
-    .btn:disabled{opacity:.6; cursor:not-allowed; transform:none}
-    .msg{
-      margin:16px 0 0; padding:14px; border-radius:10px;
-      font-size:14px; display:none; font-weight:700;
+    
+    .btn-header:hover {
+      background: var(--green);
+      color: white;
     }
-    .msg.error{background:#fee2e2; color:#991b1b; border:2px solid #fca5a5; display:block}
-    .msg.success{background:#dcfce7; color:#065f46; border:2px solid #86efac; display:block}
-    .footer{
-      text-align:center; margin:24px 0 0;
-      color:#64748b; font-size:14px; font-weight:600;
-      line-height:1.8;
+    
+    /* Main Content */
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
     }
-    .footer a{color:var(--green); text-decoration:none; font-weight:800; transition:color .2s}
-    .footer a:hover{color:var(--gold)}
-    @media(max-width:480px){
-      .box{padding:28px 20px}
-      h1{font-size:24px}
+    
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    }
+    
+    .card h2 {
+      font-size: 28px;
+      color: var(--dark);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .badge {
+      background: linear-gradient(135deg, #dcfce7, #d1fae5);
+      border: 2px solid #22c55e;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 800;
+      color: #065f46;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    
+    /* Form */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+    
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--green), #22c55e);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 16px;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      box-shadow: 0 8px 20px rgba(22, 163, 74, 0.3);
+      transition: all 0.2s;
+      margin-top: 10px;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(22, 163, 74, 0.4);
+    }
+    
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    /* Price Display */
+    .price-display {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 2px solid #fbbf24;
+      padding: 20px;
+      border-radius: 16px;
+      margin: 20px 0;
+      display: none;
+    }
+    
+    .price-display.show {
+      display: block;
+    }
+    
+    .price-display h3 {
+      color: #78350f;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    
+    .price-amount {
+      font-size: 32px;
+      font-weight: 900;
+      color: #78350f;
+    }
+    
+    /* Features */
+    .features {
+      display: grid;
+      gap: 16px;
+    }
+    
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .feature-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    
+    .feature-text {
+      font-weight: 600;
+      color: var(--dark);
+      font-size: 14px;
+    }
+    
+    /* Message */
+    .msg {
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      margin: 16px 0;
+      display: none;
+    }
+    
+    .msg.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 2px solid #fca5a5;
+      display: block;
+    }
+    
+    .msg.success {
+      background: #dcfce7;
+      color: #065f46;
+      border: 2px solid #86efac;
+      display: block;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+      
+      .card {
+        padding: 24px;
+      }
     }
   </style>
 </head>
-
 <body>
-<div class="box">
-  <div class="logo" id="moduleLogo">⚡</div>
-  <h1 id="moduleTitle">Réservation rapide</h1>
-  <div class="sub" id="moduleSubtitle">
-    Sans créer de compte, <strong>juste votre numéro</strong>
-  </div>
 
-  <div style="text-align:center; margin-bottom:24px;">
-    <span class="badge">✅ GRATUIT · SANS ENGAGEMENT</span>
-  </div>
-
-  <form id="quickBookForm">
-    <div class="form-group">
-      <label>
-        <span>📱</span>
-        <span>Votre numéro de téléphone *</span>
-      </label>
-      <input 
-        type="tel" 
-        id="guestPhone" 
-        required 
-        placeholder="+221 77 123 45 67" 
-        autocomplete="tel"
-        pattern="[\+]?[0-9\s]+"
-      />
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">🚗</div>
+      <span>DIGIY DRIVER</span>
     </div>
-
-    <div class="form-group" id="nameField">
-      <label>
-        <span>👤</span>
-        <span>Votre nom (pour la réservation) *</span>
-      </label>
-      <input 
-        type="text" 
-        id="guestName" 
-        placeholder="Astou Diop" 
-        autocomplete="name"
-      />
+    <div class="header-actions">
+      <a href="/connexion-client.html" class="btn-header">👤 Connexion</a>
+      <a href="/inscription-client.html" class="btn-header">✨ S'inscrire</a>
     </div>
-
-    <div class="form-group" id="emailField" style="display:none;">
-      <label>
-        <span>📧</span>
-        <span>Votre email *</span>
-      </label>
-      <input 
-        type="email" 
-        id="guestEmail" 
-        placeholder="astou@example.com" 
-        autocomplete="email"
-      />
+  </div>
+  
+  <!-- Main Content -->
+  <div class="main-content">
+    
+    <!-- Left: Booking Form -->
+    <div class="card">
+      <div class="badge">✅ 0% COMMISSION · PAIEMENT DIRECT</div>
+      
+      <h2>🚗 Commander un VTC</h2>
+      
+      <form id="bookingForm">
+        <div class="form-group">
+          <label>📍 Point de départ</label>
+          <input 
+            type="text" 
+            id="pickup" 
+            placeholder="Ex: Dakar Centre, Plateau..."
+            required
+          />
+        </div>
+        
+        <div class="form-group">
+          <label>📍 Destination</label>
+          <input 
+            type="text" 
+            id="destination" 
+            placeholder="Ex: Aéroport Blaise Diagne..."
+            required
+          />
+        </div>
+        
+        <div class="form-group">
+          <label>🚗 Type de véhicule</label>
+          <select id="vehicleType" required>
+            <option value="">Choisir...</option>
+            <option value="standard">Standard (4 places)</option>
+            <option value="comfort">Confort (4 places)</option>
+            <option value="van">Van (7 places)</option>
+            <option value="premium">Premium (4 places)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>👥 Nombre de passagers</label>
+          <select id="passengers" required>
+            <option value="1">1 passager</option>
+            <option value="2">2 passagers</option>
+            <option value="3">3 passagers</option>
+            <option value="4">4 passagers</option>
+            <option value="5">5 passagers</option>
+            <option value="6">6 passagers</option>
+            <option value="7">7 passagers</option>
+          </select>
+        </div>
+        
+        <div class="price-display" id="priceDisplay">
+          <h3>💰 Prix estimé</h3>
+          <div class="price-amount" id="priceAmount">--</div>
+          <p style="font-size: 12px; color: #78350f; margin-top: 8px;">
+            Prix indicatif - Le chauffeur confirmera le montant final
+          </p>
+        </div>
+        
+        <button type="submit" class="btn-primary" id="btnEstimate">
+          💰 Estimer le prix
+        </button>
+        
+        <button type="button" class="btn-primary" id="btnBook" style="display: none;">
+          🚗 Confirmer la réservation
+        </button>
+      </form>
+      
+      <div id="msg" class="msg"></div>
     </div>
     
-    <button type="submit" class="btn" id="btnContinue">
-      <span id="btnText">⚡ Continuer</span>
-    </button>
-  </form>
-
-  <div id="msg" class="msg"></div>
-
-  <div class="footer">
-    Vous avez déjà un compte ? <a href="connexion-client.html">Se connecter</a><br>
-    <a href="digiy-hub/" style="color:#94a3b8;font-weight:600;">← Retour DIGIY Hub</a>
+    <!-- Right: Features & Info -->
+    <div class="card">
+      <h2>✨ Pourquoi DIGIY DRIVER ?</h2>
+      
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">💰</div>
+          <div class="feature-text">
+            <strong>0% commission</strong><br>
+            Les chauffeurs gardent 100% de leurs gains
+          </div>
+        </div>
+        
+        <div class="feature">
+          <div class="feature-icon">💳</div>
+          <div class="feature-text">
+            <strong>Paiement direct</strong><br>
+            Payez votre chauffeur directement (cash, Wave, Orange Money)
+          </div>
+        </div>
+        
+        <div class="feature">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-text">
+            <strong>Disponible 24/7</strong><br>
+            Commandez un VTC à tout moment
+          </div>
+        </div>
+        
+        <div class="feature">
+          <div class="feature-icon">🛡️</div>
+          <div class="feature-text">
+            <strong>Chauffeurs vérifiés</strong><br>
+            Tous nos chauffeurs sont vérifiés et assurés
+          </div>
+        </div>
+        
+        <div class="feature">
+          <div class="feature-icon">📱</div>
+          <div class="feature-text">
+            <strong>Suivi en temps réel</strong><br>
+            Suivez votre chauffeur en direct sur la carte
+          </div>
+        </div>
+        
+        <div class="feature">
+          <div class="feature-icon">⭐</div>
+          <div class="feature-text">
+            <strong>Service de qualité</strong><br>
+            Note moyenne : 4.8/5 - Plus de 10,000 courses
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 12px;">
+        <h3 style="color: var(--dark); margin-bottom: 12px; font-size: 16px;">
+          🎁 Nouveau client ?
+        </h3>
+        <p style="color: var(--gray); font-size: 14px; margin-bottom: 16px;">
+          Créez votre compte gratuitement et accédez à tous les services DIGIYLYFE
+        </p>
+        <a href="/inscription-client.html" class="btn-primary" style="display: inline-block; text-align: center; text-decoration: none;">
+          ✨ Créer mon compte gratuit
+        </a>
+      </div>
+    </div>
+    
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-console.log("🦅 DIGIYLYFE - Réservation rapide chargée");
+console.log('🚗 DIGIY DRIVER - Interface client chargée');
 
-/* 🔐 SUPABASE — DÉJÀ POSÉ */
-const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
-
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-/* 🎯 CONFIGURATION DES MODULES */
-const MODULES = {
-  driver: {
-    logo: '🚗',
-    title: 'Commander sans compte',
-    subtitle: 'Réservez votre VTC rapidement',
-    needName: true,
-    needEmail: false,
-    nextPage: 'digiy-driver-order.html',
-    buttonText: '🚗 Commander maintenant'
-  },
-  
-  resa: {
-    logo: '🍽️',
-    title: 'Réserver sans compte',
-    subtitle: 'Réservez votre table au restaurant',
-    needName: true,
-    needEmail: true,
-    nextPage: 'digiy-resa-booking.html',
-    buttonText: '🍽️ Réserver maintenant'
-  },
-  
-  loc: {
-    logo: '🏠',
-    title: 'Louer sans compte',
-    subtitle: 'Réservez votre logement',
-    needName: true,
-    needEmail: true,
-    nextPage: 'digiy-loc-booking.html',
-    buttonText: '🏠 Voir les disponibilités'
-  },
-  
-  ndimbal: {
-    logo: '📦',
-    title: 'Livraison express',
-    subtitle: 'Commandez votre livraison rapidement',
-    needName: true,
-    needEmail: false,
-    nextPage: 'digiy-ndimbal-order.html',
-    buttonText: '📦 Commander livraison'
-  },
-
-  market: {
-    logo: '🛒',
-    title: 'Acheter sans compte',
-    subtitle: 'Commandez sur notre marketplace',
-    needName: true,
-    needEmail: false,
-    nextPage: 'digiy-market-shop.html',
-    buttonText: '🛒 Découvrir le market'
-  }
+// Prix de base par km (en FCFA)
+const PRICE_PER_KM = {
+  standard: 200,
+  comfort: 300,
+  van: 350,
+  premium: 500
 };
 
-/* 📱 DÉTECTION DU MODULE */
-const urlParams = new URLSearchParams(window.location.search);
-const moduleKey = (urlParams.get('module') || 'driver').toLowerCase();
-const config = MODULES[moduleKey] || MODULES.driver;
+// Prix minimum (en FCFA)
+const MIN_PRICE = 2000;
 
-/* 🎨 PERSONNALISATION DE LA PAGE */
-document.getElementById('moduleLogo').textContent = config.logo;
-document.getElementById('moduleTitle').textContent = config.title;
-document.getElementById('moduleSubtitle').innerHTML = config.subtitle + '<br><strong>Sans créer de compte</strong>';
-document.getElementById('btnText').textContent = config.buttonText;
+// Distance estimée entre lieux (à remplacer par Google Maps API)
+const ESTIMATED_DISTANCES = {
+  'dakar_centre_aeroportblaise': 50,
+  'dakar_centre_rufisque': 25,
+  'plateau_almadies': 15,
+  'default': 20
+};
 
-// Afficher/masquer les champs selon le module
-const nameField = document.getElementById('nameField');
-const emailField = document.getElementById('emailField');
-const guestName = document.getElementById('guestName');
-const guestEmail = document.getElementById('guestEmail');
-
-if (config.needName) {
-  nameField.style.display = 'block';
-  guestName.required = true;
-} else {
-  nameField.style.display = 'none';
-  guestName.required = false;
-}
-
-if (config.needEmail) {
-  emailField.style.display = 'block';
-  guestEmail.required = true;
-} else {
-  emailField.style.display = 'none';
-  guestEmail.required = false;
-}
-
-/* 🛠️ FONCTIONS UTILITAIRES */
 function showMsg(text, type = 'error') {
   const msg = document.getElementById('msg');
   msg.textContent = text;
   msg.className = 'msg ' + type;
 }
 
-function validatePhone(phone) {
-  // Format Sénégal: +221 XX XXX XX XX
-  const cleaned = phone.replace(/\s+/g, '');
-  const regex = /^(\+?221)?[7][0-9]{8}$/;
-  return regex.test(cleaned);
+function estimateDistance(pickup, destination) {
+  // TODO: Intégrer Google Maps Distance Matrix API
+  // Pour l'instant, retourne une estimation par défaut
+  return ESTIMATED_DISTANCES.default;
 }
 
-function normalizePhone(phone) {
-  // Normalise au format +221XXXXXXXXX
-  let cleaned = phone.replace(/\s+/g, '').replace(/^00/, '+');
-  if (cleaned.startsWith('221')) cleaned = '+' + cleaned;
-  if (cleaned.startsWith('7')) cleaned = '+221' + cleaned;
-  return cleaned;
+function calculatePrice(distance, vehicleType) {
+  const pricePerKm = PRICE_PER_KM[vehicleType] || PRICE_PER_KM.standard;
+  const totalPrice = distance * pricePerKm;
+  return Math.max(totalPrice, MIN_PRICE);
 }
 
-/* 📝 SOUMISSION DU FORMULAIRE */
-document.getElementById('quickBookForm').addEventListener('submit', async (e) => {
+// Formulaire d'estimation
+document.getElementById('bookingForm').addEventListener('submit', (e) => {
   e.preventDefault();
   
-  const phone = document.getElementById('guestPhone').value.trim();
-  const name = guestName.value.trim();
-  const email = guestEmail.value.trim();
+  const pickup = document.getElementById('pickup').value.trim();
+  const destination = document.getElementById('destination').value.trim();
+  const vehicleType = document.getElementById('vehicleType').value;
+  const passengers = document.getElementById('passengers').value;
   
-  // Validation téléphone
-  if (!validatePhone(phone)) {
-    showMsg('⚠️ Numéro de téléphone invalide. Format: +221 77 123 45 67');
-    return;
-  }
-
-  // Validation nom si requis
-  if (config.needName && !name) {
-    showMsg('⚠️ Veuillez entrer votre nom');
-    return;
-  }
-
-  // Validation email si requis
-  if (config.needEmail && !email) {
-    showMsg('⚠️ Veuillez entrer votre email');
+  if (!pickup || !destination || !vehicleType) {
+    showMsg('⚠️ Veuillez remplir tous les champs');
     return;
   }
   
-  const btnContinue = document.getElementById('btnContinue');
-  const btnText = document.getElementById('btnText');
+  // Calculer le prix
+  const distance = estimateDistance(pickup, destination);
+  const price = calculatePrice(distance, vehicleType);
   
-  btnContinue.disabled = true;
-  btnText.textContent = '⏳ Vérification...';
+  // Afficher le prix
+  document.getElementById('priceAmount').textContent = `${price.toLocaleString('fr-FR')} FCFA`;
+  document.getElementById('priceDisplay').classList.add('show');
   
-  try {
-    const normalizedPhone = normalizePhone(phone);
-    
-    console.log('📞 Création réservation guest:', {
-      phone: normalizedPhone,
-      name: name || null,
-      email: email || null,
-      module: moduleKey
-    });
+  // Changer le bouton
+  document.getElementById('btnEstimate').style.display = 'none';
+  document.getElementById('btnBook').style.display = 'block';
+  
+  showMsg('✅ Prix estimé calculé ! Cliquez pour confirmer la réservation', 'success');
+  
+  console.log('Estimation:', {
+    pickup,
+    destination,
+    vehicleType,
+    passengers,
+    distance,
+    price
+  });
+});
 
-    // Insertion dans guest_bookings
-    const { data, error } = await sb
-      .from('guest_bookings')
-      .insert({
-        phone: normalizedPhone,
-        name: name || null,
-        email: email || null,
-        module: moduleKey,
-        status: 'initiated',
-        booking_details: {},
-        created_at: new Date().toISOString()
-      })
-      .select()
-      .single();
-    
-    if (error) {
-      console.error('❌ Erreur Supabase:', error);
-      throw new Error(error.message);
-    }
-    
-    console.log('✅ Réservation créée:', data);
-    
-    // Sauvegarde en localStorage (backup)
-    localStorage.setItem('guestSession', JSON.stringify({
-      bookingId: data.id,
-      phone: normalizedPhone,
-      name: name || null,
-      email: email || null,
-      module: moduleKey,
+// Bouton de confirmation
+document.getElementById('btnBook').addEventListener('click', () => {
+  // Vérifier si l'utilisateur est connecté
+  // TODO: Vérifier session Supabase
+  
+  const pickup = document.getElementById('pickup').value;
+  const destination = document.getElementById('destination').value;
+  const vehicleType = document.getElementById('vehicleType').value;
+  const passengers = document.getElementById('passengers').value;
+  const price = document.getElementById('priceAmount').textContent;
+  
+  // Rediriger vers réservation rapide si pas connecté
+  showMsg('🔄 Redirection vers la réservation...', 'success');
+  
+  setTimeout(() => {
+    // Sauvegarder les détails
+    localStorage.setItem('pendingBooking', JSON.stringify({
+      pickup,
+      destination,
+      vehicleType,
+      passengers,
+      estimatedPrice: price,
       timestamp: Date.now()
     }));
     
-    showMsg('✅ Vérification réussie ! Redirection...', 'success');
-    
-    // Redirection vers la page du module
-    setTimeout(() => {
-      window.location.href = `${config.nextPage}?guest=true&bookingId=${data.id}`;
-    }, 800);
-    
-  } catch (err) {
-    console.error('❌ Erreur:', err);
-    showMsg('❌ ' + (err.message || 'Erreur de connexion. Réessayez.'));
-    btnContinue.disabled = false;
-    btnText.textContent = config.buttonText;
-  }
+    // Rediriger
+    window.location.href = '/reservation-rapide.html?module=driver';
+  }, 1000);
 });
 
-/* 📊 ANALYTICS (optionnel) */
-// Track page view
-if (window.gtag) {
-  gtag('event', 'page_view', {
-    page_title: 'Guest Booking - ' + moduleKey,
-    page_location: window.location.href
+// Réinitialiser si on change un champ
+['pickup', 'destination', 'vehicleType', 'passengers'].forEach(id => {
+  document.getElementById(id).addEventListener('change', () => {
+    document.getElementById('priceDisplay').classList.remove('show');
+    document.getElementById('btnEstimate').style.display = 'block';
+    document.getElementById('btnBook').style.display = 'none';
+    document.getElementById('msg').style.display = 'none';
   });
-}
+});
 </script>
+
 </body>
 </html>
