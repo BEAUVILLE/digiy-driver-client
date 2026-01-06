@@ -166,6 +166,7 @@
 
 <script>
 console.log("🦅 DIGIYLYFE - Réservation rapide chargée");
+console.log("🔧 VERSION: 2.0 - FIX 404 - " + new Date().toISOString());
 
 /* 🔐 SUPABASE — DÉJÀ POSÉ */
 const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -363,7 +364,12 @@ document.getElementById('quickBookForm').addEventListener('submit', async (e) =>
       const nextPage = config.nextPage.startsWith('/') ? config.nextPage : '/' + config.nextPage;
       const redirectUrl = `${baseUrl}${nextPage}?guest=true&bookingId=${data.id}`;
       
-      console.log('🔄 Redirection vers:', redirectUrl);
+      console.log('🔄 DEBUG Redirection:');
+      console.log('  - baseUrl:', baseUrl);
+      console.log('  - config.nextPage:', config.nextPage);
+      console.log('  - nextPage calculé:', nextPage);
+      console.log('  - URL finale:', redirectUrl);
+      
       window.location.href = redirectUrl;
     }, 800);
     
