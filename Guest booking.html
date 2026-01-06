@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Réservation rapide — DIGIYLYFE V4</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#16a34a" />
+  <style>
+    :root{ --green:#16a34a; --gold:#facc15; --orange:#f97316; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:system-ui,-apple-system,sans-serif;
+      background:linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+    }
+    .box{
+      background:#ffffff; padding:40px; border-radius:24px;
+      box-shadow:0 20px 60px rgba(0,0,0,.12);
+      max-width:500px; width:100%;
+      border:1px solid rgba(148,163,184,0.2);
+    }
+    .logo{
+      width:64px; height:64px; border-radius:20px;
+      background:linear-gradient(135deg,var(--gold),var(--orange));
+      display:flex; align-items:center; justify-content:center;
+      font-size:32px; margin:0 auto 20px;
+      box-shadow:0 12px 32px rgba(249,115,22,0.25);
+    }
+    h1{
+      margin:0 0 10px; font-size:28px; text-align:center;
+      background:linear-gradient(135deg,var(--green),var(--gold));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      font-weight:900;
+    }
+    .sub{
+      color:#64748b; margin:0 0 28px; font-size:15px; line-height:1.6;
+      text-align:center; font-weight:600;
+    }
+    .sub strong{color:#0f172a}
+    .badge{
+      background:linear-gradient(135deg, #dcfce7, #d1fae5);
+      border:2px solid #22c55e;
+      padding:10px 16px; border-radius:12px; margin-bottom:28px;
+      font-weight:800; color:#065f46; text-align:center;
+      font-size:12px; letter-spacing:.08em;
+    }
+    .form-group{margin-bottom:18px}
+    label{
+      display:block; margin-bottom:8px; font-weight:800; 
+      font-size:14px; color:#0f172a;
+      display:flex; align-items:center; gap:8px;
+    }
+    input{
+      width:100%; padding:14px 16px;
+      border:2px solid #e2e8f0; border-radius:12px;
+      font-size:15px; background:#ffffff; color:#0f172a; font-weight:600;
+      transition:all .2s;
+    }
+    input:focus{outline:none; border-color:var(--green); box-shadow:0 0 0 3px rgba(22,163,74,0.1)}
+    input::placeholder{color:#94a3b8}
+    .btn{
+      width:100%; padding:16px;
+      background:linear-gradient(135deg,var(--green),#22c55e);
+      color:#fff; border:none; border-radius:12px;
+      font-weight:900; font-size:16px; cursor:pointer;
+      letter-spacing:.05em;
+      box-shadow:0 8px 20px rgba(22,163,74,0.3);
+      transition:all .2s;
+    }
+    .btn:hover{transform:translateY(-2px); box-shadow:0 12px 28px rgba(22,163,74,0.4)}
+    .btn:disabled{opacity:.6; cursor:not-allowed; transform:none}
+    .msg{
+      margin:16px 0 0; padding:14px; border-radius:10px;
+      font-size:14px; display:none; font-weight:700;
+    }
+    .msg.error{background:#fee2e2; color:#991b1b; border:2px solid #fca5a5; display:block}
+    .msg.success{background:#dcfce7; color:#065f46; border:2px solid #86efac; display:block}
+    .footer{
+      text-align:center; margin:24px 0 0;
+      color:#64748b; font-size:14px; font-weight:600;
+      line-height:1.8;
+    }
+    .footer a{color:var(--green); text-decoration:none; font-weight:800; transition:color .2s}
+    .footer a:hover{color:var(--gold)}
+    @media(max-width:480px){
+      .box{padding:28px 20px}
+      h1{font-size:24px}
+    }
+  </style>
+</head>
+
+<body>
+<div class="box">
+  <div class="logo" id="moduleLogo">⚡</div>
+  <h1 id="moduleTitle">Réservation rapide</h1>
+  <div class="sub" id="moduleSubtitle">
+    Sans créer de compte, <strong>juste votre numéro</strong>
+  </div>
+
+  <div style="text-align:center; margin-bottom:24px;">
+    <span class="badge">✅ VERSION 4.0 - FIX ABSOLU</span>
+  </div>
+
+  <form id="quickBookForm">
+    <div class="form-group">
+      <label>
+        <span>📱</span>
+        <span>Votre numéro de téléphone *</span>
+      </label>
+      <input 
+        type="tel" 
+        id="guestPhone" 
+        required 
+        placeholder="+221 77 123 45 67" 
+        autocomplete="tel"
+      />
+    </div>
+
+    <div class="form-group" id="nameField">
+      <label>
+        <span>👤</span>
+        <span>Votre nom *</span>
+      </label>
+      <input 
+        type="text" 
+        id="guestName" 
+        placeholder="Astou Diop" 
+        autocomplete="name"
+      />
+    </div>
+
+    <div class="form-group" id="emailField" style="display:none;">
+      <label>
+        <span>📧</span>
+        <span>Votre email *</span>
+      </label>
+      <input 
+        type="email" 
+        id="guestEmail" 
+        placeholder="astou@example.com" 
+        autocomplete="email"
+      />
+    </div>
+    
+    <button type="submit" class="btn" id="btnContinue">
+      <span id="btnText">⚡ Continuer</span>
+    </button>
+  </form>
+
+  <div id="msg" class="msg"></div>
+
+  <div class="footer">
+    Vous avez un compte ? <a href="https://beauville.github.io/connexion-client.html">Se connecter</a><br>
+    <a href="https://beauville.github.io/digiy-hub/">← Retour</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+console.log("🦅 DIGIYLYFE V4.0 - REDIRECTION ABSOLUE GARANTIE");
+
+const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// 🔥 CONFIGURATION AVEC URLS ABSOLUES COMPLÈTES
+const REDIRECT_URLS = {
+  driver: 'https://beauville.github.io/digiy-driver-order.html',
+  resa: 'https://beauville.github.io/digiy-resa-booking.html',
+  loc: 'https://beauville.github.io/digiy-loc-booking.html',
+  ndimbal: 'https://beauville.github.io/digiy-ndimbal-order.html',
+  market: 'https://beauville.github.io/digiy-market-shop.html'
+};
+
+const MODULES = {
+  driver: { logo: '🚗', title: 'Commander sans compte', subtitle: 'Réservez votre VTC', needName: true, needEmail: false, buttonText: '🚗 Commander' },
+  resa: { logo: '🍽️', title: 'Réserver sans compte', subtitle: 'Réservez votre table', needName: true, needEmail: true, buttonText: '🍽️ Réserver' },
+  loc: { logo: '🏠', title: 'Louer sans compte', subtitle: 'Réservez votre logement', needName: true, needEmail: true, buttonText: '🏠 Réserver' },
+  ndimbal: { logo: '📦', title: 'Livraison express', subtitle: 'Commander livraison', needName: true, needEmail: false, buttonText: '📦 Commander' },
+  market: { logo: '🛒', title: 'Acheter sans compte', subtitle: 'Commander sur marketplace', needName: true, needEmail: false, buttonText: '🛒 Acheter' }
+};
+
+const urlParams = new URLSearchParams(window.location.search);
+const moduleKey = (urlParams.get('module') || 'driver').toLowerCase();
+const config = MODULES[moduleKey] || MODULES.driver;
+const redirectUrl = REDIRECT_URLS[moduleKey] || REDIRECT_URLS.driver;
+
+console.log('🎯 Module:', moduleKey);
+console.log('🔗 URL de redirection:', redirectUrl);
+
+document.getElementById('moduleLogo').textContent = config.logo;
+document.getElementById('moduleTitle').textContent = config.title;
+document.getElementById('moduleSubtitle').innerHTML = config.subtitle + '<br><strong>Sans créer de compte</strong>';
+document.getElementById('btnText').textContent = config.buttonText;
+
+const nameField = document.getElementById('nameField');
+const emailField = document.getElementById('emailField');
+const guestName = document.getElementById('guestName');
+const guestEmail = document.getElementById('guestEmail');
+
+if (config.needName) {
+  nameField.style.display = 'block';
+  guestName.required = true;
+} else {
+  nameField.style.display = 'none';
+  guestName.required = false;
+}
+
+if (config.needEmail) {
+  emailField.style.display = 'block';
+  guestEmail.required = true;
+} else {
+  emailField.style.display = 'none';
+  guestEmail.required = false;
+}
+
+function showMsg(text, type = 'error') {
+  const msg = document.getElementById('msg');
+  msg.textContent = text;
+  msg.className = 'msg ' + type;
+}
+
+function validatePhone(phone) {
+  const cleaned = phone.replace(/\s+/g, '');
+  const regex = /^(\+?221)?[7][0-9]{8}$/;
+  return regex.test(cleaned);
+}
+
+function normalizePhone(phone) {
+  let cleaned = phone.replace(/\s+/g, '').replace(/^00/, '+');
+  if (cleaned.startsWith('221')) cleaned = '+' + cleaned;
+  if (cleaned.startsWith('7')) cleaned = '+221' + cleaned;
+  return cleaned;
+}
+
+document.getElementById('quickBookForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const phone = document.getElementById('guestPhone').value.trim();
+  const name = guestName.value.trim();
+  const email = guestEmail.value.trim();
+  
+  if (!validatePhone(phone)) {
+    showMsg('⚠️ Numéro invalide. Format: +221 77 123 45 67');
+    return;
+  }
+
+  if (config.needName && !name) {
+    showMsg('⚠️ Veuillez entrer votre nom');
+    return;
+  }
+
+  if (config.needEmail && !email) {
+    showMsg('⚠️ Veuillez entrer votre email');
+    return;
+  }
+  
+  const btnContinue = document.getElementById('btnContinue');
+  const btnText = document.getElementById('btnText');
+  
+  btnContinue.disabled = true;
+  btnText.textContent = '⏳ Vérification...';
+  
+  try {
+    const normalizedPhone = normalizePhone(phone);
+    
+    const { data, error } = await sb
+      .from('guest_bookings')
+      .insert({
+        phone: normalizedPhone,
+        name: name || null,
+        email: email || null,
+        module: moduleKey,
+        status: 'initiated',
+        booking_details: {}
+      })
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('❌ Erreur:', error);
+      throw new Error(error.message);
+    }
+    
+    console.log('✅ Booking créé:', data.id);
+    
+    localStorage.setItem('guestSession', JSON.stringify({
+      bookingId: data.id,
+      phone: normalizedPhone,
+      name: name || null,
+      email: email || null,
+      module: moduleKey,
+      timestamp: Date.now()
+    }));
+    
+    showMsg('✅ Succès ! Redirection...', 'success');
+    
+    // 🚀 REDIRECTION AVEC URL ABSOLUE
+    const finalUrl = `${redirectUrl}?guest=true&bookingId=${data.id}`;
+    
+    console.log('🚀 REDIRECTION VERS:');
+    console.log('   URL:', finalUrl);
+    console.log('   Base:', redirectUrl);
+    console.log('   Booking:', data.id);
+    
+    setTimeout(() => {
+      window.location.href = finalUrl;
+    }, 800);
+    
+  } catch (err) {
+    console.error('❌', err);
+    showMsg('❌ ' + (err.message || 'Erreur'));
+    btnContinue.disabled = false;
+    btnText.textContent = config.buttonText;
+  }
+});
+</script>
+</body>
+</html>
