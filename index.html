@@ -1,593 +1,1877 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DIGIY DRIVER - Commander un VTC</title>
-  <meta name="theme-color" content="#16a34a">
-  <meta name="description" content="Commandez votre VTC au Sénégal - 0% commission">
-  
+  <meta charset="utf-8">
+  <title>DIGIY DRIVER — Commander une course</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Commandez votre VTC au Sénégal - Prix justes, chauffeurs pros, 0% commission">
+
+  <!-- ✅ SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
   <style>
     :root {
-      --green: #16a34a;
-      --gold: #facc15;
-      --orange: #f97316;
-      --dark: #0f172a;
-      --gray: #64748b;
+      --bg: #0a0a0a;
+      --card: #1a1a1a;
+      --card-light: #252525;
+      --gold: #FFD700;
+      --gold-dark: #C7A008;
+      --white: #ffffff;
+      --gray: #888888;
+      --gray-light: #b0b0b0;
+      --green: #00C853;
+      --red: #FF5252;
+      --blue: #2196F3;
+      --orange: #FF9800;
     }
-    
+
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, sans-serif;
     }
-    
+
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+      background: var(--bg);
+      color: var(--white);
       min-height: 100vh;
-      padding: 20px;
+      overflow-x: hidden;
     }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    
-    /* Header */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    @keyframes ripple {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(3); opacity: 0; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    @keyframes sosPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7); }
+      50% { box-shadow: 0 0 0 20px rgba(255, 82, 82, 0); }
+    }
+    @keyframes gpsActive {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .app { min-height: 100vh; display: flex; flex-direction: column; }
+
     .header {
-      background: white;
-      padding: 20px 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
+      background: linear-gradient(135deg, #1a1a1a, #252525);
+      padding: 15px 20px;
+      border-bottom: 2px solid var(--gold);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      z-index: 100;
     }
-    
-    .logo {
-      display: flex;
+
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .header-logo { font-size: 28px; }
+    .header-title { font-size: 18px; font-weight: 800; color: var(--gold); }
+    .header-sub { font-size: 11px; color: var(--gray); display: flex; align-items: center; gap: 5px; }
+
+    .gps-indicator {
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
-      font-size: 24px;
-      font-weight: 900;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .gps-indicator.active {
+      background: rgba(0, 200, 83, 0.2);
       color: var(--green);
     }
-    
-    .logo-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, var(--gold), var(--orange));
+    .gps-indicator.active .gps-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: gpsActive 1s infinite;
+    }
+    .gps-indicator.inactive {
+      background: rgba(255, 82, 82, 0.2);
+      color: var(--red);
+    }
+
+    .header-right { display: flex; align-items: center; gap: 10px; }
+    .header-right .menu-btn {
+      background: var(--card-light);
+      border: none;
+      color: var(--white);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .sos-btn {
+      background: var(--red);
+      border: none;
+      color: var(--white);
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      animation: sosPulse 2s infinite;
+      transition: transform 0.2s;
+    }
+    .sos-btn:hover { transform: scale(1.1); }
+    .sos-btn:active { transform: scale(0.95); }
+
+    .map-container { flex: 1; position: relative; min-height: 300px; }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .map-buttons {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 500;
+    }
+
+    .my-location-btn {
+      width: 50px;
+      height: 50px;
+      background: var(--white);
+      border: none;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .my-location-btn.tracking { background: var(--green); color: white; }
+
+    .supabase-status {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--card);
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 500;
+      border: 1px solid var(--card-light);
+    }
+
+    .supabase-status .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .supabase-status.connected .status-dot { background: var(--green); }
+    .supabase-status.disconnected .status-dot { background: var(--red); }
+
+    .booking-panel {
+      background: var(--card);
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+      padding: 20px;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+      animation: slideUp 0.5s ease;
+    }
+
+    .panel-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--gray);
+      border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+
+    .panel-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .input-group { margin-bottom: 15px; }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      background: var(--card-light);
       border-radius: 12px;
+      padding: 12px 15px;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .input-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
-    }
-    
-    .header-actions {
-      display: flex;
-      gap: 12px;
-    }
-    
-    .btn-header {
-      padding: 10px 20px;
-      border: 2px solid var(--green);
-      background: white;
-      color: var(--green);
-      border-radius: 10px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      display: inline-block;
-    }
-    
-    .btn-header:hover {
-      background: var(--green);
-      color: white;
-    }
-    
-    .btn-guest {
-      padding: 12px 24px;
-      background: linear-gradient(135deg, var(--gold), var(--orange));
-      color: #000;
-      border: none;
-      border-radius: 10px;
-      font-weight: 800;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
-      transition: all 0.2s;
-      font-size: 14px;
-    }
-    
-    .btn-guest:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(249, 115, 22, 0.4);
-    }
-    
-    /* Main Content */
-    .main-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
-    }
-    
-    .card {
-      background: white;
-      padding: 40px;
-      border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-    }
-    
-    .card h2 {
-      font-size: 28px;
-      color: var(--dark);
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    
-    .badge {
-      background: linear-gradient(135deg, #dcfce7, #d1fae5);
-      border: 2px solid #22c55e;
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-weight: 800;
-      color: #065f46;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      display: inline-block;
-      margin-bottom: 20px;
-    }
-    
-    /* Form */
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    .form-group label {
-      display: block;
-      font-weight: 700;
-      color: var(--dark);
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-    
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 14px 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-    
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: var(--green);
-      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
-    }
-    
-    .btn-primary {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, var(--green), #22c55e);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-weight: 900;
       font-size: 16px;
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      box-shadow: 0 8px 20px rgba(22, 163, 74, 0.3);
-      transition: all 0.2s;
-      margin-top: 10px;
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(22, 163, 74, 0.4);
-    }
-    
-    .btn-primary:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-    
-    /* Price Display */
-    .price-display {
-      background: linear-gradient(135deg, #fef3c7, #fde68a);
-      border: 2px solid #fbbf24;
-      padding: 20px;
-      border-radius: 16px;
-      margin: 20px 0;
-      display: none;
-    }
-    
-    .price-display.show {
-      display: block;
-    }
-    
-    .price-display h3 {
-      color: #78350f;
-      margin-bottom: 10px;
-      font-size: 18px;
-    }
-    
-    .price-amount {
-      font-size: 32px;
-      font-weight: 900;
-      color: #78350f;
-    }
-    
-    /* Features */
-    .features {
-      display: grid;
-      gap: 16px;
-    }
-    
-    .feature {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px;
-      background: #f8fafc;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-    }
-    
-    .feature-icon {
-      font-size: 24px;
       flex-shrink: 0;
     }
-    
-    .feature-text {
-      font-weight: 600;
-      color: var(--dark);
-      font-size: 14px;
+
+    .input-icon.pickup { background: rgba(0, 200, 83, 0.2); color: var(--green); }
+    .input-icon.dropoff { background: rgba(255, 215, 0, 0.2); color: var(--gold); }
+
+    .input-field {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 15px;
+      outline: none;
+      cursor: pointer;
     }
-    
-    /* Message */
-    .msg {
-      padding: 14px;
+
+    .input-field::placeholder { color: var(--gray); }
+
+    .input-divider {
+      width: 2px;
+      height: 20px;
+      background: var(--gray);
+      margin-left: 17px;
+      margin-top: 10px;
+      margin-bottom: 10px;
       border-radius: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      margin: 16px 0;
+    }
+
+    .vehicle-options {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+
+    .vehicle-option {
+      flex: 1;
+      min-width: 100px;
+      background: var(--card-light);
+      border: 2px solid transparent;
+      border-radius: 15px;
+      padding: 15px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .vehicle-option:hover { border-color: var(--gray); }
+    .vehicle-option.selected { border-color: var(--gold); background: rgba(255, 215, 0, 0.1); }
+
+    .vehicle-icon { font-size: 30px; margin-bottom: 5px; }
+    .vehicle-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .vehicle-price { font-size: 14px; color: var(--gold); font-weight: 700; }
+    .vehicle-time { font-size: 11px; color: var(--gray); }
+
+    .price-summary {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
+      border: 1px solid var(--gold);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 20px;
       display: none;
     }
-    
-    .msg.error {
-      background: #fee2e2;
-      color: #991b1b;
-      border: 2px solid #fca5a5;
-      display: block;
+
+    .price-summary.show { display: block; animation: fadeIn 0.3s ease; }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--gray-light);
     }
-    
-    .msg.success {
-      background: #dcfce7;
-      color: #065f46;
-      border: 2px solid #86efac;
-      display: block;
+
+    .price-row.total {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold);
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 215, 0, 0.3);
+      margin-top: 10px;
     }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-      .main-content {
-        grid-template-columns: 1fr;
-      }
-      
-      .header {
-        flex-direction: column;
-        gap: 16px;
-        text-align: center;
-      }
-      
-      .header-actions {
-        flex-direction: column;
-        width: 100%;
-      }
-      
-      .btn-header,
-      .btn-guest {
-        width: 100%;
-        text-align: center;
-      }
-      
-      .card {
-        padding: 24px;
-      }
+
+    .confirm-btn {
+      width: 100%;
+      padding: 18px;
+      background: var(--gold);
+      color: var(--bg);
+      border: none;
+      border-radius: 15px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
+
+    .confirm-btn:hover { background: var(--gold-dark); transform: scale(1.02); }
+    .confirm-btn:disabled { background: var(--gray); cursor: not-allowed; transform: none; }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.show { display: flex; }
+
+    .modal-card {
+      background: var(--card);
+      border: 2px solid var(--gold);
+      border-radius: 25px;
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .searching-animation {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 30px;
+    }
+
+    .searching-car {
+      font-size: 50px;
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    .searching-ripple {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px; height: 60px;
+      border: 3px solid var(--gold);
+      border-radius: 50%;
+      animation: ripple 1.5s infinite;
+    }
+    .searching-ripple:nth-child(2) { animation-delay: 0.5s; }
+    .searching-ripple:nth-child(3) { animation-delay: 1s; }
+
+    .searching-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+    .searching-sub { color: var(--gray); font-size: 14px; margin-bottom: 30px; }
+
+    .searching-drivers {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .driver-dot {
+      width: 12px; height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse 1s infinite;
+    }
+
+    .driver-dot:nth-child(2) { animation-delay: 0.2s; }
+    .driver-dot:nth-child(3) { animation-delay: 0.4s; }
+    .driver-dot:nth-child(4) { animation-delay: 0.6s; }
+    .driver-dot:nth-child(5) { animation-delay: 0.8s; }
+
+    .cancel-search-btn {
+      background: var(--card-light);
+      border: 2px solid var(--red);
+      color: var(--red);
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .cancel-search-btn:hover { background: var(--red); color: var(--white); }
+
+    .driver-found { display: none; }
+    .driver-found.show { display: block; animation: fadeIn 0.5s ease; }
+
+    .driver-avatar {
+      width: 80px; height: 80px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 15px;
+    }
+
+    .driver-name { font-size: 22px; font-weight: 700; margin-bottom: 5px; }
+    .driver-rating { color: var(--gold); font-size: 14px; margin-bottom: 5px; }
+    .driver-vehicle { color: var(--gray); font-size: 14px; margin-bottom: 20px; }
+
+    .driver-eta {
+      background: var(--card-light);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .eta-label { font-size: 12px; color: var(--gray); margin-bottom: 5px; }
+    .eta-time { font-size: 28px; font-weight: 800; color: var(--green); }
+
+    .driver-actions { display: flex; gap: 10px; margin-bottom: 10px; }
+
+    .driver-action-btn {
+      flex: 1;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .driver-action-btn.call { background: var(--green); color: var(--white); border: none; }
+    .driver-action-btn.cancel { background: var(--card-light); color: var(--red); border: 2px solid var(--red); }
+    .driver-action-btn.sos { background: var(--red); color: var(--white); border: none; animation: sosPulse 2s infinite; }
+
+    .commission-badge {
+      background: rgba(0, 200, 83, 0.1);
+      border: 1px solid var(--green);
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 15px;
+      font-size: 12px;
+      color: var(--green);
+    }
+
+    .sos-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255, 82, 82, 0.95);
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .sos-modal.show { display: flex; }
+
+    .sos-card {
+      background: var(--card);
+      border: 3px solid var(--red);
+      border-radius: 25px;
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .sos-icon { font-size: 60px; margin-bottom: 20px; }
+    .sos-title { font-size: 24px; font-weight: 800; color: var(--red); margin-bottom: 10px; }
+    .sos-subtitle { color: var(--gray); font-size: 14px; margin-bottom: 20px; }
+
+    .sos-location {
+      background: var(--card-light);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    .sos-location-label { color: var(--gray); margin-bottom: 5px; }
+    .sos-location-coords { color: var(--white); font-family: monospace; }
+
+    .sos-actions { display: flex; flex-direction: column; gap: 10px; }
+
+    .sos-call-btn {
+      width: 100%;
+      padding: 18px;
+      background: var(--red);
+      color: var(--white);
+      border: none;
+      border-radius: 15px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .sos-share-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--card-light);
+      color: var(--white);
+      border: 2px solid var(--gold);
+      border-radius: 15px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .sos-cancel-btn {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: var(--gray);
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .tracking-panel {
+      display: none;
+      background: var(--card);
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+      padding: 20px;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    }
+    .tracking-panel.show { display: block; animation: slideUp 0.5s ease; }
+
+    .tracking-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .tracking-status { display: flex; align-items: center; gap: 10px; }
+
+    .tracking-status-dot {
+      width: 12px;
+      height: 12px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 1s infinite;
+    }
+
+    .tracking-status-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--green);
+    }
+
+    .tracking-info {
+      background: var(--card-light);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .tracking-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+    }
+    .tracking-row:not(:last-child) { border-bottom: 1px solid var(--card); }
+
+    .tracking-label { color: var(--gray); font-size: 13px; }
+    .tracking-value { font-weight: 600; font-size: 14px; }
+
+    .tracking-actions { display: flex; gap: 10px; }
+
+    .footer-note {
+      text-align: center;
+      padding: 10px;
+      font-size: 11px;
+      color: var(--gray);
+    }
+    .footer-note a { color: var(--gold); text-decoration: none; }
+
+    @media (max-height: 700px) {
+      .booking-panel { padding: 15px; }
+      .vehicle-option { padding: 10px 8px; }
+    }
+
+    .location-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.97);
+      z-index: 2500;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .location-overlay.show { display: flex; }
+
+    .location-panel {
+      width: 100%;
+      max-width: 500px;
+      max-height: 100vh;
+      background: #111;
+      border-top-left-radius: 22px;
+      border-top-right-radius: 22px;
+      padding: 16px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      animation: slideUp 0.3s ease;
+    }
+
+    .location-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .location-title { font-size: 18px; font-weight: 800; color: var(--gold); }
+
+    .location-close {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .location-zones {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    .zone-pill {
+      flex-shrink: 0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      border: 1px solid #444;
+      background: #1a1a1a;
+      color: #fff;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .zone-pill.active {
+      border-color: var(--gold);
+      background: rgba(255,215,0,0.15);
+      color: var(--gold);
+    }
+
+    .location-list {
+      flex: 1;
+      overflow-y: auto;
+      margin-top: 6px;
+      border-radius: 14px;
+      background: #151515;
+      padding: 6px;
+    }
+    .location-item {
+      width: 100%;
+      text-align: left;
+      background: #202020;
+      border-radius: 10px;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 12px 14px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      cursor: pointer;
+    }
+    .location-item:hover { border-color: var(--gold); background: #252525; }
+    .location-helper { font-size: 12px; color: #aaa; margin-bottom: 6px; }
   </style>
 </head>
-<body>
 
-<div class="container">
-  <!-- Header -->
-  <div class="header">
-    <div class="logo">
-      <div class="logo-icon">🚗</div>
-      <span>DIGIY DRIVER</span>
+<body>
+<div class="app">
+
+  <header class="header">
+    <div class="header-left">
+      <span class="header-logo">🚗</span>
+      <div>
+        <div class="header-title">DIGIY DRIVER</div>
+        <div class="header-sub">
+          VTC Sénégal •
+          <span class="gps-indicator inactive" id="gpsIndicator">
+            <span class="gps-dot"></span>
+            <span id="gpsStatus">GPS OFF</span>
+          </span>
+        </div>
+      </div>
     </div>
-    <div class="header-actions">
-      <a href="/guest-booking-v4.html?module=driver" class="btn-guest">
-        ⚡ Commander sans compte
-      </a>
-      <a href="/connexion-client.html" class="btn-header">👤 Connexion</a>
-      <a href="/inscription-client.html" class="btn-header">✨ S'inscrire</a>
+    <div class="header-right">
+      <button class="sos-btn" id="sosBtn" title="Urgence SOS">SOS</button>
+      <button class="menu-btn" id="menuBtn" title="Espace chauffeur">☰</button>
+    </div>
+  </header>
+
+  <div class="map-container">
+    <div id="map"></div>
+
+    <div class="supabase-status connected" id="supabaseStatus">
+      <span class="status-dot"></span>
+      <span id="supabaseStatusText">En ligne</span>
+    </div>
+
+    <div class="map-buttons">
+      <button class="my-location-btn" id="locationBtn" title="GPS On/Off">📍</button>
     </div>
   </div>
-  
-  <!-- Main Content -->
-  <div class="main-content">
-    
-    <!-- Left: Booking Form -->
-    <div class="card">
-      <div class="badge">✅ 0% COMMISSION · PAIEMENT DIRECT</div>
-      
-      <h2>🚗 Commander un VTC</h2>
-      
-      <form id="bookingForm">
-        <div class="form-group">
-          <label>📍 Point de départ</label>
-          <input 
-            type="text" 
-            id="pickup" 
-            placeholder="Ex: Dakar Centre, Plateau..."
-            required
-          />
-        </div>
-        
-        <div class="form-group">
-          <label>📍 Destination</label>
-          <input 
-            type="text" 
-            id="destination" 
-            placeholder="Ex: Aéroport Blaise Diagne..."
-            required
-          />
-        </div>
-        
-        <div class="form-group">
-          <label>🚗 Type de véhicule</label>
-          <select id="vehicleType" required>
-            <option value="">Choisir...</option>
-            <option value="standard">Standard (4 places)</option>
-            <option value="comfort">Confort (4 places)</option>
-            <option value="van">Van (7 places)</option>
-            <option value="premium">Premium (4 places)</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label>👥 Nombre de passagers</label>
-          <select id="passengers" required>
-            <option value="1">1 passager</option>
-            <option value="2">2 passagers</option>
-            <option value="3">3 passagers</option>
-            <option value="4">4 passagers</option>
-            <option value="5">5 passagers</option>
-            <option value="6">6 passagers</option>
-            <option value="7">7 passagers</option>
-          </select>
-        </div>
-        
-        <div class="price-display" id="priceDisplay">
-          <h3>💰 Prix estimé</h3>
-          <div class="price-amount" id="priceAmount">--</div>
-          <p style="font-size: 12px; color: #78350f; margin-top: 8px;">
-            Prix indicatif - Le chauffeur confirmera le montant final
-          </p>
-        </div>
-        
-        <button type="submit" class="btn-primary" id="btnEstimate">
-          💰 Estimer le prix
-        </button>
-        
-        <button type="button" class="btn-primary" id="btnBook" style="display: none;">
-          🚗 Confirmer la réservation
-        </button>
-      </form>
-      
-      <div id="msg" class="msg"></div>
+
+  <div class="booking-panel" id="bookingPanel">
+    <div class="panel-handle"></div>
+
+    <div class="panel-title">
+      <span>🚕</span>
+      <span>Où allez-vous ?</span>
     </div>
-    
-    <!-- Right: Features & Info -->
-    <div class="card">
-      <h2>✨ Pourquoi DIGIY DRIVER ?</h2>
-      
-      <div class="features">
-        <div class="feature">
-          <div class="feature-icon">💰</div>
-          <div class="feature-text">
-            <strong>0% commission</strong><br>
-            Les chauffeurs gardent 100% de leurs gains
-          </div>
-        </div>
-        
-        <div class="feature">
-          <div class="feature-icon">💳</div>
-          <div class="feature-text">
-            <strong>Paiement direct</strong><br>
-            Payez votre chauffeur directement (cash, Wave, Orange Money)
-          </div>
-        </div>
-        
-        <div class="feature">
-          <div class="feature-icon">⚡</div>
-          <div class="feature-text">
-            <strong>Disponible 24/7</strong><br>
-            Commandez un VTC à tout moment
-          </div>
-        </div>
-        
-        <div class="feature">
-          <div class="feature-icon">🛡️</div>
-          <div class="feature-text">
-            <strong>Chauffeurs vérifiés</strong><br>
-            Tous nos chauffeurs sont vérifiés et assurés
-          </div>
-        </div>
-        
-        <div class="feature">
-          <div class="feature-icon">📱</div>
-          <div class="feature-text">
-            <strong>Suivi en temps réel</strong><br>
-            Suivez votre chauffeur en direct sur la carte
-          </div>
-        </div>
-        
-        <div class="feature">
-          <div class="feature-icon">⭐</div>
-          <div class="feature-text">
-            <strong>Service de qualité</strong><br>
-            Note moyenne : 4.8/5 - Plus de 10,000 courses
-          </div>
-        </div>
+
+    <div class="input-group">
+      <div class="input-row" id="pickupRow">
+        <div class="input-icon pickup">📍</div>
+        <input type="text" class="input-field" id="pickupInput" placeholder="Point de départ" readonly>
       </div>
-      
-      <div style="margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 12px;">
-        <h3 style="color: var(--dark); margin-bottom: 12px; font-size: 16px;">
-          🎁 Nouveau client ?
-        </h3>
-        <p style="color: var(--gray); font-size: 14px; margin-bottom: 16px;">
-          Créez votre compte gratuitement et accédez à tous les services DIGIYLYFE
-        </p>
-        <a href="/inscription-client.html" class="btn-primary" style="display: inline-block; text-align: center; text-decoration: none;">
-          ✨ Créer mon compte gratuit
-        </a>
+      <div class="input-divider"></div>
+      <div class="input-row" id="dropoffRow">
+        <div class="input-icon dropoff">🏁</div>
+        <input type="text" class="input-field" id="dropoffInput" placeholder="Destination" readonly>
+      </div>
+      <div class="input-row" style="margin-top:8px;">
+        <div class="input-icon" style="background:rgba(59,130,246,0.2);color:#3b82f6;">📞</div>
+        <input
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          class="input-field"
+          id="clientPhone"
+          placeholder="Téléphone WhatsApp (+221 77...)"
+          style="cursor: text;"
+        >
       </div>
     </div>
-    
+
+    <div class="vehicle-options" id="vehicleOptions">
+      <div class="vehicle-option selected" data-type="eco" data-multiplier="1">
+        <div class="vehicle-icon">🚗</div>
+        <div class="vehicle-name">Éco</div>
+        <div class="vehicle-price" id="priceEco">—</div>
+        <div class="vehicle-time">3 min</div>
+      </div>
+      <div class="vehicle-option" data-type="confort" data-multiplier="1.3">
+        <div class="vehicle-icon">🚙</div>
+        <div class="vehicle-name">Confort</div>
+        <div class="vehicle-price" id="priceConfort">—</div>
+        <div class="vehicle-time">5 min</div>
+      </div>
+      <div class="vehicle-option" data-type="premium" data-multiplier="1.8">
+        <div class="vehicle-icon">🚘</div>
+        <div class="vehicle-name">Premium</div>
+        <div class="vehicle-price" id="pricePremium">—</div>
+        <div class="vehicle-time">8 min</div>
+      </div>
+      <div class="vehicle-option" data-type="moto" data-multiplier="0.7">
+        <div class="vehicle-icon">🏍️</div>
+        <div class="vehicle-name">Moto</div>
+        <div class="vehicle-price" id="priceMoto">—</div>
+        <div class="vehicle-time">2 min</div>
+      </div>
+    </div>
+
+    <div class="price-summary" id="priceSummary">
+      <div class="price-row">
+        <span>Distance estimée</span>
+        <span id="summaryDistance">— km</span>
+      </div>
+      <div class="price-row">
+        <span>Durée estimée</span>
+        <span id="summaryDuration">— min</span>
+      </div>
+      <div class="price-row">
+        <span>Type de véhicule</span>
+        <span id="summaryVehicle">Éco</span>
+      </div>
+      <div class="price-row total">
+        <span>Total à payer</span>
+        <span id="summaryTotal">— FCFA</span>
+      </div>
+    </div>
+
+    <button class="confirm-btn" id="confirmBtn" disabled>
+      <span>🚕</span>
+      <span>Commander ma course</span>
+    </button>
+
+    <div class="footer-note">
+      💰 Paiement en espèces au chauffeur • <a href="https://digiylyfe.com/page-inscription-digiy/">Devenir chauffeur</a>
+    </div>
+  </div>
+
+  <div class="tracking-panel" id="trackingPanel">
+    <div class="panel-handle"></div>
+
+    <div class="tracking-header">
+      <div class="tracking-status">
+        <div class="tracking-status-dot"></div>
+        <span class="tracking-status-text" id="rideStatus">En route vers vous</span>
+      </div>
+      <button class="sos-btn" id="sosBtnTracking" style="width: 40px; height: 40px; font-size: 10px;">SOS</button>
+    </div>
+
+    <div class="tracking-info">
+      <div class="tracking-row">
+        <span class="tracking-label">Chauffeur</span>
+        <span class="tracking-value" id="trackingDriverName">—</span>
+      </div>
+      <div class="tracking-row">
+        <span class="tracking-label">Véhicule</span>
+        <span class="tracking-value" id="trackingVehicle">—</span>
+      </div>
+      <div class="tracking-row">
+        <span class="tracking-label">ETA</span>
+        <span class="tracking-value" id="trackingETA" style="color: var(--green);">—</span>
+      </div>
+      <div class="tracking-row">
+        <span class="tracking-label">Prix</span>
+        <span class="tracking-value" id="trackingPrice" style="color: var(--gold);">—</span>
+      </div>
+    </div>
+
+    <div class="tracking-actions">
+      <button class="driver-action-btn call" id="callDriverBtn">📞 Appeler</button>
+      <button class="driver-action-btn cancel" id="cancelRideBtn">✕ Annuler</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="location-overlay" id="locationOverlay">
+  <div class="location-panel">
+    <div class="location-header">
+      <div class="location-title" id="locationTitle">Choisir un lieu</div>
+      <button class="location-close" id="closeLocationBtn">✕</button>
+    </div>
+    <div class="location-helper">
+      Tape sur une zone, puis choisis ton point exact 👀
+    </div>
+    <div class="location-zones" id="locationZones"></div>
+    <div class="location-list" id="locationList"></div>
   </div>
 </div>
 
+<div class="modal-overlay" id="searchingModal">
+  <div class="modal-card">
+
+    <div id="searchingState">
+      <div class="searching-animation">
+        <div class="searching-ripple"></div>
+        <div class="searching-ripple"></div>
+        <div class="searching-ripple"></div>
+        <div class="searching-car">🚗</div>
+      </div>
+
+      <div class="searching-title">Recherche d'un chauffeur...</div>
+      <div class="searching-sub">Envoi de votre demande aux chauffeurs DIGIY à proximité</div>
+
+      <div class="searching-drivers">
+        <div class="driver-dot"></div><div class="driver-dot"></div><div class="driver-dot"></div><div class="driver-dot"></div><div class="driver-dot"></div>
+      </div>
+
+      <button class="cancel-search-btn" id="cancelSearchBtn">✕ Annuler la recherche</button>
+    </div>
+
+    <div class="driver-found" id="driverFoundState">
+      <div class="driver-avatar">👤</div>
+      <div class="driver-name" id="foundDriverName">Chauffeur DIGIY</div>
+      <div class="driver-rating">⭐ <span id="foundDriverRating">5.0</span> • <span id="foundDriverTrips">—</span> courses</div>
+      <div class="driver-vehicle" id="foundDriverVehicle">Toyota Corolla • Blanc • DK-1234-AB</div>
+
+      <div class="driver-eta">
+        <div class="eta-label">Arrivée dans</div>
+        <div class="eta-time" id="foundDriverETA">3 min</div>
+      </div>
+
+      <div class="driver-actions">
+        <button class="driver-action-btn call" id="callFoundDriverBtn">📞 Appeler</button>
+        <button class="driver-action-btn sos" id="sosFoundBtn">🆘 SOS</button>
+      </div>
+
+      <button class="driver-action-btn cancel" id="cancelFoundRideBtn" style="margin-top: 10px;">✕ Annuler la course</button>
+
+      <div class="commission-badge">
+        💚 0% commission — Le chauffeur garde 100% de vos <span id="foundPrice">—</span> FCFA
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="sos-modal" id="sosModal">
+  <div class="sos-card">
+    <div class="sos-icon">🆘</div>
+    <div class="sos-title">URGENCE ACTIVÉE</div>
+    <div class="sos-subtitle">Votre position est prête à être partagée</div>
+
+    <div class="sos-location">
+      <div class="sos-location-label">📍 Votre position actuelle</div>
+      <div class="sos-location-coords" id="sosCoords">Récupération en cours...</div>
+    </div>
+
+    <div class="sos-actions">
+      <button class="sos-call-btn" id="sosCallBtn">📞 Appeler Police (17)</button>
+      <button class="sos-share-btn" id="sosShareBtn">📤 Partager ma position</button>
+      <button class="sos-cancel-btn" id="sosCancelBtn">← Annuler l'alerte</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
-console.log('🚗 DIGIY DRIVER - Interface client chargée');
+(function(){
+  'use strict';
 
-// Prix de base par km (en FCFA)
-const PRICE_PER_KM = {
-  standard: 200,
-  comfort: 300,
-  van: 350,
-  premium: 500
-};
+  // ✅ SUPABASE CONFIG (TES CLÉS)
+  const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
 
-// Prix minimum (en FCFA)
-const MIN_PRICE = 2000;
+  window.__sb = window.__sb || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = window.__sb;
 
-// Distance estimée entre lieux (à remplacer par Google Maps API)
-const ESTIMATED_DISTANCES = {
-  'dakar_centre_aeroportblaise': 50,
-  'dakar_centre_rufisque': 25,
-  'plateau_almadies': 15,
-  'default': 20
-};
+  const PRICE_PER_KM = 400;
+  const MIN_PRICE = 1000;
+  const EMERGENCY_NUMBER = 'tel:17';
 
-function showMsg(text, type = 'error') {
-  const msg = document.getElementById('msg');
-  msg.textContent = text;
-  msg.className = 'msg ' + type;
-}
+  // ✅ Points de repère “terrain” (plus riche)
+  // (Tu peux en ajouter sans casser le code)
+  const LOCATIONS = {
+    // ✈️ AIBD / Diass
+    "Aéroport International Blaise Diagne (AIBD)": { lat: 14.6700, lng: -17.0733, zone: "aeroports" },
+    "AIBD Départs": { lat: 14.6712, lng: -17.0745, zone: "aeroports" },
+    "AIBD Arrivées": { lat: 14.6689, lng: -17.0723, zone: "aeroports" },
+    "Diass Centre": { lat: 14.6338, lng: -17.0717, zone: "aeroports" },
+    "Diamniadio (Pôle urbain)": { lat: 14.7288, lng: -17.1714, zone: "aeroports" },
 
-function estimateDistance(pickup, destination) {
-  // TODO: Intégrer Google Maps Distance Matrix API
-  // Pour l'instant, retourne une estimation par défaut
-  return ESTIMATED_DISTANCES.default;
-}
+    // 🏙️ Dakar
+    "Dakar Plateau": { lat: 14.6695, lng: -17.4390, zone: "dakar" },
+    "Indépendance / Centre-ville": { lat: 14.6741, lng: -17.4362, zone: "dakar" },
+    "Médina": { lat: 14.6772, lng: -17.4520, zone: "dakar" },
+    "Sicap Liberté": { lat: 14.7080, lng: -17.4540, zone: "dakar" },
+    "Point E": { lat: 14.6907, lng: -17.4636, zone: "dakar" },
+    "Fann / Hôpital": { lat: 14.6919, lng: -17.4684, zone: "dakar" },
+    "HLM": { lat: 14.7078, lng: -17.4557, zone: "dakar" },
+    "VDN (Voye de Dégagement Nord)": { lat: 14.7432, lng: -17.4780, zone: "dakar" },
+    "Dakar Almadies": { lat: 14.7445, lng: -17.5095, zone: "dakar" },
+    "Ngor": { lat: 14.7492, lng: -17.5137, zone: "dakar" },
+    "Yoff": { lat: 14.7440, lng: -17.4750, zone: "dakar" },
+    "Parcelles Assainies": { lat: 14.7648, lng: -17.4379, zone: "dakar" },
+    "Rufisque": { lat: 14.7172, lng: -17.2696, zone: "dakar" },
 
-function calculatePrice(distance, vehicleType) {
-  const pricePerKm = PRICE_PER_KM[vehicleType] || PRICE_PER_KM.standard;
-  const totalPrice = distance * pricePerKm;
-  return Math.max(totalPrice, MIN_PRICE);
-}
+    // 🏖️ Petite Côte / Saly
+    "Saly Centre": { lat: 14.4500, lng: -16.9833, zone: "saly" },
+    "Saly Koulang": { lat: 14.4567, lng: -16.9823, zone: "saly" },
+    "Ngaparou": { lat: 14.4717, lng: -16.9759, zone: "saly" },
+    "Somone": { lat: 14.4831, lng: -17.0818, zone: "saly" },
+    "Popenguine": { lat: 14.5558, lng: -17.1044, zone: "saly" },
+    "Nianing": { lat: 14.3732, lng: -16.9435, zone: "saly" },
 
-// Formulaire d'estimation
-document.getElementById('bookingForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  
-  const pickup = document.getElementById('pickup').value.trim();
-  const destination = document.getElementById('destination').value.trim();
-  const vehicleType = document.getElementById('vehicleType').value;
-  const passengers = document.getElementById('passengers').value;
-  
-  if (!pickup || !destination || !vehicleType) {
-    showMsg('⚠️ Veuillez remplir tous les champs');
-    return;
+    // 🏙️ Mbour
+    "Mbour Centre": { lat: 14.4167, lng: -16.9667, zone: "mbour" },
+    "Mbour Gare": { lat: 14.4199, lng: -16.9683, zone: "mbour" },
+    "Sindia": { lat: 14.5962, lng: -17.0778, zone: "mbour" },
+
+    // 🏙️ Thiès
+    "Thiès Centre": { lat: 14.7886, lng: -16.9317, zone: "thies" },
+    "Université Iba Der Thiam (Thiès)": { lat: 14.7805, lng: -16.9259, zone: "thies" },
+
+    // 🌊 Spots bonus
+    "Lac Rose (Retba)": { lat: 14.8380, lng: -17.2317, zone: "dakar" },
+    "Toll (Gare)": { lat: 14.7388, lng: -17.2840, zone: "dakar" }
+  };
+
+  const ZONES_CONFIG = [
+    { id: 'aeroports', label: '✈️ AIBD / Diass' },
+    { id: 'dakar',     label: '🏙️ Dakar' },
+    { id: 'saly',      label: '🏖️ Saly / Petite Côte' },
+    { id: 'mbour',     label: '🏙️ Mbour' },
+    { id: 'thies',     label: '🏙️ Thiès' }
+  ];
+
+  // ====== STATE ======
+  let map = null;
+  let pickupMarker = null;
+  let dropoffMarker = null;
+  let routeLine = null;
+  let driverMarkers = [];
+  let poiMarkers = [];
+  let myPositionMarker = null;
+  let myPosition = null;
+  let gpsWatchId = null;
+  let isGPSTracking = false;
+  let currentRideId = null;
+  let realtimeChannel = null;
+
+  let booking = {
+    pickup: null,
+    dropoff: null,
+    pickupName: '',
+    dropoffName: '',
+    vehicleType: 'eco',
+    multiplier: 1,
+    distance: 0,
+    duration: 0,
+    price: 0
+  };
+
+  let selectedDriver = null;
+  let currentLocationType = 'pickup';
+  let selectedZoneId = ZONES_CONFIG[0].id;
+
+  // ====== Utils ======
+  function normPhone(p){
+    p = (p||"").trim().replace(/\s+/g,"").replace(/[^\d+]/g,"");
+    if(p.startsWith("00221")) p = "+221" + p.slice(5);
+    if(!p.startsWith("+") && p.startsWith("221")) p = "+" + p;
+    if(!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
+    return p;
   }
-  
-  // Calculer le prix
-  const distance = estimateDistance(pickup, destination);
-  const price = calculatePrice(distance, vehicleType);
-  
-  // Afficher le prix
-  document.getElementById('priceAmount').textContent = `${price.toLocaleString('fr-FR')} FCFA`;
-  document.getElementById('priceDisplay').classList.add('show');
-  
-  // Changer le bouton
-  document.getElementById('btnEstimate').style.display = 'none';
-  document.getElementById('btnBook').style.display = 'block';
-  
-  showMsg('✅ Prix estimé calculé ! Cliquez pour confirmer la réservation', 'success');
-  
-  console.log('Estimation:', {
-    pickup,
-    destination,
-    vehicleType,
-    passengers,
-    distance,
-    price
-  });
-});
 
-// Bouton de confirmation
-document.getElementById('btnBook').addEventListener('click', () => {
-  // Vérifier si l'utilisateur est connecté
-  // TODO: Vérifier session Supabase
-  
-  const pickup = document.getElementById('pickup').value;
-  const destination = document.getElementById('destination').value;
-  const vehicleType = document.getElementById('vehicleType').value;
-  const passengers = document.getElementById('passengers').value;
-  const price = document.getElementById('priceAmount').textContent;
-  
-  // Rediriger vers réservation rapide si pas connecté
-  showMsg('🔄 Redirection vers la réservation...', 'success');
-  
-  setTimeout(() => {
-    // Sauvegarder les détails
-    localStorage.setItem('pendingBooking', JSON.stringify({
-      pickup,
-      destination,
-      vehicleType,
-      passengers,
-      estimatedPrice: price,
-      timestamp: Date.now()
-    }));
-    
-    // Rediriger
-    window.location.href = '/reservation-rapide.html?module=driver';
-  }, 1000);
-});
+  function extractCity(locationName) {
+    if (!locationName) return null;
+    const n = locationName.toLowerCase();
+    if (n.includes('saly') || n.includes('somone') || n.includes('ngaparou') || n.includes('popenguine') || n.includes('nianing')) return 'Saly';
+    if (n.includes('dakar') || n.includes('almadies') || n.includes('ngor') || n.includes('yoff') || n.includes('rufisque') || n.includes('lac rose')) return 'Dakar';
+    if (n.includes('mbour') || n.includes('sindia')) return 'Mbour';
+    if (n.includes('thiès') || n.includes('thies')) return 'Thiès';
+    if (n.includes('aibd') || n.includes('diass') || n.includes('diamniadio')) return 'Diass';
+    return null;
+  }
 
-// Réinitialiser si on change un champ
-['pickup', 'destination', 'vehicleType', 'passengers'].forEach(id => {
-  document.getElementById(id).addEventListener('change', () => {
-    document.getElementById('priceDisplay').classList.remove('show');
-    document.getElementById('btnEstimate').style.display = 'block';
-    document.getElementById('btnBook').style.display = 'none';
-    document.getElementById('msg').style.display = 'none';
+  function round100(x){ return Math.round(x / 100) * 100; }
+
+  // ====== Supabase status réel ======
+  async function setSupabaseStatus(ok, msg){
+    const box = document.getElementById('supabaseStatus');
+    const txt = document.getElementById('supabaseStatusText');
+    if(!box || !txt) return;
+    box.classList.toggle('connected', !!ok);
+    box.classList.toggle('disconnected', !ok);
+    txt.textContent = msg || (ok ? 'En ligne' : 'Hors ligne');
+  }
+
+  async function pingSupabase(){
+    try{
+      const { error } = await supabase.from('driver_profiles').select('id').limit(1);
+      if(error) throw error;
+      setSupabaseStatus(true, 'En ligne');
+      return true;
+    }catch(e){
+      console.warn('Supabase ping KO:', e?.message || e);
+      setSupabaseStatus(false, 'Hors ligne');
+      return false;
+    }
+  }
+
+  // ====== UI events ======
+  document.getElementById('pickupRow').addEventListener('click', () => openLocationPicker('pickup'));
+  document.getElementById('dropoffRow').addEventListener('click', () => openLocationPicker('dropoff'));
+  document.getElementById('closeLocationBtn').addEventListener('click', closeLocationOverlay);
+  document.getElementById('locationBtn').addEventListener('click', toggleGPSTracking);
+  document.getElementById('confirmBtn').addEventListener('click', confirmBooking);
+
+  document.getElementById('sosBtn').addEventListener('click', triggerSOS);
+  document.getElementById('sosBtnTracking').addEventListener('click', triggerSOS);
+  document.getElementById('cancelSearchBtn').addEventListener('click', cancelSearch);
+  document.getElementById('callDriverBtn').addEventListener('click', callDriver);
+  document.getElementById('cancelRideBtn').addEventListener('click', cancelRide);
+  document.getElementById('callFoundDriverBtn').addEventListener('click', callDriver);
+  document.getElementById('sosFoundBtn').addEventListener('click', triggerSOS);
+  document.getElementById('cancelFoundRideBtn').addEventListener('click', cancelRide);
+  document.getElementById('sosCallBtn').addEventListener('click', callEmergency);
+  document.getElementById('sosShareBtn').addEventListener('click', shareLocation);
+  document.getElementById('sosCancelBtn').addEventListener('click', closeSOS);
+
+  // Menu -> espace chauffeur (tu peux changer si tu veux)
+  document.getElementById('menuBtn').addEventListener('click', () => location.href='./authentification-chauffeur.html');
+
+  // Véhicules
+  document.getElementById('vehicleOptions').addEventListener('click', (e) => {
+    const option = e.target.closest('.vehicle-option');
+    if (!option) return;
+
+    document.querySelectorAll('.vehicle-option').forEach(el => el.classList.remove('selected'));
+    option.classList.add('selected');
+
+    booking.vehicleType = option.dataset.type;
+    booking.multiplier = parseFloat(option.dataset.multiplier);
+
+    document.getElementById('summaryVehicle').textContent = option.querySelector('.vehicle-name').textContent;
+
+    if (booking.distance > 0) {
+      const basePrice = Math.max(MIN_PRICE, round100(booking.distance * PRICE_PER_KM));
+      booking.price = round100(basePrice * booking.multiplier);
+      document.getElementById('summaryTotal').textContent = booking.price.toLocaleString() + ' FCFA';
+    }
   });
-});
+
+  // ====== Location picker ======
+  function buildZoneButtons() {
+    const zonesContainer = document.getElementById('locationZones');
+    zonesContainer.innerHTML = '';
+    ZONES_CONFIG.forEach((zone, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'zone-pill' + (index === 0 ? ' active' : '');
+      btn.textContent = zone.label;
+      btn.dataset.zoneId = zone.id;
+      btn.addEventListener('click', () => selectZone(zone.id));
+      zonesContainer.appendChild(btn);
+    });
+  }
+
+  function filterLocationsByZone(zoneId) {
+    const allNames = Object.keys(LOCATIONS);
+    return allNames.filter(name => (LOCATIONS[name].zone || '') === zoneId);
+  }
+
+  function renderLocationList(names) {
+    const list = document.getElementById('locationList');
+    list.innerHTML = '';
+    if (!names.length) {
+      const empty = document.createElement('div');
+      empty.style.padding = '16px';
+      empty.style.color = '#aaa';
+      empty.textContent = 'Aucun lieu trouvé.';
+      list.appendChild(empty);
+      return;
+    }
+    names.forEach(name => {
+      const btn = document.createElement('button');
+      btn.className = 'location-item';
+      btn.innerHTML = `<span>${name}</span>`;
+      btn.addEventListener('click', () => chooseLocation(name));
+      list.appendChild(btn);
+    });
+  }
+
+  function selectZone(zoneId) {
+    selectedZoneId = zoneId;
+    const pills = document.querySelectorAll('.zone-pill');
+    pills.forEach(p => p.classList.toggle('active', p.dataset.zoneId === zoneId));
+
+    // liste overlay
+    const locations = filterLocationsByZone(zoneId);
+    renderLocationList(locations);
+
+    // marqueurs POI sur la carte
+    showPOIsForZone(zoneId);
+  }
+
+  function openLocationPicker(type) {
+    currentLocationType = type;
+    const title = document.getElementById('locationTitle');
+    title.textContent = type === 'pickup' ? 'Choisir le point de départ' : 'Choisir la destination';
+    document.getElementById('locationOverlay').classList.add('show');
+
+    // on garde la zone sélectionnée si déjà choisie
+    selectZone(selectedZoneId || ZONES_CONFIG[0].id);
+  }
+
+  function closeLocationOverlay() {
+    document.getElementById('locationOverlay').classList.remove('show');
+  }
+
+  function chooseLocation(locationName) {
+    const coords = LOCATIONS[locationName];
+    if (!coords) return;
+
+    if (currentLocationType === 'pickup') {
+      booking.pickup = { lat: coords.lat, lng: coords.lng };
+      booking.pickupName = locationName;
+      document.getElementById('pickupInput').value = locationName;
+      addPickupMarker(coords.lat, coords.lng);
+    } else {
+      booking.dropoff = { lat: coords.lat, lng: coords.lng };
+      booking.dropoffName = locationName;
+      document.getElementById('dropoffInput').value = locationName;
+      addDropoffMarker(coords.lat, coords.lng);
+    }
+    closeLocationOverlay();
+    checkIfReady();
+  }
+
+  // ====== GPS ======
+  function toggleGPSTracking() {
+    if (isGPSTracking) stopGPSTracking();
+    else startGPSTracking();
+  }
+
+  function startGPSTracking() {
+    if (!navigator.geolocation) {
+      alert('La géolocalisation n\'est pas supportée par votre navigateur');
+      return;
+    }
+
+    gpsWatchId = navigator.geolocation.watchPosition(
+      (position) => updateMyPosition(position),
+      (error) => handleGPSError(error),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 2000 }
+    );
+
+    isGPSTracking = true;
+    updateGPSIndicator(true);
+    document.getElementById('locationBtn').classList.add('tracking');
+  }
+
+  function stopGPSTracking() {
+    if (gpsWatchId !== null) {
+      navigator.geolocation.clearWatch(gpsWatchId);
+      gpsWatchId = null;
+    }
+    isGPSTracking = false;
+    updateGPSIndicator(false);
+    document.getElementById('locationBtn').classList.remove('tracking');
+  }
+
+  function handleGPSError(error) {
+    console.error('Erreur GPS:', error);
+    stopGPSTracking();
+    updateGPSIndicator(false);
+  }
+
+  function updateMyPosition(position) {
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+    const accuracy = position.coords.accuracy;
+
+    myPosition = { lat, lng, accuracy };
+
+    if (myPositionMarker) {
+      myPositionMarker.setLatLng([lat, lng]);
+    } else {
+      const icon = L.divIcon({
+        className: 'my-position-marker',
+        html: `<div style="position: relative;width: 20px;height: 20px;">
+          <div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 50px;height: 50px;background: rgba(33, 150, 243, 0.2);border-radius: 50%;"></div>
+          <div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 16px;height: 16px;background: #2196F3;border-radius: 50%;border: 3px solid #fff;box-shadow: 0 2px 10px rgba(0,0,0,0.3);"></div>
+        </div>`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
+      });
+
+      myPositionMarker = L.marker([lat, lng], { icon }).addTo(map);
+    }
+
+    // Si pas encore pickup : on prend la position actuelle
+    if (!booking.pickup) {
+      booking.pickup = { lat, lng };
+      booking.pickupName = 'Ma position actuelle';
+      document.getElementById('pickupInput').value = 'Ma position actuelle';
+      addPickupMarker(lat, lng);
+    }
+  }
+
+  function updateGPSIndicator(active) {
+    const indicator = document.getElementById('gpsIndicator');
+    const status = document.getElementById('gpsStatus');
+
+    if (active) {
+      indicator.classList.remove('inactive');
+      indicator.classList.add('active');
+      status.textContent = 'GPS ON';
+    } else {
+      indicator.classList.remove('active');
+      indicator.classList.add('inactive');
+      status.textContent = 'GPS OFF';
+    }
+  }
+
+  // ====== Map & POIs ======
+  function initMap() {
+    // Focus Dakar/AIBD/Saly (terrain)
+    const CENTER = [14.62, -17.25];
+
+    map = L.map('map', {
+      center: CENTER,
+      zoom: 9
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© DIGIY DRIVER',
+      maxZoom: 19,
+      minZoom: 6
+    }).addTo(map);
+
+    // POIs par défaut
+    showPOIsForZone(ZONES_CONFIG[0].id);
+
+    // Chauffeurs + GPS
+    loadAvailableDrivers();
+    startGPSTracking();
+  }
+
+  function clearPOIMarkers(){
+    poiMarkers.forEach(m => { try{ map.removeLayer(m); }catch(e){} });
+    poiMarkers = [];
+  }
+
+  function poiIcon(){
+    // petit pin discret gold
+    return L.divIcon({
+      className: 'poi-marker',
+      html: `<div style="
+        width: 14px; height: 14px;
+        background: #FFD700;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+      "></div>`,
+      iconSize: [14, 14],
+      iconAnchor: [7, 7]
+    });
+  }
+
+  function showPOIsForZone(zoneId){
+    if(!map) return;
+    clearPOIMarkers();
+
+    const names = Object.keys(LOCATIONS).filter(n => (LOCATIONS[n].zone||'') === zoneId);
+
+    names.forEach(name => {
+      const c = LOCATIONS[name];
+      const m = L.marker([c.lat, c.lng], { icon: poiIcon() }).addTo(map);
+      m.bindPopup(`<b style="color:#111">${name}</b>`);
+      poiMarkers.push(m);
+    });
+
+    // zoom doux sur la zone si on a des points
+    if (poiMarkers.length >= 2){
+      const group = L.featureGroup(poiMarkers);
+      map.fitBounds(group.getBounds(), { padding: [40, 40] });
+    } else if (poiMarkers.length === 1){
+      map.setView(poiMarkers[0].getLatLng(), 13);
+    }
+  }
+
+  // ====== Drivers ======
+  async function loadAvailableDrivers() {
+    try {
+      const { data: drivers, error } = await supabase
+        .from('driver_profiles')
+        .select('*')
+        .eq('is_online', true);
+
+      if (error) throw error;
+
+      // On place des markers proches de Dakar par défaut (démo)
+      if (drivers && drivers.length > 0) {
+        drivers.forEach(driver => {
+          const lat = 14.70 + (Math.random() - 0.5) * 0.18;
+          const lng = -17.45 + (Math.random() - 0.5) * 0.18;
+          addDriverMarker({ ...driver, lat, lng });
+        });
+      }
+    } catch (error) {
+      console.error('Erreur chargement chauffeurs:', error);
+    }
+  }
+
+  function addDriverMarker(driver) {
+    const icon = L.divIcon({
+      className: 'driver-marker',
+      html: `<div style="
+        background: #00C853;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      ">🚗</div>`,
+      iconSize: [30, 30],
+      iconAnchor: [15, 15]
+    });
+
+    const marker = L.marker([driver.lat, driver.lng], { icon }).addTo(map);
+    marker.bindPopup(`<b>${driver.full_name || 'Chauffeur DIGIY'}</b><br>${driver.car_model || 'Véhicule'}`);
+    driverMarkers.push(marker);
+  }
+
+  // ====== Pickup / Dropoff markers ======
+  function addPickupMarker(lat, lng) {
+    if (pickupMarker) map.removeLayer(pickupMarker);
+
+    const icon = L.divIcon({
+      className: 'pickup-marker',
+      html: `<div style="
+        background: #00C853;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 3px solid #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      "></div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
+    });
+
+    pickupMarker = L.marker([lat, lng], { icon }).addTo(map);
+  }
+
+  function addDropoffMarker(lat, lng) {
+    if (dropoffMarker) map.removeLayer(dropoffMarker);
+
+    const icon = L.divIcon({
+      className: 'dropoff-marker',
+      html: `<div style="
+        background: #FFD700;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 3px solid #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      "></div>`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
+    });
+
+    dropoffMarker = L.marker([lat, lng], { icon }).addTo(map);
+  }
+
+  // ====== Pricing / route ======
+  function checkIfReady() {
+    if (booking.pickup && booking.dropoff) calculateRoute();
+  }
+
+  function calculateRoute() {
+    const R = 6371;
+    const dLat = (booking.dropoff.lat - booking.pickup.lat) * Math.PI / 180;
+    const dLng = (booking.dropoff.lng - booking.pickup.lng) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(booking.pickup.lat * Math.PI / 180) * Math.cos(booking.dropoff.lat * Math.PI / 180) *
+              Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    let distance = R * c;
+
+    // petit facteur "routes réelles"
+    distance = distance * 1.25;
+    booking.distance = distance;
+    booking.duration = Math.max(5, Math.round(distance / 28 * 60)); // 28 km/h moyenne
+
+    updatePrices();
+    drawRoute();
+    showPriceSummary();
+
+    document.getElementById('confirmBtn').disabled = false;
+  }
+
+  function updatePrices() {
+    const basePrice = Math.max(MIN_PRICE, round100(booking.distance * PRICE_PER_KM));
+
+    const eco     = basePrice;
+    const confort = round100(basePrice * 1.3);
+    const premium = round100(basePrice * 1.8);
+    const moto    = round100(basePrice * 0.7);
+
+    document.getElementById('priceEco').textContent     = eco.toLocaleString() + ' F';
+    document.getElementById('priceConfort').textContent = confort.toLocaleString() + ' F';
+    document.getElementById('pricePremium').textContent = premium.toLocaleString() + ' F';
+    document.getElementById('priceMoto').textContent    = moto.toLocaleString() + ' F';
+
+    booking.price = round100(basePrice * booking.multiplier);
+  }
+
+  function drawRoute() {
+    if (routeLine) map.removeLayer(routeLine);
+
+    routeLine = L.polyline([
+      [booking.pickup.lat, booking.pickup.lng],
+      [booking.dropoff.lat, booking.dropoff.lng]
+    ], {
+      color: '#FFD700',
+      weight: 4,
+      opacity: 0.8,
+      dashArray: '10, 10'
+    }).addTo(map);
+
+    map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
+  }
+
+  function showPriceSummary() {
+    document.getElementById('summaryDistance').textContent = booking.distance.toFixed(1) + ' km';
+    document.getElementById('summaryDuration').textContent = booking.duration + ' min';
+    document.getElementById('summaryTotal').textContent = booking.price.toLocaleString() + ' FCFA';
+    document.getElementById('summaryVehicle').textContent =
+      document.querySelector('.vehicle-option.selected .vehicle-name').textContent;
+
+    document.getElementById('priceSummary').classList.add('show');
+  }
+
+  // ====== Booking flow ======
+  async function confirmBooking() {
+    const phoneInput = document.getElementById('clientPhone');
+    const clientPhone = normPhone(phoneInput.value.trim());
+
+    if (!clientPhone || !clientPhone.startsWith("+221")) {
+      alert("⚠️ Numéro WhatsApp invalide.\nFormat attendu : +221 77 XXX XX XX");
+      return;
+    }
+
+    document.getElementById('searchingModal').classList.add('show');
+    document.getElementById('searchingState').style.display = 'block';
+    document.getElementById('driverFoundState').classList.remove('show');
+
+    await sendRideRequest(clientPhone);
+  }
+
+  async function sendRideRequest(clientPhone) {
+    const rideSafe = {
+      pickup_name: booking.pickupName,
+      pickup_lat: booking.pickup.lat,
+      pickup_lng: booking.pickup.lng,
+
+      dropoff_name: booking.dropoffName,
+      dropoff_lat: booking.dropoff.lat,
+      dropoff_lng: booking.dropoff.lng,
+
+      client_phone: clientPhone,
+      city: extractCity(booking.pickupName),
+      status: 'new',
+      price_xof: booking.price,
+      distance_km: Number(booking.distance.toFixed(2)),
+      duration_min: booking.duration,
+      vehicle_type: booking.vehicleType,
+      note: `Course ${booking.vehicleType} - ${booking.distance.toFixed(1)}km`
+    };
+
+    const rideLegacy = {
+      pickup_address: booking.pickupName,
+      pickup_text: booking.pickupName,
+      pickup: booking.pickupName,
+      pickup_location: `${booking.pickup.lat},${booking.pickup.lng}`,
+
+      dropoff_address: booking.dropoffName,
+      dropoff_text: booking.dropoffName,
+      dropoff: booking.dropoffName,
+      dropoff_location: `${booking.dropoff.lat},${booking.dropoff.lng}`,
+
+      client_phone: clientPhone,
+      city: extractCity(booking.pickupName),
+      status: 'new',
+      price: booking.price,
+      price_xof: booking.price,
+      distance: booking.distance,
+      duration: booking.duration,
+      vehicle_type: booking.vehicleType,
+      created_at: new Date().toISOString(),
+      note: `Course ${booking.vehicleType} - ${booking.distance.toFixed(1)}km`
+    };
+
+    try {
+      let ins = await supabase.from('ride_requests').insert([rideSafe]).select().single();
+
+      if (ins.error) {
+        console.warn('Insert SAFE KO, fallback legacy:', ins.error.message);
+        ins = await supabase.from('ride_requests').insert([rideLegacy]).select().single();
+      }
+
+      if (ins.error) throw ins.error;
+
+      const data = ins.data;
+      currentRideId = data.id;
+
+      listenToRideUpdates(data.id);
+
+      // simulation acceptation
+      setTimeout(() => simulateDriverAcceptance(), Math.random() * 2000 + 2500);
+
+    } catch (error) {
+      console.error('Erreur création course:', error);
+      alert('❌ Erreur lors de la création de la course.\nVérifie les colonnes de ride_requests sur Supabase.');
+      document.getElementById('searchingModal').classList.remove('show');
+    }
+  }
+
+  async function simulateDriverAcceptance() {
+    if (!currentRideId) return;
+
+    try {
+      const { data: driver, error } = await supabase
+        .from('driver_profiles')
+        .select('*')
+        .eq('is_online', true)
+        .limit(1)
+        .single();
+
+      if (error) throw error;
+
+      if (driver) {
+        selectedDriver = driver;
+
+        await supabase
+          .from('ride_requests')
+          .update({
+            status: 'accepted',
+            assigned_driver_phone: driver.phone,
+            accepted_at: new Date().toISOString()
+          })
+          .eq('id', currentRideId);
+
+        driverFound();
+      } else {
+        document.getElementById('searchingModal').classList.remove('show');
+        alert('Aucun chauffeur disponible pour le moment. Réessaie dans quelques minutes.');
+      }
+    } catch (error) {
+      console.error('Erreur acceptance:', error);
+      document.getElementById('searchingModal').classList.remove('show');
+      alert('Aucun chauffeur dispo (ou Supabase KO).');
+    }
+  }
+
+  function listenToRideUpdates(rideId) {
+    if (realtimeChannel) supabase.removeChannel(realtimeChannel);
+
+    realtimeChannel = supabase
+      .channel(`ride_${rideId}`)
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'ride_requests',
+        filter: `id=eq.${rideId}`
+      }, (payload) => {
+        const ride = payload.new;
+        handleRideUpdate(ride);
+      })
+      .subscribe();
+  }
+
+  function handleRideUpdate(ride) {
+    if (!ride || !ride.status) return;
+    switch (ride.status) {
+      case 'in_progress':
+        updateRideStatus('Course en cours');
+        break;
+      case 'completed':
+        handleRideCompleted(ride);
+        break;
+      case 'cancelled':
+        handleRideCancelled();
+        break;
+    }
+  }
+
+  function driverFound() {
+    if (!selectedDriver) return;
+
+    const eta = Math.floor(Math.random() * 4) + 2;
+
+    document.getElementById('foundDriverName').textContent = selectedDriver.full_name || 'Chauffeur DIGIY';
+    document.getElementById('foundDriverRating').textContent = '5.0';
+    document.getElementById('foundDriverTrips').textContent = '—';
+    document.getElementById('foundDriverVehicle').textContent =
+      `${selectedDriver.car_model || 'Véhicule'} • ${selectedDriver.car_plate || 'DK-XXXX-XX'}`;
+    document.getElementById('foundDriverETA').textContent = `${eta} min`;
+    document.getElementById('foundPrice').textContent = booking.price.toLocaleString();
+
+    document.getElementById('searchingState').style.display = 'none';
+    document.getElementById('driverFoundState').classList.add('show');
+
+    document.getElementById('trackingDriverName').textContent = selectedDriver.full_name || '—';
+    document.getElementById('trackingVehicle').textContent =
+      `${selectedDriver.car_model || '—'} • ${selectedDriver.car_plate || '—'}`;
+    document.getElementById('trackingETA').textContent = `${eta} min`;
+    document.getElementById('trackingPrice').textContent = `${booking.price.toLocaleString()} FCFA`;
+
+    setTimeout(() => confirmRideStart(), 2500);
+  }
+
+  async function confirmRideStart() {
+    document.getElementById('searchingModal').classList.remove('show');
+    document.getElementById('bookingPanel').style.display = 'none';
+    document.getElementById('trackingPanel').classList.add('show');
+
+    if (currentRideId) {
+      await supabase
+        .from('ride_requests')
+        .update({
+          status: 'in_progress',
+          started_at: new Date().toISOString()
+        })
+        .eq('id', currentRideId);
+    }
+  }
+
+  function updateRideStatus(status) {
+    document.getElementById('rideStatus').textContent = status;
+  }
+
+  function handleRideCompleted(ride) {
+    alert(`Course terminée ! Montant: ${(ride.price_xof || ride.price || booking.price).toLocaleString()} FCFA\nMerci d'avoir choisi DIGIY DRIVER !`);
+    resetBooking();
+  }
+
+  function handleRideCancelled() {
+    alert('La course a été annulée.');
+    resetBooking();
+  }
+
+  async function cancelSearch() {
+    document.getElementById('searchingModal').classList.remove('show');
+
+    if (currentRideId) {
+      await supabase
+        .from('ride_requests')
+        .update({
+          status: 'cancelled',
+          cancelled_by: 'client',
+          cancelled_at: new Date().toISOString()
+        })
+        .eq('id', currentRideId);
+    }
+
+    currentRideId = null;
+  }
+
+  async function cancelRide() {
+    if (!confirm('Êtes-vous sûr de vouloir annuler cette course ?')) return;
+
+    document.getElementById('searchingModal').classList.remove('show');
+    document.getElementById('trackingPanel').classList.remove('show');
+    document.getElementById('bookingPanel').style.display = 'block';
+
+    if (currentRideId) {
+      await supabase
+        .from('ride_requests')
+        .update({
+          status: 'cancelled',
+          cancelled_by: 'client',
+          cancelled_at: new Date().toISOString()
+        })
+        .eq('id', currentRideId);
+
+      if (realtimeChannel) supabase.removeChannel(realtimeChannel);
+    }
+
+    selectedDriver = null;
+    currentRideId = null;
+  }
+
+  function resetBooking() {
+    document.getElementById('searchingModal').classList.remove('show');
+    document.getElementById('trackingPanel').classList.remove('show');
+    document.getElementById('bookingPanel').style.display = 'block';
+
+    selectedDriver = null;
+    currentRideId = null;
+
+    if (realtimeChannel) supabase.removeChannel(realtimeChannel);
+  }
+
+  function callDriver() {
+    if (selectedDriver && selectedDriver.phone) window.open(`tel:${selectedDriver.phone}`);
+  }
+
+  // ====== SOS ======
+  function triggerSOS() {
+    getCurrentPosition().then(position => {
+      const lat = position.lat;
+      const lng = position.lng;
+
+      document.getElementById('sosModal').classList.add('show');
+      document.getElementById('sosCoords').textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+
+      if (navigator.vibrate) navigator.vibrate([500, 200, 500, 200, 500]);
+    }).catch(error => {
+      document.getElementById('sosModal').classList.add('show');
+      document.getElementById('sosCoords').textContent = 'Position non disponible';
+      console.error('Erreur SOS:', error);
+    });
+  }
+
+  function getCurrentPosition() {
+    return new Promise((resolve, reject) => {
+      if (myPosition) resolve(myPosition);
+      else if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+          reject,
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      } else reject(new Error('Géolocalisation non supportée'));
+    });
+  }
+
+  function callEmergency() { window.location.href = EMERGENCY_NUMBER; }
+
+  function shareLocation() {
+    getCurrentPosition().then(position => {
+      const lat = position.lat;
+      const lng = position.lng;
+      const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+
+      const text = `🆘 URGENCE - Ma position:\n${lat.toFixed(6)}, ${lng.toFixed(6)}\n${mapsUrl}`;
+      if (navigator.share) {
+        navigator.share({ title: '🆘 URGENCE - Ma position', text, url: mapsUrl });
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => alert('Position copiée !'));
+      } else {
+        alert(text);
+      }
+    });
+  }
+
+  function closeSOS() { document.getElementById('sosModal').classList.remove('show'); }
+
+  // ====== Boot ======
+  document.addEventListener('DOMContentLoaded', async () => {
+    initMap();
+    buildZoneButtons();
+    selectZone(ZONES_CONFIG[0].id);
+    await pingSupabase();
+  });
+
+})();
 </script>
 
 </body>
