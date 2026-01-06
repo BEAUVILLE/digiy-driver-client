@@ -89,6 +89,26 @@
       color: white;
     }
     
+    .btn-guest {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--gold), var(--orange));
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    
+    .btn-guest:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(249, 115, 22, 0.4);
+    }
+    
     /* Main Content */
     .main-content {
       display: grid;
@@ -272,6 +292,17 @@
         text-align: center;
       }
       
+      .header-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .btn-header,
+      .btn-guest {
+        width: 100%;
+        text-align: center;
+      }
+      
       .card {
         padding: 24px;
       }
@@ -288,6 +319,9 @@
       <span>DIGIY DRIVER</span>
     </div>
     <div class="header-actions">
+      <a href="/guest-booking-v4.html?module=driver" class="btn-guest">
+        ⚡ Commander sans compte
+      </a>
       <a href="/connexion-client.html" class="btn-header">👤 Connexion</a>
       <a href="/inscription-client.html" class="btn-header">✨ S'inscrire</a>
     </div>
