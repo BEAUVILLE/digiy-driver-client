@@ -493,7 +493,7 @@
 
     .driver-name { font-size: 22px; font-weight: 700; margin-bottom: 5px; }
     .driver-rating { color: var(--gold); font-size: 14px; margin-bottom: 5px; }
-    .driver-vehicle { color: var(--gray); font-size: 14px; margin-bottom: 15px; }
+    .driver-vehicle { color: var(--gray); font-size: 14px; margin-bottom: 10px; }
 
     .driver-eta {
       background: var(--card-light);
@@ -946,6 +946,12 @@
         <span class="tracking-label">Prix</span>
         <span class="tracking-value" id="trackingPrice" style="color: var(--gold);">—</span>
       </div>
+
+      <!-- ✅ AJOUT : Téléphone dans le tracking panel -->
+      <div class="tracking-row">
+        <span class="tracking-label">Téléphone</span>
+        <span class="tracking-value" id="trackingPhone" style="color: var(--green);">—</span>
+      </div>
     </div>
 
     <div class="tracking-actions">
@@ -1005,10 +1011,13 @@
       <div class="driver-name" id="foundDriverName">Chauffeur DIGIY</div>
       <div class="driver-rating">⭐ <span id="foundDriverRating">5.0</span> • <span id="foundDriverTrips">—</span> courses</div>
       <div class="driver-vehicle" id="foundDriverVehicle">Véhicule • Plaque</div>
-      <div class="tracking-row">
-  <span class="tracking-label">Téléphone</span>
-  <span class="tracking-value" id="trackingPhone" style="color: var(--green);">—</span>
-</div>      
+
+      <!-- ✅ MODIF : Téléphone dans la modal Chauffeur trouvé -->
+      <div class="driver-phone" style="color: var(--green); font-size: 15px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; justify-content: center;">
+        <span>📱</span>
+        <span id="foundDriverPhone">+221 77 XXX XX XX</span>
+      </div>
+
       <div class="driver-eta">
         <div class="eta-label">Arrivée dans</div>
         <div class="eta-time" id="foundDriverETA">3 min</div>
@@ -1686,7 +1695,14 @@
     document.getElementById('foundDriverTrips').textContent = '—';
     document.getElementById('foundDriverVehicle').textContent =
       `${selectedDriver.car_model || 'Véhicule'} • ${selectedDriver.car_plate || 'DK-XXXX-XX'}`;
-   document.getElementById('foundDriverPhone').textContent = selectedDriver.phone || '+221 77 XXX XX XX';    document.getElementById('foundDriverETA').textContent = `${eta} min`;
+
+    // ✅ Téléphone dans MODAL "Chauffeur trouvé"
+    const foundPhoneEl = document.getElementById('foundDriverPhone');
+    if (foundPhoneEl) {
+      foundPhoneEl.textContent = selectedDriver.phone || '+221 77 XXX XX XX';
+    }
+
+    document.getElementById('foundDriverETA').textContent = `${eta} min`;
     document.getElementById('foundPrice').textContent = booking.price.toLocaleString();
 
     document.getElementById('searchingState').style.display = 'none';
@@ -1697,11 +1713,13 @@
       `${selectedDriver.car_model || '—'} • ${selectedDriver.car_plate || '—'}`;
     document.getElementById('trackingETA').textContent = `${eta} min`;
     document.getElementById('trackingPrice').textContent = `${booking.price.toLocaleString()} FCFA`;
-    // ✅ TÉLÉPHONE DU CHAUFFEUR (avec sécurité)
-  const phoneEl = document.getElementById('foundDriverPhone');
-  if (phoneEl && selectedDriver.phone) {
-    phoneEl.textContent = selectedDriver.phone;
-  }    
+
+    // ✅ TÉLÉPHONE DANS TRACKING (avec sécurité)
+    const trackingPhoneEl = document.getElementById('trackingPhone');
+    if (trackingPhoneEl && selectedDriver.phone) {
+      trackingPhoneEl.textContent = selectedDriver.phone;
+    }
+
     setTimeout(() => confirmRideStart(), 2500);
   }
 
@@ -1849,7 +1867,6 @@
     window.location.href = EMERGENCY_NUMBER;
   }
 
-  // ✅✅✅ ICI : FIN PROPRE DE shareLocation() (tu étais coupé)
   function shareLocation() {
     getCurrentPosition().then(position => {
       const lat = position.lat;
@@ -1866,7 +1883,6 @@
           url: mapsUrl
         }).catch(()=>{});
       } else {
-        // fallback clipboard
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(payloadText)
             .then(() => alert("✅ Position copiée. Colle-la sur WhatsApp."))
@@ -1884,7 +1900,6 @@
     document.getElementById('sosModal').classList.remove('show');
   }
 
-  // ✅ INIT UI + MAP
   function boot() {
     buildZoneButtons();
     initMap();
