@@ -1697,7 +1697,11 @@
       `${selectedDriver.car_model || '—'} • ${selectedDriver.car_plate || '—'}`;
     document.getElementById('trackingETA').textContent = `${eta} min`;
     document.getElementById('trackingPrice').textContent = `${booking.price.toLocaleString()} FCFA`;
-    document.getElementById('trackingPhone').textContent = selectedDriver.phone || '+221 77 XXX XX XX';    
+    // ✅ TÉLÉPHONE DU CHAUFFEUR (avec sécurité)
+  const phoneEl = document.getElementById('foundDriverPhone');
+  if (phoneEl && selectedDriver.phone) {
+    phoneEl.textContent = selectedDriver.phone;
+  }    
     setTimeout(() => confirmRideStart(), 2500);
   }
 
