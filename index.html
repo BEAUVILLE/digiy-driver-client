@@ -1686,7 +1686,7 @@
     document.getElementById('foundDriverTrips').textContent = '—';
     document.getElementById('foundDriverVehicle').textContent =
       `${selectedDriver.car_model || 'Véhicule'} • ${selectedDriver.car_plate || 'DK-XXXX-XX'}`;
-    document.getElementById('foundDriverETA').textContent = `${eta} min`;
+   document.getElementById('foundDriverPhone').textContent = selectedDriver.phone || '+221 77 XXX XX XX';    document.getElementById('foundDriverETA').textContent = `${eta} min`;
     document.getElementById('foundPrice').textContent = booking.price.toLocaleString();
 
     document.getElementById('searchingState').style.display = 'none';
