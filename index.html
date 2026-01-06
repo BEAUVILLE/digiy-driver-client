@@ -1697,7 +1697,7 @@
       `${selectedDriver.car_model || '—'} • ${selectedDriver.car_plate || '—'}`;
     document.getElementById('trackingETA').textContent = `${eta} min`;
     document.getElementById('trackingPrice').textContent = `${booking.price.toLocaleString()} FCFA`;
-
+    document.getElementById('trackingPhone').textContent = selectedDriver.phone || '+221 77 XXX XX XX';    
     setTimeout(() => confirmRideStart(), 2500);
   }
 
