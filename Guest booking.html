@@ -98,7 +98,7 @@
   </div>
 
   <div style="text-align:center; margin-bottom:24px;">
-    <span class="badge">✅ VERSION 4.0 - FIX ABSOLU</span>
+    <span class="badge">✅ VERSION 4.0 - NO-READ</span>
   </div>
 
   <form id="quickBookForm">
@@ -158,14 +158,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-console.log("🦅 DIGIYLYFE V4.0 - REDIRECTION ABSOLUE GARANTIE");
+console.log("🦅 DIGIYLYFE V4 — NO-READ MODE");
 
 const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// 🔥 CONFIGURATION AVEC URLS ABSOLUES COMPLÈTES
 const REDIRECT_URLS = {
   driver: 'https://beauville.github.io/digiy-driver-order.html',
   resa: 'https://beauville.github.io/digiy-resa-booking.html',
@@ -175,20 +174,17 @@ const REDIRECT_URLS = {
 };
 
 const MODULES = {
-  driver: { logo: '🚗', title: 'Commander sans compte', subtitle: 'Réservez votre VTC', needName: true, needEmail: false, buttonText: '🚗 Commander' },
-  resa: { logo: '🍽️', title: 'Réserver sans compte', subtitle: 'Réservez votre table', needName: true, needEmail: true, buttonText: '🍽️ Réserver' },
-  loc: { logo: '🏠', title: 'Louer sans compte', subtitle: 'Réservez votre logement', needName: true, needEmail: true, buttonText: '🏠 Réserver' },
-  ndimbal: { logo: '📦', title: 'Livraison express', subtitle: 'Commander livraison', needName: true, needEmail: false, buttonText: '📦 Commander' },
-  market: { logo: '🛒', title: 'Acheter sans compte', subtitle: 'Commander sur marketplace', needName: true, needEmail: false, buttonText: '🛒 Acheter' }
+  driver:  { logo: '🚗', title: 'Commander sans compte', subtitle: 'Réservez votre VTC',       needName: true,  needEmail: false, buttonText: '🚗 Commander' },
+  resa:    { logo: '🍽️', title: 'Réserver sans compte',  subtitle: 'Réservez votre table',   needName: true,  needEmail: true,  buttonText: '🍽️ Réserver' },
+  loc:     { logo: '🏠', title: 'Louer sans compte',     subtitle: 'Réservez votre logement',needName: true,  needEmail: true,  buttonText: '🏠 Réserver' },
+  ndimbal: { logo: '📦', title: 'Livraison express',     subtitle: 'Commander livraison',    needName: true,  needEmail: false, buttonText: '📦 Commander' },
+  market:  { logo: '🛒', title: 'Acheter sans compte',   subtitle: 'Commander sur marketplace',needName: true,needEmail: false, buttonText: '🛒 Acheter' }
 };
 
 const urlParams = new URLSearchParams(window.location.search);
 const moduleKey = (urlParams.get('module') || 'driver').toLowerCase();
 const config = MODULES[moduleKey] || MODULES.driver;
 const redirectUrl = REDIRECT_URLS[moduleKey] || REDIRECT_URLS.driver;
-
-console.log('🎯 Module:', moduleKey);
-console.log('🔗 URL de redirection:', redirectUrl);
 
 document.getElementById('moduleLogo').textContent = config.logo;
 document.getElementById('moduleTitle').textContent = config.title;
@@ -200,21 +196,11 @@ const emailField = document.getElementById('emailField');
 const guestName = document.getElementById('guestName');
 const guestEmail = document.getElementById('guestEmail');
 
-if (config.needName) {
-  nameField.style.display = 'block';
-  guestName.required = true;
-} else {
-  nameField.style.display = 'none';
-  guestName.required = false;
-}
+nameField.style.display = config.needName ? 'block' : 'none';
+guestName.required = !!config.needName;
 
-if (config.needEmail) {
-  emailField.style.display = 'block';
-  guestEmail.required = true;
-} else {
-  emailField.style.display = 'none';
-  guestEmail.required = false;
-}
+emailField.style.display = config.needEmail ? 'block' : 'none';
+guestEmail.required = !!config.needEmail;
 
 function showMsg(text, type = 'error') {
   const msg = document.getElementById('msg');
@@ -237,98 +223,61 @@ function normalizePhone(phone) {
 
 document.getElementById('quickBookForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  
+
   const phone = document.getElementById('guestPhone').value.trim();
   const name = guestName.value.trim();
   const email = guestEmail.value.trim();
-  
+
   if (!validatePhone(phone)) {
     showMsg('⚠️ Numéro invalide. Format: +221 77 123 45 67');
     return;
   }
-
   if (config.needName && !name) {
     showMsg('⚠️ Veuillez entrer votre nom');
     return;
   }
-
   if (config.needEmail && !email) {
     showMsg('⚠️ Veuillez entrer votre email');
     return;
   }
-  
+
   const btnContinue = document.getElementById('btnContinue');
   const btnText = document.getElementById('btnText');
-  
   btnContinue.disabled = true;
-  btnText.textContent = '⏳ Vérification...';
-  
+  btnText.textContent = '⏳ Envoi...';
+
   try {
     const normalizedPhone = normalizePhone(phone);
-    
-   const bookingId = (crypto?.randomUUID?.() || (Date.now() + "-" + Math.random().toString(16).slice(2)));
+    const bookingId = (crypto?.randomUUID?.() || (Date.now() + "-" + Math.random().toString(16).slice(2)));
 
-const { error } = await sb
-  .from('guest_bookings')
-  .insert([{
-    id: bookingId,                 // ✅ on pousse nous-même l'id (pas besoin de READ)
-    phone: normalizedPhone,
-    name: name || null,
-    email: email || null,
-    module: moduleKey,
-    status: 'initiated',
-    booking_details: {}
-  }], { returning: "minimal" });   // ✅ IMPORTANT : aucune donnée retournée
+    const { error } = await sb
+      .from('guest_bookings')
+      .insert([{
+        id: bookingId,
+        phone: normalizedPhone,
+        name: name || null,
+        email: email || null,
+        module: moduleKey,
+        status: 'initiated',
+        booking_details: {}
+      }], { returning: "minimal" });
 
-if (error) {
-  console.error('❌ Erreur:', error);
-  throw new Error(error.message);
-}
+    if (error) throw new Error(error.message);
 
-console.log('✅ Booking créé (no-read):', bookingId);
-
-localStorage.setItem('guestSession', JSON.stringify({
-  bookingId,
-  phone: normalizedPhone,
-  name: name || null,
-  email: email || null,
-  module: moduleKey,
-  timestamp: Date.now()
-}));
-
-showMsg('✅ Succès ! Redirection...', 'success');
-
-const finalUrl = `${redirectUrl}?guest=true&bookingId=${encodeURIComponent(bookingId)}`;
-
-setTimeout(() => {
-  window.location.href = finalUrl;
-}, 800);
-    
-    console.log('✅ Booking créé:', data.id);
-    
     localStorage.setItem('guestSession', JSON.stringify({
-      bookingId: data.id,
+      bookingId,
       phone: normalizedPhone,
       name: name || null,
       email: email || null,
       module: moduleKey,
       timestamp: Date.now()
     }));
-    
+
     showMsg('✅ Succès ! Redirection...', 'success');
-    
-    // 🚀 REDIRECTION AVEC URL ABSOLUE
-    const finalUrl = `${redirectUrl}?guest=true&bookingId=${data.id}`;
-    
-    console.log('🚀 REDIRECTION VERS:');
-    console.log('   URL:', finalUrl);
-    console.log('   Base:', redirectUrl);
-    console.log('   Booking:', data.id);
-    
-    setTimeout(() => {
-      window.location.href = finalUrl;
-    }, 800);
-    
+
+    const finalUrl = `${redirectUrl}?guest=true&bookingId=${encodeURIComponent(bookingId)}`;
+    setTimeout(() => { window.location.href = finalUrl; }, 650);
+
   } catch (err) {
     console.error('❌', err);
     showMsg('❌ ' + (err.message || 'Erreur'));
