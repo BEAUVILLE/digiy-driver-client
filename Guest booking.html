@@ -266,23 +266,43 @@ document.getElementById('quickBookForm').addEventListener('submit', async (e) =>
   try {
     const normalizedPhone = normalizePhone(phone);
     
-    const { data, error } = await sb
-      .from('guest_bookings')
-      .insert({
-        phone: normalizedPhone,
-        name: name || null,
-        email: email || null,
-        module: moduleKey,
-        status: 'initiated',
-        booking_details: {}
-      })
-      .select()
-      .single();
-    
-    if (error) {
-      console.error('❌ Erreur:', error);
-      throw new Error(error.message);
-    }
+   const bookingId = (crypto?.randomUUID?.() || (Date.now() + "-" + Math.random().toString(16).slice(2)));
+
+const { error } = await sb
+  .from('guest_bookings')
+  .insert([{
+    id: bookingId,                 // ✅ on pousse nous-même l'id (pas besoin de READ)
+    phone: normalizedPhone,
+    name: name || null,
+    email: email || null,
+    module: moduleKey,
+    status: 'initiated',
+    booking_details: {}
+  }], { returning: "minimal" });   // ✅ IMPORTANT : aucune donnée retournée
+
+if (error) {
+  console.error('❌ Erreur:', error);
+  throw new Error(error.message);
+}
+
+console.log('✅ Booking créé (no-read):', bookingId);
+
+localStorage.setItem('guestSession', JSON.stringify({
+  bookingId,
+  phone: normalizedPhone,
+  name: name || null,
+  email: email || null,
+  module: moduleKey,
+  timestamp: Date.now()
+}));
+
+showMsg('✅ Succès ! Redirection...', 'success');
+
+const finalUrl = `${redirectUrl}?guest=true&bookingId=${encodeURIComponent(bookingId)}`;
+
+setTimeout(() => {
+  window.location.href = finalUrl;
+}, 800);
     
     console.log('✅ Booking créé:', data.id);
     
