@@ -343,7 +343,7 @@
       border: 1px solid var(--gold);
       border-radius: 15px;
       padding: 15px;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
       display: none;
     }
 
@@ -385,6 +385,36 @@
 
     .confirm-btn:hover { background: var(--gold-dark); transform: scale(1.02); }
     .confirm-btn:disabled { background: var(--gray); cursor: not-allowed; transform: none; }
+
+    /* ✅ ASTUCE TERRAIN (GPS SHARE) */
+    .gps-share {
+      display:flex;
+      gap:10px;
+      margin-bottom: 14px;
+      flex-wrap:wrap;
+    }
+    .gps-share button{
+      flex:1;
+      min-width:150px;
+      padding:12px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:#1f2937;
+      color:#fff;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .gps-share button.primary{
+      background: rgba(0,200,83,0.18);
+      border-color: rgba(0,200,83,0.55);
+      color: #b7ffd2;
+    }
+    .gps-share .hint{
+      width:100%;
+      font-size:12px;
+      color: var(--gray);
+      margin-top: -6px;
+    }
 
     .modal-overlay {
       display: none;
@@ -846,6 +876,7 @@
         <input type="text" class="input-field" id="dropoffInput" placeholder="Destination" readonly>
       </div>
 
+      <!-- ✅ PATCH #1 : Téléphone client -->
       <div class="input-row" style="margin-top:8px; cursor: default;">
         <div class="input-icon" style="background:rgba(59,130,246,0.2);color:#3b82f6;">
           📞
@@ -859,6 +890,15 @@
           placeholder="Téléphone WhatsApp (+221 77...)"
           style="cursor: text;"
         >
+      </div>
+    </div>
+
+    <!-- ✅ PATCH #4 : ASTUCE TERRAIN GPS (simple pour non-initiés) -->
+    <div class="gps-share">
+      <button class="primary" id="btnShareMyPoint" type="button">📍 Partager mon point</button>
+      <button id="btnCopyMyPoint" type="button">📋 Copier GPS</button>
+      <div class="hint">
+        Astuce : si tu es dans une ruelle / résidence, envoie ton point au chauffeur (WhatsApp / Maps).
       </div>
     </div>
 
@@ -947,7 +987,7 @@
         <span class="tracking-value" id="trackingPrice" style="color: var(--gold);">—</span>
       </div>
 
-      <!-- ✅ AJOUT : Téléphone dans le tracking panel -->
+      <!-- ✅ PATCH #3 : Téléphone dans tracking -->
       <div class="tracking-row">
         <span class="tracking-label">Téléphone</span>
         <span class="tracking-value" id="trackingPhone" style="color: var(--green);">—</span>
@@ -1012,7 +1052,7 @@
       <div class="driver-rating">⭐ <span id="foundDriverRating">5.0</span> • <span id="foundDriverTrips">—</span> courses</div>
       <div class="driver-vehicle" id="foundDriverVehicle">Véhicule • Plaque</div>
 
-      <!-- ✅ MODIF : Téléphone dans la modal Chauffeur trouvé -->
+      <!-- ✅ PATCH #3 : Téléphone dans modal -->
       <div class="driver-phone" style="color: var(--green); font-size: 15px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; justify-content: center;">
         <span>📱</span>
         <span id="foundDriverPhone">+221 77 XXX XX XX</span>
@@ -1174,6 +1214,10 @@
 
   document.getElementById('openGmapsFoundBtn').addEventListener('click', openGoogleMapsRoute);
   document.getElementById('openGmapsTrackingBtn').addEventListener('click', openGoogleMapsRoute);
+
+  // ✅ ASTUCE TERRAIN GPS
+  document.getElementById('btnShareMyPoint').addEventListener('click', shareMyPointToDriver);
+  document.getElementById('btnCopyMyPoint').addEventListener('click', copyMyPoint);
 
   document.getElementById('vehicleOptions').addEventListener('click', (e) => {
     const option = e.target.closest('.vehicle-option');
@@ -1556,7 +1600,7 @@
   }
 
   async function sendRideRequest(clientPhone) {
-    // ✅ IMPORTANT : pas de colonnes pickup/dropoff si elles n'existent pas dans la table
+    // ✅ PATCH #2 : rideData avec colonnes sûres
     const rideData = {
       pickup_address: booking.pickupName,
       pickup_text: booking.pickupName,
@@ -1590,6 +1634,7 @@
       currentRideId = data.id;
       listenToRideUpdates(data.id);
 
+      // Simu pour test
       setTimeout(() => simulateDriverAcceptance(), Math.random() * 2000 + 3000);
 
       document.getElementById('confirmBtn').disabled = true;
@@ -1696,7 +1741,7 @@
     document.getElementById('foundDriverVehicle').textContent =
       `${selectedDriver.car_model || 'Véhicule'} • ${selectedDriver.car_plate || 'DK-XXXX-XX'}`;
 
-    // ✅ Téléphone dans MODAL "Chauffeur trouvé"
+    // ✅ PATCH #3 : Téléphone dans MODAL
     const foundPhoneEl = document.getElementById('foundDriverPhone');
     if (foundPhoneEl) {
       foundPhoneEl.textContent = selectedDriver.phone || '+221 77 XXX XX XX';
@@ -1714,7 +1759,7 @@
     document.getElementById('trackingETA').textContent = `${eta} min`;
     document.getElementById('trackingPrice').textContent = `${booking.price.toLocaleString()} FCFA`;
 
-    // ✅ TÉLÉPHONE DANS TRACKING (avec sécurité)
+    // ✅ PATCH #3 : TÉLÉPHONE DANS TRACKING
     const trackingPhoneEl = document.getElementById('trackingPhone');
     if (trackingPhoneEl && selectedDriver.phone) {
       trackingPhoneEl.textContent = selectedDriver.phone;
@@ -1898,6 +1943,43 @@
 
   function closeSOS() {
     document.getElementById('sosModal').classList.remove('show');
+  }
+
+  // ✅ ASTUCE TERRAIN GPS (simple pour tout le monde)
+  async function buildMyPointPayload(){
+    const pos = await getCurrentPosition();
+    const lat = pos.lat, lng = pos.lng;
+    const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+    const text = `📍 Mon point exact:\n${lat.toFixed(6)}, ${lng.toFixed(6)}\n${mapsUrl}`;
+    return { text, mapsUrl };
+  }
+
+  async function shareMyPointToDriver(){
+    try{
+      const { text, mapsUrl } = await buildMyPointPayload();
+      if(navigator.share){
+        await navigator.share({ title:"📍 Mon point", text, url: mapsUrl });
+      }else{
+        // fallback WhatsApp share (universel)
+        window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank");
+      }
+    }catch(e){
+      alert("GPS non dispo. Active le GPS puis réessaie.");
+    }
+  }
+
+  async function copyMyPoint(){
+    try{
+      const { text } = await buildMyPointPayload();
+      if(navigator.clipboard?.writeText){
+        await navigator.clipboard.writeText(text);
+        alert("✅ GPS copié. Colle-le sur WhatsApp au chauffeur.");
+      }else{
+        prompt("Copie/colle :", text);
+      }
+    }catch(e){
+      alert("GPS non dispo. Active le GPS puis réessaie.");
+    }
   }
 
   function boot() {
