@@ -5,7 +5,7 @@
   <title>DIGIY DRIVER — Commander une course</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#061b14">
-  <meta name="description" content="DIGIY DRIVER — Commande de course simple, prix justes, chauffeur direct, 0% commission.">
+  <meta name="description" content="DIGIY DRIVER — Commande de course simple, chauffeur direct, 0% commission.">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -22,7 +22,6 @@
       --red:#ef4444;
       --blue:#3b82f6;
       --shadow:0 18px 55px rgba(0,0,0,.40);
-      --radius:18px;
     }
 
     *{box-sizing:border-box}
@@ -31,7 +30,7 @@
       padding:0;
       background:var(--bg);
       color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     }
 
     body{
@@ -44,9 +43,9 @@
 
     .app{
       min-height:100vh;
-      max-width:820px;
+      max-width:860px;
       margin:0 auto;
-      padding:0 0 26px;
+      padding:0 0 28px;
     }
 
     .header{
@@ -100,34 +99,9 @@
       display:flex;
       gap:8px;
       align-items:center;
-      flex-shrink:0;
       flex-wrap:wrap;
       justify-content:flex-end;
     }
-
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      min-height:38px;
-      padding:0 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font-size:12px;
-      font-weight:900;
-      white-space:nowrap;
-    }
-
-    .chip .dot{
-      width:8px;
-      height:8px;
-      border-radius:999px;
-      background:var(--red);
-    }
-
-    .chip.ok .dot{background:var(--green)}
 
     .btn{
       border:none;
@@ -302,20 +276,6 @@
     }
 
     .field input::placeholder{color:var(--muted)}
-
-    .helper-actions{
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      gap:10px;
-      margin-top:12px;
-    }
-
-    .hint{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.45;
-      margin-top:8px;
-    }
 
     .vehicles{
       display:grid;
@@ -582,16 +542,6 @@
       font-size:14px;
     }
 
-    .sos-box{
-      margin-top:14px;
-      padding:14px;
-      border-radius:16px;
-      border:1px solid rgba(239,68,68,.35);
-      background:rgba(239,68,68,.08);
-      font-size:13px;
-      line-height:1.5;
-    }
-
     @keyframes spin{
       to{transform:rotate(360deg)}
     }
@@ -603,7 +553,6 @@
 
     @media (max-width:720px){
       .vehicles{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .helper-actions{grid-template-columns:1fr}
       .actions{display:grid;grid-template-columns:1fr}
       .header{padding:12px}
       .brand-title{font-size:16px}
@@ -625,9 +574,7 @@
     </div>
 
     <div class="header-actions">
-      <div class="chip" id="gpsChip"><span class="dot"></span><span id="gpsText">GPS OFF</span></div>
       <a class="btn ghost" href="http://digiylyfe.com">← Retour site</a>
-      <button class="btn red" id="sosBtn" type="button">SOS</button>
     </div>
   </header>
 
@@ -668,16 +615,6 @@
         <div class="field-icon phone">📞</div>
         <input id="clientPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Téléphone WhatsApp (+221 77...)">
       </div>
-    </div>
-
-    <div class="helper-actions">
-      <button class="btn green" id="btnUseMyPosition" type="button">📍 Ma position</button>
-      <button class="btn green" id="btnShareMyPoint" type="button">📤 Partager point</button>
-      <button class="btn ghost" id="btnCopyMyPoint" type="button">📋 Copier GPS</button>
-    </div>
-
-    <div class="hint">
-      Pour les ruelles, résidences ou quartiers difficiles à trouver, partage ton point exact au chauffeur.
     </div>
 
     <div class="vehicles" id="vehicleOptions">
@@ -727,7 +664,6 @@
     <div class="tracking" id="trackingPanel">
       <div class="tracking-top">
         <div class="tracking-status"><span class="dot"></span><span id="rideStatus">Recherche chauffeur…</span></div>
-        <button class="btn red" id="trackingSosBtn" type="button">SOS</button>
       </div>
 
       <div class="tracking-card">
@@ -772,24 +708,6 @@
   </div>
 </div>
 
-<div class="modal" id="sosModal" aria-hidden="true">
-  <div class="modal-card">
-    <div class="modal-title" style="color:#fecaca">🆘 URGENCE</div>
-    <div class="modal-sub">Ta position est prête à être partagée.</div>
-
-    <div class="sos-box">
-      <div style="font-weight:900;margin-bottom:6px">Position actuelle</div>
-      <div id="sosCoords">Récupération en cours…</div>
-    </div>
-
-    <div class="actions" style="margin-top:16px">
-      <button class="btn red" id="sosCallBtn" type="button">📞 Police (17)</button>
-      <button class="btn green" id="sosShareBtn" type="button">📤 Partager ma position</button>
-      <button class="btn ghost" id="sosCloseBtn" type="button">Fermer</button>
-    </div>
-  </div>
-</div>
-
 <script>
 (function(){
   "use strict";
@@ -801,7 +719,6 @@
 
   const PRICE_PER_KM = 400;
   const MIN_PRICE = 1000;
-  const POLICE_PHONE = "tel:17";
 
   const LOCATIONS = {
     "Aéroport International Blaise Diagne (AIBD)": { lat: 14.6700, lng: -17.0733 },
@@ -826,7 +743,6 @@
   let currentRideId = null;
   let realtimeChannel = null;
   let currentLocationType = "pickup";
-  let myPosition = null;
   let selectedDriver = null;
 
   const booking = {
@@ -842,8 +758,6 @@
   };
 
   const el = {
-    gpsChip: document.getElementById("gpsChip"),
-    gpsText: document.getElementById("gpsText"),
     dbPill: document.getElementById("dbPill"),
     dbText: document.getElementById("dbText"),
 
@@ -852,10 +766,6 @@
     pickupInput: document.getElementById("pickupInput"),
     dropoffInput: document.getElementById("dropoffInput"),
     clientPhone: document.getElementById("clientPhone"),
-
-    btnUseMyPosition: document.getElementById("btnUseMyPosition"),
-    btnShareMyPoint: document.getElementById("btnShareMyPoint"),
-    btnCopyMyPoint: document.getElementById("btnCopyMyPoint"),
 
     vehicleOptions: document.getElementById("vehicleOptions"),
     priceEco: document.getElementById("priceEco"),
@@ -889,15 +799,7 @@
     closeLocationBtn: document.getElementById("closeLocationBtn"),
 
     searchModal: document.getElementById("searchModal"),
-    cancelSearchBtn: document.getElementById("cancelSearchBtn"),
-
-    sosBtn: document.getElementById("sosBtn"),
-    trackingSosBtn: document.getElementById("trackingSosBtn"),
-    sosModal: document.getElementById("sosModal"),
-    sosCoords: document.getElementById("sosCoords"),
-    sosCallBtn: document.getElementById("sosCallBtn"),
-    sosShareBtn: document.getElementById("sosShareBtn"),
-    sosCloseBtn: document.getElementById("sosCloseBtn")
+    cancelSearchBtn: document.getElementById("cancelSearchBtn")
   };
 
   function normPhone(p){
@@ -916,11 +818,6 @@
     if (name.includes("Thiès")) return "Thiès";
     if (name.includes("AIBD") || name.includes("Aéroport")) return "Diass";
     return null;
-  }
-
-  function setGpsState(ok, label){
-    el.gpsChip.classList.toggle("ok", !!ok);
-    el.gpsText.textContent = label || (ok ? "GPS ON" : "GPS OFF");
   }
 
   function setDbState(ok, label){
@@ -1008,41 +905,6 @@
 
     closePicker();
     maybeEstimate();
-  }
-
-  function getCurrentPosition(){
-    return new Promise((resolve, reject) => {
-      if (!navigator.geolocation) {
-        reject(new Error("Géolocalisation non supportée"));
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (pos) => resolve({
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-          accuracy: pos.coords.accuracy || null
-        }),
-        reject,
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-      );
-    });
-  }
-
-  async function useMyPositionAsPickup(){
-    try{
-      const pos = await getCurrentPosition();
-      myPosition = pos;
-      setGpsState(true, "GPS ON");
-      booking.pickup = { lat: pos.lat, lng: pos.lng };
-      booking.pickupName = "Ma position actuelle";
-      el.pickupInput.value = "Ma position actuelle";
-      maybeEstimate();
-    }catch(err){
-      console.error(err);
-      setGpsState(false, "GPS OFF");
-      alert("GPS non disponible. Active la localisation puis réessaie.");
-    }
   }
 
   function calcDistanceKm(a, b){
@@ -1350,96 +1212,6 @@
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
-  function openSOS(){
-    (myPosition ? Promise.resolve(myPosition) : getCurrentPosition())
-      .then((pos) => {
-        myPosition = pos;
-        setGpsState(true, "GPS ON");
-        el.sosCoords.textContent = `${pos.lat.toFixed(6)}, ${pos.lng.toFixed(6)}`;
-      })
-      .catch(() => {
-        el.sosCoords.textContent = "Position non disponible";
-      });
-
-    el.sosModal.classList.add("show");
-    el.sosModal.setAttribute("aria-hidden", "false");
-  }
-
-  function closeSOS(){
-    el.sosModal.classList.remove("show");
-    el.sosModal.setAttribute("aria-hidden", "true");
-  }
-
-  function callPolice(){
-    window.location.href = POLICE_PHONE;
-  }
-
-  async function buildMyPointPayload(){
-    const pos = myPosition || await getCurrentPosition();
-    const mapsUrl = `https://www.google.com/maps?q=${pos.lat},${pos.lng}`;
-    const text = `📍 Mon point exact :\n${pos.lat.toFixed(6)}, ${pos.lng.toFixed(6)}\n${mapsUrl}`;
-    return { text, mapsUrl, pos };
-  }
-
-  async function shareMyPoint(){
-    try{
-      const { text, mapsUrl, pos } = await buildMyPointPayload();
-      myPosition = pos;
-      setGpsState(true, "GPS ON");
-
-      if (navigator.share) {
-        await navigator.share({ title: "📍 Mon point", text, url: mapsUrl });
-      } else {
-        window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank", "noopener,noreferrer");
-      }
-    }catch(err){
-      console.error(err);
-      alert("GPS non disponible. Active la localisation puis réessaie.");
-    }
-  }
-
-  async function copyMyPoint(){
-    try{
-      const { text, pos } = await buildMyPointPayload();
-      myPosition = pos;
-      setGpsState(true, "GPS ON");
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(text);
-        alert("✅ Point GPS copié.");
-      } else {
-        window.prompt("Copie/colle :", text);
-      }
-    }catch(err){
-      console.error(err);
-      alert("GPS non disponible. Active la localisation puis réessaie.");
-    }
-  }
-
-  async function shareEmergencyLocation(){
-    try{
-      const { text, mapsUrl, pos } = await buildMyPointPayload();
-      myPosition = pos;
-      setGpsState(true, "GPS ON");
-
-      if (navigator.share) {
-        await navigator.share({
-          title: "🆘 URGENCE - Ma position",
-          text: "🆘 URGENCE\n" + text,
-          url: mapsUrl
-        });
-      } else if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText("🆘 URGENCE\n" + text);
-        alert("✅ Position d’urgence copiée.");
-      } else {
-        window.prompt("Copie/colle :", "🆘 URGENCE\n" + text);
-      }
-    }catch(err){
-      console.error(err);
-      alert("Position non disponible.");
-    }
-  }
-
   function bindEvents(){
     el.pickupRow.addEventListener("click", () => openPicker("pickup"));
     el.dropoffRow.addEventListener("click", () => openPicker("dropoff"));
@@ -1447,10 +1219,6 @@
     el.locationOverlay.addEventListener("click", (e) => {
       if (e.target === el.locationOverlay) closePicker();
     });
-
-    el.btnUseMyPosition.addEventListener("click", useMyPositionAsPickup);
-    el.btnShareMyPoint.addEventListener("click", shareMyPoint);
-    el.btnCopyMyPoint.addEventListener("click", copyMyPoint);
 
     el.vehicleOptions.addEventListener("click", (e) => {
       const card = e.target.closest(".vehicle");
@@ -1464,22 +1232,12 @@
     el.callDriverBtn.addEventListener("click", callDriver);
     el.openGmapsBtn.addEventListener("click", openGoogleMapsRoute);
     el.cancelRideBtn.addEventListener("click", cancelRide);
-
-    el.sosBtn.addEventListener("click", openSOS);
-    el.trackingSosBtn.addEventListener("click", openSOS);
-    el.sosCloseBtn.addEventListener("click", closeSOS);
-    el.sosModal.addEventListener("click", (e) => {
-      if (e.target === el.sosModal) closeSOS();
-    });
-    el.sosCallBtn.addEventListener("click", callPolice);
-    el.sosShareBtn.addEventListener("click", shareEmergencyLocation);
   }
 
   function boot(){
     buildZones();
     bindEvents();
     pingSupabase();
-    setGpsState(false, "GPS OFF");
   }
 
   window.addEventListener("load", boot);
