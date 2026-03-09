@@ -3,820 +3,611 @@
 <head>
   <meta charset="utf-8">
   <title>DIGIY DRIVER — Commander une course</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="description" content="Commandez votre VTC au Sénégal - Prix justes, chauffeurs pros, 0% commission">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#061b14">
+  <meta name="description" content="DIGIY DRIVER — Commande de course simple, prix justes, chauffeur direct, 0% commission.">
 
-  <!-- ✅ SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
   <style>
-    :root {
-      --bg: #0a0a0a;
-      --card: #1a1a1a;
-      --card-light: #252525;
-      --gold: #FFD700;
-      --gold-dark: #C7A008;
-      --white: #ffffff;
-      --gray: #888888;
-      --gray-light: #b0b0b0;
-      --green: #00C853;
-      --red: #FF5252;
-      --blue: #2196F3;
-      --orange: #FF9800;
+    :root{
+      --bg:#061b14;
+      --card:#0b2a1f;
+      --card2:#103728;
+      --line:rgba(255,255,255,.12);
+      --text:#ecfdf5;
+      --muted:rgba(236,253,245,.72);
+      --gold:#facc15;
+      --green:#22c55e;
+      --red:#ef4444;
+      --blue:#3b82f6;
+      --shadow:0 18px 55px rgba(0,0,0,.40);
+      --radius:18px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif
     }
 
-    body {
-      background: var(--bg);
-      color: var(--white);
-      min-height: 100vh;
-      overflow-x: hidden;
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top, rgba(250,204,21,.10), transparent 35%),
+        radial-gradient(circle at bottom, rgba(34,197,94,.10), transparent 40%),
+        var(--bg);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.8; }
-    }
-    @keyframes ripple {
-      0% { transform: scale(1); opacity: 0.8; }
-      100% { transform: scale(3); opacity: 0; }
-    }
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    @keyframes sosPulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7); }
-      50% { box-shadow: 0 0 0 20px rgba(255, 82, 82, 0); }
-    }
-    @keyframes gpsActive {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+    .app{
+      min-height:100vh;
+      max-width:820px;
+      margin:0 auto;
+      padding:0 0 26px;
     }
 
-    .app {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .header {
-      background: linear-gradient(135deg, #1a1a1a, #252525);
-      padding: 15px 20px;
-      border-bottom: 2px solid var(--gold);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 100;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .header-logo { font-size: 28px; }
-
-    .header-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--gold);
-    }
-
-    .header-sub {
-      font-size: 11px;
-      color: var(--gray);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .gps-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 10px;
-      font-weight: 600;
-    }
-
-    .gps-indicator.active {
-      background: rgba(0, 200, 83, 0.2);
-      color: var(--green);
-    }
-
-    .gps-indicator.active .gps-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--green);
-      border-radius: 50%;
-      animation: gpsActive 1s infinite;
-    }
-
-    .gps-indicator.inactive {
-      background: rgba(255, 82, 82, 0.2);
-      color: var(--red);
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .header-right .menu-btn {
-      background: var(--card-light);
-      border: none;
-      color: var(--white);
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .sos-btn {
-      background: var(--red);
-      border: none;
-      color: var(--white);
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      animation: sosPulse 2s infinite;
-      transition: transform 0.2s;
-    }
-
-    .sos-btn:hover { transform: scale(1.1); }
-    .sos-btn:active { transform: scale(0.95); }
-
-    .map-container {
-      flex: 1;
-      position: relative;
-      min-height: 300px;
-    }
-
-    #map {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    .map-buttons {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 500;
-    }
-
-    .my-location-btn {
-      width: 50px;
-      height: 50px;
-      background: var(--white);
-      border: none;
-      border-radius: 50%;
-      font-size: 24px;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-
-    .my-location-btn.tracking {
-      background: var(--green);
-      color: white;
-    }
-
-    .supabase-status {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: var(--card);
-      padding: 8px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      z-index: 500;
-      border: 1px solid var(--card-light);
-    }
-
-    .supabase-status .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
-
-    .supabase-status.connected .status-dot { background: var(--green); }
-    .supabase-status.disconnected .status-dot { background: var(--red); }
-
-    .booking-panel {
-      background: var(--card);
-      border-top-left-radius: 25px;
-      border-top-right-radius: 25px;
-      padding: 20px;
-      box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
-      animation: slideUp 0.5s ease;
-    }
-
-    .panel-handle {
-      width: 40px;
-      height: 4px;
-      background: var(--gray);
-      border-radius: 2px;
-      margin: 0 auto 20px;
-    }
-
-    .panel-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .input-group { margin-bottom: 15px; }
-
-    .input-row {
-      display: flex;
-      align-items: center;
-      background: var(--card-light);
-      border-radius: 12px;
-      padding: 12px 15px;
-      gap: 12px;
-      cursor: pointer;
-    }
-
-    .input-icon {
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-
-    .input-icon.pickup { background: rgba(0, 200, 83, 0.2); color: var(--green); }
-    .input-icon.dropoff { background: rgba(255, 215, 0, 0.2); color: var(--gold); }
-
-    .input-field {
-      flex: 1;
-      background: none;
-      border: none;
-      color: var(--white);
-      font-size: 15px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .input-field::placeholder { color: var(--gray); }
-
-    .input-divider {
-      width: 2px;
-      height: 20px;
-      background: var(--gray);
-      margin-left: 17px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      border-radius: 10px;
-    }
-
-    .vehicle-options {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      overflow-x: auto;
-      padding-bottom: 5px;
-    }
-
-    .vehicle-option {
-      flex: 1;
-      min-width: 100px;
-      background: var(--card-light);
-      border: 2px solid transparent;
-      border-radius: 15px;
-      padding: 15px 10px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .vehicle-option:hover { border-color: var(--gray); }
-    .vehicle-option.selected {
-      border-color: var(--gold);
-      background: rgba(255, 215, 0, 0.1);
-    }
-
-    .vehicle-icon { font-size: 30px; margin-bottom: 5px; }
-    .vehicle-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
-    .vehicle-price { font-size: 14px; color: var(--gold); font-weight: 700; }
-    .vehicle-time { font-size: 11px; color: var(--gray); }
-
-    .price-summary {
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
-      border: 1px solid var(--gold);
-      border-radius: 15px;
-      padding: 15px;
-      margin-bottom: 14px;
-      display: none;
-    }
-
-    .price-summary.show { display: block; animation: fadeIn 0.3s ease; }
-
-    .price-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: var(--gray-light);
-    }
-
-    .price-row.total {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--gold);
-      padding-top: 10px;
-      border-top: 1px solid rgba(255, 215, 0, 0.3);
-      margin-top: 10px;
-    }
-
-    .confirm-btn {
-      width: 100%;
-      padding: 18px;
-      background: var(--gold);
-      color: var(--bg);
-      border: none;
-      border-radius: 15px;
-      font-size: 18px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .confirm-btn:hover { background: var(--gold-dark); transform: scale(1.02); }
-    .confirm-btn:disabled { background: var(--gray); cursor: not-allowed; transform: none; }
-
-    /* ✅ ASTUCE TERRAIN (GPS SHARE) */
-    .gps-share {
+    .header{
+      position:sticky;
+      top:0;
+      z-index:1000;
       display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px;
+      background:rgba(6,27,20,.94);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
       gap:10px;
-      margin-bottom: 14px;
+      min-width:0;
+    }
+
+    .brand-logo{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      background:linear-gradient(135deg,#facc15,#f59e0b);
+      color:#111;
+      box-shadow:0 8px 22px rgba(250,204,21,.35);
+      flex:0 0 auto;
+    }
+
+    .brand-title{
+      font-weight:950;
+      letter-spacing:.04em;
+      font-size:18px;
+    }
+
+    .brand-sub{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:2px;
+    }
+
+    .header-actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-shrink:0;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      min-height:38px;
+      padding:0 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      font-size:12px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .chip .dot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:var(--red);
+    }
+
+    .chip.ok .dot{background:var(--green)}
+
+    .btn{
+      border:none;
+      border-radius:14px;
+      min-height:46px;
+      padding:0 14px;
+      cursor:pointer;
+      font-weight:900;
+      color:#111;
+      background:linear-gradient(135deg,#facc15,#f59e0b);
+      box-shadow:0 10px 24px rgba(250,204,21,.20);
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      box-shadow:none;
+    }
+
+    .btn.ghost{
+      color:var(--text);
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+      box-shadow:none;
+    }
+
+    .btn.green{
+      background:rgba(34,197,94,.16);
+      color:#bbf7d0;
+      border:1px solid rgba(34,197,94,.45);
+      box-shadow:none;
+    }
+
+    .btn.red{
+      background:rgba(239,68,68,.14);
+      color:#fecaca;
+      border:1px solid rgba(239,68,68,.42);
+      box-shadow:none;
+    }
+
+    .hero{
+      margin:16px 14px 0;
+      padding:18px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at top left, rgba(34,197,94,.12), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(250,204,21,.10), transparent 35%),
+        linear-gradient(180deg, rgba(11,42,31,.98), rgba(9,30,22,.98));
+      box-shadow:var(--shadow);
+    }
+
+    .hero-title{
+      font-size:24px;
+      font-weight:950;
+      line-height:1.15;
+      margin:0 0 8px;
+    }
+
+    .hero-title span{color:#fde68a}
+
+    .hero-sub{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.55;
+      margin:0;
+    }
+
+    .status-row{
+      margin-top:12px;
+      display:flex;
+      gap:8px;
       flex-wrap:wrap;
     }
-    .gps-share button{
-      flex:1;
-      min-width:150px;
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .pill .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--red);
+    }
+
+    .pill.ok .dot{background:var(--green)}
+    .pill.blue .dot{background:var(--blue)}
+
+    .panel{
+      margin:16px 14px 0;
+      padding:16px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(11,42,31,.98), rgba(9,30,22,.98));
+      box-shadow:var(--shadow);
+    }
+
+    .panel-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+
+    .panel-title{
+      font-size:20px;
+      font-weight:950;
+    }
+
+    .panel-sub{
+      font-size:13px;
+      color:var(--muted);
+      margin-top:4px;
+      line-height:1.5;
+    }
+
+    .stack{display:grid;gap:10px}
+
+    .field{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-height:58px;
       padding:12px 14px;
-      border-radius: 14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:#1f2937;
-      color:#fff;
-      font-weight:800;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
       cursor:pointer;
     }
-    .gps-share button.primary{
-      background: rgba(0,200,83,0.18);
-      border-color: rgba(0,200,83,0.55);
-      color: #b7ffd2;
+
+    .field.static{cursor:default}
+
+    .field-icon{
+      width:36px;
+      height:36px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:16px;
+      flex:0 0 auto;
     }
-    .gps-share .hint{
+
+    .field-icon.pickup{background:rgba(34,197,94,.16);color:#86efac}
+    .field-icon.dropoff{background:rgba(250,204,21,.16);color:#fde68a}
+    .field-icon.phone{background:rgba(59,130,246,.16);color:#bfdbfe}
+
+    .field input{
       width:100%;
+      background:none;
+      border:none;
+      outline:none;
+      color:var(--text);
+      font-size:15px;
+      font-weight:800;
+    }
+
+    .field input::placeholder{color:var(--muted)}
+
+    .helper-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .hint{
       font-size:12px;
-      color: var(--gray);
-      margin-top: -6px;
+      color:var(--muted);
+      line-height:1.45;
+      margin-top:8px;
     }
 
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+    .vehicles{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:10px;
+      margin-top:14px;
     }
 
-    .modal-overlay.show { display: flex; }
-
-    .modal-card {
-      background: var(--card);
-      border: 2px solid var(--gold);
-      border-radius: 25px;
-      padding: 40px 30px;
-      width: 100%;
-      max-width: 380px;
-      text-align: center;
-      animation: fadeIn 0.5s ease;
+    .vehicle{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px 10px;
+      background:rgba(255,255,255,.04);
+      text-align:center;
+      cursor:pointer;
     }
 
-    .searching-animation {
-      position: relative;
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 30px;
+    .vehicle.active{
+      border-color:rgba(250,204,21,.55);
+      background:rgba(250,204,21,.08);
+      box-shadow:0 8px 22px rgba(250,204,21,.10);
     }
 
-    .searching-car {
-      font-size: 50px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
+    .vehicle-ico{font-size:26px}
+    .vehicle-name{font-size:12px;font-weight:900;margin-top:6px}
+    .vehicle-price{font-size:14px;font-weight:900;color:#fde68a;margin-top:3px}
+    .vehicle-time{font-size:11px;color:var(--muted);margin-top:2px}
+
+    .summary{
+      display:none;
+      margin-top:14px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(250,204,21,.35);
+      background:rgba(250,204,21,.08);
     }
 
-    .searching-ripple {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 60px;
-      height: 60px;
-      border: 3px solid var(--gold);
-      border-radius: 50%;
-      animation: ripple 1.5s infinite;
+    .summary.show{display:block}
+
+    .row{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      padding:6px 0;
+      font-size:14px;
     }
 
-    .searching-ripple:nth-child(2) { animation-delay: 0.5s; }
-    .searching-ripple:nth-child(3) { animation-delay: 1s; }
+    .row .label{color:var(--muted)}
 
-    .searching-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
-    .searching-sub { color: var(--gray); font-size: 14px; margin-bottom: 20px; }
-
-    .searching-drivers {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
+    .row.total{
+      margin-top:8px;
+      padding-top:10px;
+      border-top:1px solid rgba(250,204,21,.24);
+      font-size:18px;
+      font-weight:950;
+      color:#fde68a;
     }
 
-    .driver-dot {
-      width: 12px;
-      height: 12px;
-      background: var(--gold);
-      border-radius: 50%;
-      animation: pulse 1s infinite;
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
     }
 
-    .driver-dot:nth-child(2) { animation-delay: 0.2s; }
-    .driver-dot:nth-child(3) { animation-delay: 0.4s; }
-    .driver-dot:nth-child(4) { animation-delay: 0.6s; }
-    .driver-dot:nth-child(5) { animation-delay: 0.8s; }
+    .actions .btn{flex:1}
 
-    .cancel-search-btn {
-      background: var(--card-light);
-      border: 2px solid var(--red);
-      color: var(--red);
-      padding: 12px 30px;
-      border-radius: 25px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .cancel-search-btn:hover { background: var(--red); color: var(--white); }
-
-    .driver-found { display: none; }
-    .driver-found.show { display: block; animation: fadeIn 0.5s ease; }
-
-    .driver-avatar {
-      width: 80px;
-      height: 80px;
-      background: var(--gold);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 40px;
-      margin: 0 auto 15px;
+    .foot-note{
+      margin-top:12px;
+      font-size:12px;
+      text-align:center;
+      color:var(--muted);
+      line-height:1.45;
     }
 
-    .driver-name { font-size: 22px; font-weight: 700; margin-bottom: 5px; }
-    .driver-rating { color: var(--gold); font-size: 14px; margin-bottom: 5px; }
-    .driver-vehicle { color: var(--gray); font-size: 14px; margin-bottom: 10px; }
-
-    .driver-eta {
-      background: var(--card-light);
-      border-radius: 15px;
-      padding: 15px;
-      margin-bottom: 15px;
+    .foot-note a{
+      color:#fde68a;
+      text-decoration:none;
+      font-weight:900;
     }
 
-    .eta-label { font-size: 12px; color: var(--gray); margin-bottom: 5px; }
-    .eta-time { font-size: 28px; font-weight: 800; color: var(--green); }
-
-    .driver-actions { display: flex; gap: 10px; margin-bottom: 10px; }
-
-    .driver-action-btn {
-      flex: 1;
-      padding: 15px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      border: none;
+    .tracking{
+      display:none;
+      margin-top:16px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
     }
 
-    .driver-action-btn.call { background: var(--green); color: var(--white); }
-    .driver-action-btn.cancel { background: var(--card-light); color: var(--red); border: 2px solid var(--red); }
-    .driver-action-btn.gmaps { background: #1f2937; color: #fff; border: 1px solid rgba(255,255,255,.18); }
+    .tracking.show{display:block}
 
-    .commission-badge {
-      background: rgba(0, 200, 83, 0.1);
-      border: 1px solid var(--green);
-      border-radius: 10px;
-      padding: 10px;
-      margin-top: 15px;
-      font-size: 12px;
-      color: var(--green);
+    .tracking-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
     }
 
-    .sos-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(255, 82, 82, 0.95);
-      z-index: 3000;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .sos-modal.show { display: flex; }
-
-    .sos-card {
-      background: var(--card);
-      border: 3px solid var(--red);
-      border-radius: 25px;
-      padding: 40px 30px;
-      width: 100%;
-      max-width: 380px;
-      text-align: center;
-      animation: fadeIn 0.3s ease;
+    .tracking-status{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-weight:900;
+      color:#86efac;
     }
 
-    .sos-icon { font-size: 60px; margin-bottom: 20px; }
-    .sos-title { font-size: 24px; font-weight: 800; color: var(--red); margin-bottom: 10px; }
-    .sos-subtitle { color: var(--gray); font-size: 14px; margin-bottom: 20px; }
-
-    .sos-location {
-      background: var(--card-light);
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 20px;
-      font-size: 13px;
+    .tracking-status .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--green);
     }
 
-    .sos-location-label { color: var(--gray); margin-bottom: 5px; }
-    .sos-location-coords { color: var(--white); font-family: monospace; }
-
-    .sos-actions { display: flex; flex-direction: column; gap: 10px; }
-
-    .sos-call-btn {
-      width: 100%;
-      padding: 18px;
-      background: var(--red);
-      color: var(--white);
-      border: none;
-      border-radius: 15px;
-      font-size: 18px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+    .tracking-card{
+      border-radius:16px;
+      padding:12px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.14);
     }
 
-    .sos-share-btn {
-      width: 100%;
-      padding: 15px;
-      background: var(--card-light);
-      color: var(--white);
-      border: 2px solid var(--gold);
-      border-radius: 15px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.72);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      z-index:2000;
     }
 
-    .sos-cancel-btn {
-      width: 100%;
-      padding: 12px;
-      background: transparent;
-      color: var(--gray);
-      border: none;
-      font-size: 14px;
-      cursor: pointer;
-      margin-top: 10px;
+    .overlay.show{display:flex}
+
+    .picker{
+      width:100%;
+      max-width:520px;
+      max-height:92vh;
+      border-top-left-radius:22px;
+      border-top-right-radius:22px;
+      background:#0b1511;
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px;
+      animation:slideUp .22s ease;
     }
 
-    .tracking-panel {
-      display: none;
-      background: var(--card);
-      border-top-left-radius: 25px;
-      border-top-right-radius: 25px;
-      padding: 20px;
-      box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    .picker-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
     }
 
-    .tracking-panel.show { display: block; animation: slideUp 0.5s ease; }
-
-    .tracking-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
+    .picker-title{
+      font-size:18px;
+      font-weight:950;
+      color:#fde68a;
     }
 
-    .tracking-status {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .close{
+      background:none;
+      border:none;
+      color:#fff;
+      font-size:22px;
+      cursor:pointer;
+      width:36px;
+      height:36px;
+      border-radius:999px;
     }
 
-    .tracking-status-dot {
-      width: 12px;
-      height: 12px;
-      background: var(--green);
-      border-radius: 50%;
-      animation: pulse 1s infinite;
+    .zones{
+      display:flex;
+      gap:8px;
+      overflow:auto;
+      padding-bottom:6px;
+      margin-bottom:10px;
     }
 
-    .tracking-status-text {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--green);
+    .zone{
+      flex:0 0 auto;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:#fff;
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer;
+      white-space:nowrap;
     }
 
-    .tracking-info {
-      background: var(--card-light);
-      border-radius: 15px;
-      padding: 15px;
-      margin-bottom: 15px;
+    .zone.active{
+      border-color:rgba(250,204,21,.45);
+      background:rgba(250,204,21,.10);
+      color:#fde68a;
     }
 
-    .tracking-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
+    .loc-list{
+      display:grid;
+      gap:8px;
+      max-height:60vh;
+      overflow:auto;
     }
 
-    .tracking-row:not(:last-child) { border-bottom: 1px solid var(--card); }
-
-    .tracking-label { color: var(--gray); font-size: 13px; }
-    .tracking-value { font-weight: 700; font-size: 14px; }
-
-    .tracking-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .tracking-actions .driver-action-btn { flex: 1; min-width: 120px; }
-
-    .footer-note {
-      text-align: center;
-      padding: 10px;
-      font-size: 11px;
-      color: var(--gray);
-    }
-    .footer-note a { color: var(--gold); text-decoration: none; }
-
-    @media (max-height: 700px) {
-      .booking-panel { padding: 15px; }
-      .vehicle-option { padding: 10px 8px; }
+    .loc-item{
+      text-align:left;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:#fff;
+      border-radius:14px;
+      padding:12px 14px;
+      font-size:14px;
+      font-weight:900;
+      cursor:pointer;
     }
 
-    .location-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.97);
-      z-index: 2500;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
+    .loc-item:hover{border-color:rgba(250,204,21,.35)}
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.76);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:2200;
     }
-    .location-overlay.show { display: flex; }
-    .location-panel {
-      width: 100%;
-      max-width: 500px;
-      max-height: 100vh;
-      background: #111;
-      border-top-left-radius: 22px;
-      border-top-right-radius: 22px;
-      padding: 16px 16px 24px;
-      display: flex;
-      flex-direction: column;
-      animation: slideUp 0.3s ease;
+
+    .modal.show{display:flex}
+
+    .modal-card{
+      width:100%;
+      max-width:400px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(11,42,31,.98), rgba(8,27,20,.98));
+      box-shadow:var(--shadow);
+      padding:20px;
+      text-align:center;
     }
-    .location-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
+
+    .spinner{
+      width:54px;
+      height:54px;
+      border-radius:50%;
+      border:4px solid rgba(255,255,255,.10);
+      border-top-color:var(--gold);
+      margin:0 auto 14px;
+      animation:spin .85s linear infinite;
     }
-    .location-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--gold);
+
+    .modal-title{
+      font-size:22px;
+      font-weight:950;
     }
-    .location-close {
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 22px;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
+
+    .modal-sub{
+      margin-top:8px;
+      color:var(--muted);
+      line-height:1.5;
+      font-size:14px;
     }
-    .location-zones {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 8px;
-      margin-bottom: 10px;
+
+    .sos-box{
+      margin-top:14px;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(239,68,68,.35);
+      background:rgba(239,68,68,.08);
+      font-size:13px;
+      line-height:1.5;
     }
-    .zone-pill {
-      flex-shrink: 0;
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 13px;
-      border: 1px solid #444;
-      background: #1a1a1a;
-      color: #fff;
-      cursor: pointer;
-      white-space: nowrap;
-      font-weight: 700;
+
+    @keyframes spin{
+      to{transform:rotate(360deg)}
     }
-    .zone-pill.active {
-      border-color: var(--gold);
-      background: rgba(255,215,0,0.15);
-      color: var(--gold);
+
+    @keyframes slideUp{
+      from{transform:translateY(100%)}
+      to{transform:translateY(0)}
     }
-    .location-list {
-      flex: 1;
-      overflow-y: auto;
-      margin-top: 6px;
-      border-radius: 14px;
-      background: #151515;
-      padding: 6px;
-    }
-    .location-item {
-      width: 100%;
-      text-align: left;
-      background: #202020;
-      border-radius: 10px;
-      border: 1px solid #333;
-      color: #fff;
-      padding: 12px 14px;
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      cursor: pointer;
-    }
-    .location-item span { display: block; }
-    .location-item:hover {
-      border-color: var(--gold);
-      background: #252525;
-    }
-    .location-helper {
-      font-size: 12px;
-      color: #aaa;
-      margin-bottom: 6px;
+
+    @media (max-width:720px){
+      .vehicles{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .helper-actions{grid-template-columns:1fr}
+      .actions{display:grid;grid-template-columns:1fr}
+      .header{padding:12px}
+      .brand-title{font-size:16px}
+      .header-actions{width:100%}
     }
   </style>
 </head>
@@ -825,795 +616,543 @@
 <div class="app">
 
   <header class="header">
-    <div class="header-left">
-      <span class="header-logo">🚗</span>
+    <div class="brand">
+      <div class="brand-logo">🚗</div>
       <div>
-        <div class="header-title">DIGIY DRIVER</div>
-        <div class="header-sub">
-          VTC Sénégal •
-          <span class="gps-indicator inactive" id="gpsIndicator">
-            <span class="gps-dot"></span>
-            <span id="gpsStatus">GPS OFF</span>
-          </span>
-        </div>
+        <div class="brand-title">DIGIY DRIVER</div>
+        <div class="brand-sub">Client • commande simple • chauffeur direct</div>
       </div>
     </div>
-    <div class="header-right">
-      <button class="sos-btn" id="sosBtn" title="Urgence SOS">SOS</button>
-      <button class="menu-btn" id="menuBtn">☰</button>
+
+    <div class="header-actions">
+      <div class="chip" id="gpsChip"><span class="dot"></span><span id="gpsText">GPS OFF</span></div>
+      <a class="btn ghost" href="http://digiylyfe.com">← Retour site</a>
+      <button class="btn red" id="sosBtn" type="button">SOS</button>
     </div>
   </header>
 
-  <div class="map-container">
-    <div id="map"></div>
+  <section class="hero">
+    <h1 class="hero-title">Commander une course <span>sans détour</span></h1>
+    <p class="hero-sub">
+      Choisis ton départ, ta destination, ton type de véhicule, puis envoie.
+      DIGIY ne prend pas la commission du chauffeur.
+    </p>
 
-    <div class="supabase-status connected" id="supabaseStatus">
-      <span class="status-dot"></span>
-      <span id="supabaseStatusText">En ligne</span>
+    <div class="status-row">
+      <div class="pill ok" id="dbPill"><span class="dot"></span><span id="dbText">Supabase OK</span></div>
+      <div class="pill blue"><span class="dot"></span><span>Client DRIVER</span></div>
+      <div class="pill"><span class="dot"></span><span>0% commission</span></div>
     </div>
+  </section>
 
-    <div class="map-buttons">
-      <button class="my-location-btn" id="locationBtn">📍</button>
-    </div>
-  </div>
-
-  <div class="booking-panel" id="bookingPanel">
-    <div class="panel-handle"></div>
-
-    <div class="panel-title">
-      <span>🚕</span>
-      <span>Où allez-vous ?</span>
-    </div>
-
-    <div class="input-group">
-      <div class="input-row" id="pickupRow">
-        <div class="input-icon pickup">📍</div>
-        <input type="text" class="input-field" id="pickupInput" placeholder="Point de départ" readonly>
-      </div>
-      <div class="input-divider"></div>
-      <div class="input-row" id="dropoffRow">
-        <div class="input-icon dropoff">🏁</div>
-        <input type="text" class="input-field" id="dropoffInput" placeholder="Destination" readonly>
-      </div>
-
-      <!-- ✅ PATCH #1 : Téléphone client -->
-      <div class="input-row" style="margin-top:8px; cursor: default;">
-        <div class="input-icon" style="background:rgba(59,130,246,0.2);color:#3b82f6;">
-          📞
-        </div>
-        <input
-          type="tel"
-          inputmode="tel"
-          autocomplete="tel"
-          class="input-field"
-          id="clientPhone"
-          placeholder="Téléphone WhatsApp (+221 77...)"
-          style="cursor: text;"
-        >
+  <section class="panel" id="bookingPanel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">Commander une course</div>
+        <div class="panel-sub">Remplis les infos utiles, puis commande.</div>
       </div>
     </div>
 
-    <!-- ✅ PATCH #4 : ASTUCE TERRAIN GPS (simple pour non-initiés) -->
-    <div class="gps-share">
-      <button class="primary" id="btnShareMyPoint" type="button">📍 Partager mon point</button>
-      <button id="btnCopyMyPoint" type="button">📋 Copier GPS</button>
-      <div class="hint">
-        Astuce : si tu es dans une ruelle / résidence, envoie ton point au chauffeur (WhatsApp / Maps).
+    <div class="stack">
+      <div class="field" id="pickupRow">
+        <div class="field-icon pickup">📍</div>
+        <input id="pickupInput" type="text" placeholder="Point de départ" readonly>
+      </div>
+
+      <div class="field" id="dropoffRow">
+        <div class="field-icon dropoff">🏁</div>
+        <input id="dropoffInput" type="text" placeholder="Destination" readonly>
+      </div>
+
+      <div class="field static">
+        <div class="field-icon phone">📞</div>
+        <input id="clientPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Téléphone WhatsApp (+221 77...)">
       </div>
     </div>
 
-    <div class="vehicle-options" id="vehicleOptions">
-      <div class="vehicle-option selected" data-type="eco" data-multiplier="1">
-        <div class="vehicle-icon">🚗</div>
+    <div class="helper-actions">
+      <button class="btn green" id="btnUseMyPosition" type="button">📍 Ma position</button>
+      <button class="btn green" id="btnShareMyPoint" type="button">📤 Partager point</button>
+      <button class="btn ghost" id="btnCopyMyPoint" type="button">📋 Copier GPS</button>
+    </div>
+
+    <div class="hint">
+      Pour les ruelles, résidences ou quartiers difficiles à trouver, partage ton point exact au chauffeur.
+    </div>
+
+    <div class="vehicles" id="vehicleOptions">
+      <div class="vehicle active" data-type="eco" data-multiplier="1">
+        <div class="vehicle-ico">🚗</div>
         <div class="vehicle-name">Éco</div>
         <div class="vehicle-price" id="priceEco">—</div>
         <div class="vehicle-time">3 min</div>
       </div>
-      <div class="vehicle-option" data-type="confort" data-multiplier="1.3">
-        <div class="vehicle-icon">🚙</div>
+      <div class="vehicle" data-type="confort" data-multiplier="1.3">
+        <div class="vehicle-ico">🚙</div>
         <div class="vehicle-name">Confort</div>
         <div class="vehicle-price" id="priceConfort">—</div>
         <div class="vehicle-time">5 min</div>
       </div>
-      <div class="vehicle-option" data-type="premium" data-multiplier="1.8">
-        <div class="vehicle-icon">🚘</div>
+      <div class="vehicle" data-type="premium" data-multiplier="1.8">
+        <div class="vehicle-ico">🚘</div>
         <div class="vehicle-name">Premium</div>
         <div class="vehicle-price" id="pricePremium">—</div>
         <div class="vehicle-time">8 min</div>
       </div>
-      <div class="vehicle-option" data-type="moto" data-multiplier="0.7">
-        <div class="vehicle-icon">🏍️</div>
+      <div class="vehicle" data-type="moto" data-multiplier="0.7">
+        <div class="vehicle-ico">🏍️</div>
         <div class="vehicle-name">Moto</div>
         <div class="vehicle-price" id="priceMoto">—</div>
         <div class="vehicle-time">2 min</div>
       </div>
     </div>
 
-    <div class="price-summary" id="priceSummary">
-      <div class="price-row">
-        <span>Distance estimée</span>
-        <span id="summaryDistance">— km</span>
-      </div>
-      <div class="price-row">
-        <span>Durée estimée</span>
-        <span id="summaryDuration">— min</span>
-      </div>
-      <div class="price-row">
-        <span>Type de véhicule</span>
-        <span id="summaryVehicle">Éco</span>
-      </div>
-      <div class="price-row total">
-        <span>Total à payer</span>
-        <span id="summaryTotal">— FCFA</span>
-      </div>
+    <div class="summary" id="priceSummary">
+      <div class="row"><span class="label">Distance estimée</span><span id="summaryDistance">—</span></div>
+      <div class="row"><span class="label">Durée estimée</span><span id="summaryDuration">—</span></div>
+      <div class="row"><span class="label">Véhicule</span><span id="summaryVehicle">Éco</span></div>
+      <div class="row total"><span>Total</span><span id="summaryTotal">—</span></div>
     </div>
 
-    <button class="confirm-btn" id="confirmBtn" disabled>
-      <span>🚕</span>
-      <span>Commander ma course</span>
-    </button>
-
-    <div class="footer-note">
-      💰 Paiement en espèces au chauffeur • <a href="https://digiylyfe.com/page-inscription-digiy/">Devenir chauffeur</a>
-    </div>
-  </div>
-
-  <div class="tracking-panel" id="trackingPanel">
-    <div class="panel-handle"></div>
-
-    <div class="tracking-header">
-      <div class="tracking-status">
-        <div class="tracking-status-dot"></div>
-        <span class="tracking-status-text" id="rideStatus">En route vers vous</span>
-      </div>
-      <button class="sos-btn" id="sosBtnTracking" style="width: 40px; height: 40px; font-size: 10px;">SOS</button>
+    <div class="actions">
+      <button class="btn" id="confirmBtn" type="button" disabled>🚕 Commander ma course</button>
+      <a class="btn ghost" href="http://digiylyfe.com">← Retour DIGIYLYFE</a>
     </div>
 
-    <div class="tracking-info">
-      <div class="tracking-row">
-        <span class="tracking-label">Chauffeur</span>
-        <span class="tracking-value" id="trackingDriverName">—</span>
-      </div>
-      <div class="tracking-row">
-        <span class="tracking-label">Véhicule</span>
-        <span class="tracking-value" id="trackingVehicle">—</span>
-      </div>
-      <div class="tracking-row">
-        <span class="tracking-label">ETA</span>
-        <span class="tracking-value" id="trackingETA" style="color: var(--green);">—</span>
-      </div>
-      <div class="tracking-row">
-        <span class="tracking-label">Prix</span>
-        <span class="tracking-value" id="trackingPrice" style="color: var(--gold);">—</span>
-      </div>
-
-      <!-- ✅ PATCH #3 : Téléphone dans tracking -->
-      <div class="tracking-row">
-        <span class="tracking-label">Téléphone</span>
-        <span class="tracking-value" id="trackingPhone" style="color: var(--green);">—</span>
-      </div>
+    <div class="foot-note">
+      Paiement direct au chauffeur • 0% commission DIGIY •
+      <a href="http://digiylyfe.com" target="_blank" rel="noopener">Site principal</a>
     </div>
 
-    <div class="tracking-actions">
-      <button class="driver-action-btn call" id="callDriverBtn">📞 Appeler</button>
-      <button class="driver-action-btn gmaps" id="openGmapsTrackingBtn">🗺️ Itinéraire</button>
-      <button class="driver-action-btn cancel" id="cancelRideBtn">✕ Annuler</button>
-    </div>
-  </div>
+    <div class="tracking" id="trackingPanel">
+      <div class="tracking-top">
+        <div class="tracking-status"><span class="dot"></span><span id="rideStatus">Recherche chauffeur…</span></div>
+        <button class="btn red" id="trackingSosBtn" type="button">SOS</button>
+      </div>
 
+      <div class="tracking-card">
+        <div class="row"><span class="label">Chauffeur</span><span id="trackingDriverName">—</span></div>
+        <div class="row"><span class="label">Véhicule</span><span id="trackingVehicle">—</span></div>
+        <div class="row"><span class="label">Téléphone</span><span id="trackingPhone">—</span></div>
+        <div class="row"><span class="label">ETA</span><span id="trackingETA" style="color:#86efac;font-weight:900">—</span></div>
+        <div class="row"><span class="label">Prix</span><span id="trackingPrice" style="color:#fde68a;font-weight:900">—</span></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn green" id="callDriverBtn" type="button">📞 Appeler</button>
+        <button class="btn ghost" id="openGmapsBtn" type="button">🗺️ Itinéraire</button>
+        <button class="btn red" id="cancelRideBtn" type="button">✕ Annuler</button>
+      </div>
+    </div>
+  </section>
 </div>
 
-<div class="location-overlay" id="locationOverlay">
-  <div class="location-panel">
-    <div class="location-header">
-      <div class="location-title" id="locationTitle">Choisir un lieu</div>
-      <button class="location-close" id="closeLocationBtn">✕</button>
+<div class="overlay" id="locationOverlay" aria-hidden="true">
+  <div class="picker">
+    <div class="picker-head">
+      <div class="picker-title" id="locationTitle">Choisir un lieu</div>
+      <button class="close" id="closeLocationBtn" type="button">✕</button>
     </div>
-    <div class="location-helper">
-      Tape sur une zone, puis choisis ton point exact 👀
-    </div>
-    <div class="location-zones" id="locationZones"></div>
-    <div class="location-list" id="locationList"></div>
+
+    <div class="zones" id="locationZones"></div>
+    <div class="loc-list" id="locationList"></div>
   </div>
 </div>
 
-<div class="modal-overlay" id="searchingModal">
+<div class="modal" id="searchModal" aria-hidden="true">
   <div class="modal-card">
-
-    <div id="searchingState">
-      <div class="searching-animation">
-        <div class="searching-ripple"></div>
-        <div class="searching-ripple"></div>
-        <div class="searching-ripple"></div>
-        <div class="searching-car">🚗</div>
-      </div>
-
-      <div class="searching-title">Recherche d'un chauffeur...</div>
-      <div class="searching-sub">
-        Envoi de votre demande aux chauffeurs DIGIY à proximité
-      </div>
-
-      <div class="searching-drivers">
-        <div class="driver-dot"></div>
-        <div class="driver-dot"></div>
-        <div class="driver-dot"></div>
-        <div class="driver-dot"></div>
-        <div class="driver-dot"></div>
-      </div>
-
-      <button class="cancel-search-btn" id="cancelSearchBtn">
-        ✕ Annuler la recherche
-      </button>
+    <div class="spinner"></div>
+    <div class="modal-title">Recherche d’un chauffeur…</div>
+    <div class="modal-sub">
+      La demande part vers les chauffeurs DIGIY à proximité.
     </div>
-
-    <div class="driver-found" id="driverFoundState">
-      <div class="driver-avatar">👤</div>
-      <div class="driver-name" id="foundDriverName">Chauffeur DIGIY</div>
-      <div class="driver-rating">⭐ <span id="foundDriverRating">5.0</span> • <span id="foundDriverTrips">—</span> courses</div>
-      <div class="driver-vehicle" id="foundDriverVehicle">Véhicule • Plaque</div>
-
-      <!-- ✅ PATCH #3 : Téléphone dans modal -->
-      <div class="driver-phone" style="color: var(--green); font-size: 15px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; justify-content: center;">
-        <span>📱</span>
-        <span id="foundDriverPhone">+221 77 XXX XX XX</span>
-      </div>
-
-      <div class="driver-eta">
-        <div class="eta-label">Arrivée dans</div>
-        <div class="eta-time" id="foundDriverETA">3 min</div>
-      </div>
-
-      <div class="driver-actions">
-        <button class="driver-action-btn call" id="callFoundDriverBtn">📞 Appeler</button>
-        <button class="driver-action-btn gmaps" id="openGmapsFoundBtn">🗺️ Itinéraire</button>
-      </div>
-
-      <button class="driver-action-btn cancel" id="cancelFoundRideBtn" style="margin-top: 10px;">
-        ✕ Annuler la course
-      </button>
-
-      <div class="commission-badge">
-        💚 0% commission — Le chauffeur garde 100% de vos <span id="foundPrice">—</span> FCFA
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<div class="sos-modal" id="sosModal">
-  <div class="sos-card">
-    <div class="sos-icon">🆘</div>
-    <div class="sos-title">URGENCE ACTIVÉE</div>
-    <div class="sos-subtitle">Votre position est prête à être partagée</div>
-
-    <div class="sos-location">
-      <div class="sos-location-label">📍 Votre position actuelle</div>
-      <div class="sos-location-coords" id="sosCoords">Récupération en cours...</div>
-    </div>
-
-    <div class="sos-actions">
-      <button class="sos-call-btn" id="sosCallBtn">📞 Appeler Police (17)</button>
-      <button class="sos-share-btn" id="sosShareBtn">📤 Partager ma position</button>
-      <button class="sos-cancel-btn" id="sosCancelBtn">← Annuler l'alerte</button>
+    <div class="actions" style="margin-top:16px">
+      <button class="btn red" id="cancelSearchBtn" type="button">✕ Annuler</button>
     </div>
   </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<div class="modal" id="sosModal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-title" style="color:#fecaca">🆘 URGENCE</div>
+    <div class="modal-sub">Ta position est prête à être partagée.</div>
+
+    <div class="sos-box">
+      <div style="font-weight:900;margin-bottom:6px">Position actuelle</div>
+      <div id="sosCoords">Récupération en cours…</div>
+    </div>
+
+    <div class="actions" style="margin-top:16px">
+      <button class="btn red" id="sosCallBtn" type="button">📞 Police (17)</button>
+      <button class="btn green" id="sosShareBtn" type="button">📤 Partager ma position</button>
+      <button class="btn ghost" id="sosCloseBtn" type="button">Fermer</button>
+    </div>
+  </div>
+</div>
 
 <script>
 (function(){
-  'use strict';
+  "use strict";
 
-  // ✅ SUPABASE CONFIG
   const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
-
-  window.__sb = window.__sb || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  const supabase = window.__sb;
+  const supabase = window.__digiyDriverSb || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  window.__digiyDriverSb = supabase;
 
   const PRICE_PER_KM = 400;
   const MIN_PRICE = 1000;
-  const EMERGENCY_NUMBER = 'tel:17';
+  const POLICE_PHONE = "tel:17";
 
   const LOCATIONS = {
-    'Aéroport International Blaise Diagne (AIBD)': { lat: 14.6700, lng: -17.0733 },
-    'AIBD Départs': { lat: 14.6712, lng: -17.0745 },
-    'AIBD Arrivées': { lat: 14.6689, lng: -17.0723 },
-    'Saly Centre': { lat: 14.4500, lng: -16.9833 },
-    'Saly Koulang': { lat: 14.4567, lng: -16.9823 },
-    'Dakar Plateau': { lat: 14.6695, lng: -17.4390 },
-    'Dakar Almadies': { lat: 14.7445, lng: -17.5095 },
-    'Mbour Centre': { lat: 14.4167, lng: -16.9667 },
-    'Thiès Centre': { lat: 14.7886, lng: -16.9317 }
+    "Aéroport International Blaise Diagne (AIBD)": { lat: 14.6700, lng: -17.0733 },
+    "AIBD Départs": { lat: 14.6712, lng: -17.0745 },
+    "AIBD Arrivées": { lat: 14.6689, lng: -17.0723 },
+    "Saly Centre": { lat: 14.4500, lng: -16.9833 },
+    "Saly Koulang": { lat: 14.4567, lng: -16.9823 },
+    "Dakar Plateau": { lat: 14.6695, lng: -17.4390 },
+    "Dakar Almadies": { lat: 14.7445, lng: -17.5095 },
+    "Mbour Centre": { lat: 14.4167, lng: -16.9667 },
+    "Thiès Centre": { lat: 14.7886, lng: -16.9317 }
   };
 
-  let map = null;
-  let pickupMarker = null;
-  let dropoffMarker = null;
-  let routeLine = null;
-  let driverMarkers = [];
-  let myPositionMarker = null;
-  let myPosition = null;
-  let gpsWatchId = null;
-  let isGPSTracking = false;
+  const ZONES = [
+    { id: "aeroports", label: "✈️ AÉROPORTS" },
+    { id: "saly", label: "🏖️ SALY" },
+    { id: "dakar", label: "🏙️ DAKAR" },
+    { id: "mbour", label: "🏙️ MBOUR" },
+    { id: "thies", label: "🏙️ THIÈS" }
+  ];
+
   let currentRideId = null;
   let realtimeChannel = null;
+  let currentLocationType = "pickup";
+  let myPosition = null;
+  let selectedDriver = null;
 
-  let booking = {
+  const booking = {
     pickup: null,
     dropoff: null,
-    pickupName: '',
-    dropoffName: '',
-    vehicleType: 'eco',
+    pickupName: "",
+    dropoffName: "",
+    vehicleType: "eco",
     multiplier: 1,
     distance: 0,
     duration: 0,
     price: 0
   };
 
-  let selectedDriver = null;
-  let currentLocationType = 'pickup';
+  const el = {
+    gpsChip: document.getElementById("gpsChip"),
+    gpsText: document.getElementById("gpsText"),
+    dbPill: document.getElementById("dbPill"),
+    dbText: document.getElementById("dbText"),
 
-  const ZONES_CONFIG = [
-    { id: 'aeroports',  label: '✈️ AÉROPORTS' },
-    { id: 'saly',       label: '🏖️ Saly' },
-    { id: 'dakar',      label: '🏙️ Dakar' },
-    { id: 'mbour',      label: '🏙️ Mbour' },
-    { id: 'thies',      label: '🏙️ Thiès' }
-  ];
+    pickupRow: document.getElementById("pickupRow"),
+    dropoffRow: document.getElementById("dropoffRow"),
+    pickupInput: document.getElementById("pickupInput"),
+    dropoffInput: document.getElementById("dropoffInput"),
+    clientPhone: document.getElementById("clientPhone"),
+
+    btnUseMyPosition: document.getElementById("btnUseMyPosition"),
+    btnShareMyPoint: document.getElementById("btnShareMyPoint"),
+    btnCopyMyPoint: document.getElementById("btnCopyMyPoint"),
+
+    vehicleOptions: document.getElementById("vehicleOptions"),
+    priceEco: document.getElementById("priceEco"),
+    priceConfort: document.getElementById("priceConfort"),
+    pricePremium: document.getElementById("pricePremium"),
+    priceMoto: document.getElementById("priceMoto"),
+
+    summary: document.getElementById("priceSummary"),
+    summaryDistance: document.getElementById("summaryDistance"),
+    summaryDuration: document.getElementById("summaryDuration"),
+    summaryVehicle: document.getElementById("summaryVehicle"),
+    summaryTotal: document.getElementById("summaryTotal"),
+
+    confirmBtn: document.getElementById("confirmBtn"),
+
+    trackingPanel: document.getElementById("trackingPanel"),
+    rideStatus: document.getElementById("rideStatus"),
+    trackingDriverName: document.getElementById("trackingDriverName"),
+    trackingVehicle: document.getElementById("trackingVehicle"),
+    trackingPhone: document.getElementById("trackingPhone"),
+    trackingETA: document.getElementById("trackingETA"),
+    trackingPrice: document.getElementById("trackingPrice"),
+    callDriverBtn: document.getElementById("callDriverBtn"),
+    openGmapsBtn: document.getElementById("openGmapsBtn"),
+    cancelRideBtn: document.getElementById("cancelRideBtn"),
+
+    locationOverlay: document.getElementById("locationOverlay"),
+    locationTitle: document.getElementById("locationTitle"),
+    locationZones: document.getElementById("locationZones"),
+    locationList: document.getElementById("locationList"),
+    closeLocationBtn: document.getElementById("closeLocationBtn"),
+
+    searchModal: document.getElementById("searchModal"),
+    cancelSearchBtn: document.getElementById("cancelSearchBtn"),
+
+    sosBtn: document.getElementById("sosBtn"),
+    trackingSosBtn: document.getElementById("trackingSosBtn"),
+    sosModal: document.getElementById("sosModal"),
+    sosCoords: document.getElementById("sosCoords"),
+    sosCallBtn: document.getElementById("sosCallBtn"),
+    sosShareBtn: document.getElementById("sosShareBtn"),
+    sosCloseBtn: document.getElementById("sosCloseBtn")
+  };
 
   function normPhone(p){
-    p = (p||"").trim().replace(/\s+/g,"").replace(/[^\d+]/g,"");
-    if(p.startsWith("00221")) p = "+221" + p.slice(5);
-    if(!p.startsWith("+") && p.startsWith("221")) p = "+" + p;
-    if(!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
+    p = String(p || "").trim().replace(/\s+/g, "").replace(/[^\d+]/g, "");
+    if (p.startsWith("00221")) p = "+221" + p.slice(5);
+    if (!p.startsWith("+") && p.startsWith("221")) p = "+" + p;
+    if (!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
     return p;
   }
 
-  function extractCity(locationName) {
-    if (!locationName) return null;
-    if (locationName.includes('Saly')) return 'Saly';
-    if (locationName.includes('Dakar')) return 'Dakar';
-    if (locationName.includes('Mbour')) return 'Mbour';
-    if (locationName.includes('Thiès')) return 'Thiès';
-    if (locationName.includes('AIBD')) return 'Diass';
+  function cityFromName(name){
+    if (!name) return null;
+    if (name.includes("Saly")) return "Saly";
+    if (name.includes("Dakar")) return "Dakar";
+    if (name.includes("Mbour")) return "Mbour";
+    if (name.includes("Thiès")) return "Thiès";
+    if (name.includes("AIBD") || name.includes("Aéroport")) return "Diass";
     return null;
   }
 
-  function setSupabaseStatus(ok, text){
-    const box = document.getElementById('supabaseStatus');
-    const t = document.getElementById('supabaseStatusText');
-    box.classList.toggle('connected', !!ok);
-    box.classList.toggle('disconnected', !ok);
-    t.textContent = text || (ok ? 'En ligne' : 'Hors ligne');
+  function setGpsState(ok, label){
+    el.gpsChip.classList.toggle("ok", !!ok);
+    el.gpsText.textContent = label || (ok ? "GPS ON" : "GPS OFF");
   }
 
-  // ✅ EVENT LISTENERS
-  document.getElementById('pickupRow').addEventListener('click', () => openLocationPicker('pickup'));
-  document.getElementById('dropoffRow').addEventListener('click', () => openLocationPicker('dropoff'));
-  document.getElementById('closeLocationBtn').addEventListener('click', closeLocationOverlay);
-  document.getElementById('locationBtn').addEventListener('click', toggleGPSTracking);
-  document.getElementById('confirmBtn').addEventListener('click', confirmBooking);
+  function setDbState(ok, label){
+    el.dbPill.classList.toggle("ok", !!ok);
+    el.dbText.textContent = label || (ok ? "Supabase OK" : "Supabase OFF");
+  }
 
-  document.getElementById('sosBtn').addEventListener('click', triggerSOS);
-  document.getElementById('sosBtnTracking').addEventListener('click', triggerSOS);
-
-  document.getElementById('cancelSearchBtn').addEventListener('click', cancelSearch);
-  document.getElementById('callDriverBtn').addEventListener('click', callDriver);
-  document.getElementById('cancelRideBtn').addEventListener('click', cancelRide);
-
-  document.getElementById('callFoundDriverBtn').addEventListener('click', callDriver);
-  document.getElementById('cancelFoundRideBtn').addEventListener('click', cancelRide);
-
-  document.getElementById('sosCallBtn').addEventListener('click', callEmergency);
-  document.getElementById('sosShareBtn').addEventListener('click', shareLocation);
-  document.getElementById('sosCancelBtn').addEventListener('click', closeSOS);
-
-  document.getElementById('menuBtn').addEventListener('click', () => location.href='./authentification-chauffeur.html');
-
-  document.getElementById('openGmapsFoundBtn').addEventListener('click', openGoogleMapsRoute);
-  document.getElementById('openGmapsTrackingBtn').addEventListener('click', openGoogleMapsRoute);
-
-  // ✅ ASTUCE TERRAIN GPS
-  document.getElementById('btnShareMyPoint').addEventListener('click', shareMyPointToDriver);
-  document.getElementById('btnCopyMyPoint').addEventListener('click', copyMyPoint);
-
-  document.getElementById('vehicleOptions').addEventListener('click', (e) => {
-    const option = e.target.closest('.vehicle-option');
-    if (!option) return;
-
-    document.querySelectorAll('.vehicle-option').forEach(el => el.classList.remove('selected'));
-    option.classList.add('selected');
-
-    booking.vehicleType = option.dataset.type;
-    booking.multiplier = parseFloat(option.dataset.multiplier);
-
-    document.getElementById('summaryVehicle').textContent = option.querySelector('.vehicle-name').textContent;
-
-    if (booking.distance > 0) {
-      const basePrice = Math.max(MIN_PRICE, Math.round(booking.distance * PRICE_PER_KM / 100) * 100);
-      booking.price = Math.round(basePrice * booking.multiplier / 100) * 100;
-      document.getElementById('summaryTotal').textContent = booking.price.toLocaleString() + ' FCFA';
-    }
-  });
-
-  function buildZoneButtons() {
-    const zonesContainer = document.getElementById('locationZones');
-    zonesContainer.innerHTML = '';
-    ZONES_CONFIG.forEach((zone, index) => {
-      const btn = document.createElement('button');
-      btn.className = 'zone-pill' + (index === 0 ? ' active' : '');
+  function buildZones(){
+    el.locationZones.innerHTML = "";
+    ZONES.forEach((zone, index) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "zone" + (index === 0 ? " active" : "");
       btn.textContent = zone.label;
       btn.dataset.zoneId = zone.id;
-      btn.addEventListener('click', () => selectZone(zone.id));
-      zonesContainer.appendChild(btn);
+      btn.addEventListener("click", () => selectZone(zone.id));
+      el.locationZones.appendChild(btn);
     });
   }
 
-  function filterLocationsByZone(zoneId) {
-    const allNames = Object.keys(LOCATIONS);
-    if (zoneId === 'aeroports') return allNames.filter(l => l.includes('AIBD') || l.includes('Aéroport'));
-    if (zoneId === 'saly')      return allNames.filter(l => l.includes('Saly'));
-    if (zoneId === 'dakar')     return allNames.filter(l => l.includes('Dakar'));
-    if (zoneId === 'mbour')     return allNames.filter(l => l.includes('Mbour'));
-    if (zoneId === 'thies')     return allNames.filter(l => l.includes('Thiès'));
-    return allNames;
+  function filterLocations(zoneId){
+    const names = Object.keys(LOCATIONS);
+    if (zoneId === "aeroports") return names.filter(x => x.includes("AIBD") || x.includes("Aéroport"));
+    if (zoneId === "saly") return names.filter(x => x.includes("Saly"));
+    if (zoneId === "dakar") return names.filter(x => x.includes("Dakar"));
+    if (zoneId === "mbour") return names.filter(x => x.includes("Mbour"));
+    if (zoneId === "thies") return names.filter(x => x.includes("Thiès"));
+    return names;
   }
 
-  function renderLocationList(names) {
-    const list = document.getElementById('locationList');
-    list.innerHTML = '';
-    if (!names.length) {
-      const empty = document.createElement('div');
-      empty.style.padding = '16px';
-      empty.style.color = '#aaa';
-      empty.textContent = 'Aucun lieu trouvé.';
-      list.appendChild(empty);
+  function renderLocationList(list){
+    el.locationList.innerHTML = "";
+    if (!list.length) {
+      const div = document.createElement("div");
+      div.className = "loc-item";
+      div.textContent = "Aucun lieu trouvé.";
+      div.style.cursor = "default";
+      el.locationList.appendChild(div);
       return;
     }
-    names.forEach(name => {
-      const btn = document.createElement('button');
-      btn.className = 'location-item';
-      btn.innerHTML = `<span>${name}</span>`;
-      btn.addEventListener('click', () => chooseLocation(name));
-      list.appendChild(btn);
+
+    list.forEach(name => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "loc-item";
+      btn.textContent = name;
+      btn.addEventListener("click", () => chooseLocation(name));
+      el.locationList.appendChild(btn);
     });
   }
 
-  function selectZone(zoneId) {
-    const pills = document.querySelectorAll('.zone-pill');
-    pills.forEach(p => p.classList.toggle('active', p.dataset.zoneId === zoneId));
-    renderLocationList(filterLocationsByZone(zoneId));
+  function selectZone(zoneId){
+    el.locationZones.querySelectorAll(".zone").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.zoneId === zoneId);
+    });
+    renderLocationList(filterLocations(zoneId));
   }
 
-  function openLocationPicker(type) {
+  function openPicker(type){
     currentLocationType = type;
-    document.getElementById('locationTitle').textContent =
-      type === 'pickup' ? 'Choisir le point de départ' : 'Choisir la destination';
-    document.getElementById('locationOverlay').classList.add('show');
-    selectZone(ZONES_CONFIG[0].id);
+    el.locationTitle.textContent = type === "pickup" ? "Choisir le point de départ" : "Choisir la destination";
+    el.locationOverlay.classList.add("show");
+    el.locationOverlay.setAttribute("aria-hidden", "false");
+    selectZone(ZONES[0].id);
   }
 
-  function closeLocationOverlay() {
-    document.getElementById('locationOverlay').classList.remove('show');
+  function closePicker(){
+    el.locationOverlay.classList.remove("show");
+    el.locationOverlay.setAttribute("aria-hidden", "true");
   }
 
-  function chooseLocation(locationName) {
-    const coords = LOCATIONS[locationName];
+  function chooseLocation(name){
+    const coords = LOCATIONS[name];
     if (!coords) return;
 
-    if (currentLocationType === 'pickup') {
+    if (currentLocationType === "pickup") {
       booking.pickup = coords;
-      booking.pickupName = locationName;
-      document.getElementById('pickupInput').value = locationName;
-      addPickupMarker(coords.lat, coords.lng);
+      booking.pickupName = name;
+      el.pickupInput.value = name;
     } else {
       booking.dropoff = coords;
-      booking.dropoffName = locationName;
-      document.getElementById('dropoffInput').value = locationName;
-      addDropoffMarker(coords.lat, coords.lng);
+      booking.dropoffName = name;
+      el.dropoffInput.value = name;
     }
 
-    closeLocationOverlay();
-    checkIfReady();
+    closePicker();
+    maybeEstimate();
   }
 
-  function toggleGPSTracking() {
-    if (isGPSTracking) stopGPSTracking();
-    else startGPSTracking();
-  }
-
-  function startGPSTracking() {
-    if (!navigator.geolocation) {
-      alert('La géolocalisation n\'est pas supportée par votre navigateur');
-      return;
-    }
-
-    gpsWatchId = navigator.geolocation.watchPosition(
-      (position) => updateMyPosition(position),
-      (error) => handleGPSError(error),
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-    );
-
-    isGPSTracking = true;
-    updateGPSIndicator(true);
-    document.getElementById('locationBtn').classList.add('tracking');
-  }
-
-  function stopGPSTracking() {
-    if (gpsWatchId !== null) {
-      navigator.geolocation.clearWatch(gpsWatchId);
-      gpsWatchId = null;
-    }
-    isGPSTracking = false;
-    updateGPSIndicator(false);
-    document.getElementById('locationBtn').classList.remove('tracking');
-  }
-
-  function updateMyPosition(position) {
-    const lat = position.coords.latitude;
-    const lng = position.coords.longitude;
-    const accuracy = position.coords.accuracy;
-
-    myPosition = { lat, lng, accuracy };
-
-    if (myPositionMarker) {
-      myPositionMarker.setLatLng([lat, lng]);
-    } else {
-      const icon = L.divIcon({
-        className: 'my-position-marker',
-        html: `<div style="position: relative;width: 20px;height: 20px;">
-          <div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 50px;height: 50px;background: rgba(33, 150, 243, 0.2);border-radius: 50%;"></div>
-          <div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);width: 16px;height: 16px;background: #2196F3;border-radius: 50%;border: 3px solid #fff;box-shadow: 0 2px 10px rgba(0,0,0,0.3);"></div>
-        </div>`,
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
-      });
-      myPositionMarker = L.marker([lat, lng], { icon }).addTo(map);
-    }
-
-    if (!booking.pickup) {
-      booking.pickup = { lat, lng };
-      booking.pickupName = 'Ma position actuelle';
-      document.getElementById('pickupInput').value = 'Ma position actuelle';
-      addPickupMarker(lat, lng);
-    }
-  }
-
-  function handleGPSError(error) {
-    updateGPSIndicator(false);
-    console.error('Erreur GPS:', error);
-  }
-
-  function updateGPSIndicator(active) {
-    const indicator = document.getElementById('gpsIndicator');
-    const status = document.getElementById('gpsStatus');
-
-    if (active) {
-      indicator.classList.remove('inactive');
-      indicator.classList.add('active');
-      status.textContent = 'GPS ON';
-    } else {
-      indicator.classList.remove('active');
-      indicator.classList.add('inactive');
-      status.textContent = 'GPS OFF';
-    }
-  }
-
-  function initMap() {
-    const SENEGAL_CENTER = [14.4974, -14.4524];
-
-    map = L.map('map', { center: SENEGAL_CENTER, zoom: 8 });
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© DIGIY DRIVER',
-      maxZoom: 19,
-      minZoom: 6
-    }).addTo(map);
-
-    loadAvailableDrivers();
-    startGPSTracking();
-  }
-
-  async function loadAvailableDrivers() {
-    try {
-      const { error: pingErr } = await supabase.from('driver_profiles').select('id').limit(1);
-      if (pingErr) setSupabaseStatus(false, 'Supabase?');
-      else setSupabaseStatus(true, 'En ligne');
-
-      const { data: drivers, error } = await supabase
-        .from('driver_profiles')
-        .select('*')
-        .eq('is_online', true);
-
-      if (error) throw error;
-
-      if (drivers && drivers.length > 0) {
-        drivers.forEach(driver => {
-          const lat = 14.7 + (Math.random() - 0.5) * 0.1;
-          const lng = -17.45 + (Math.random() - 0.5) * 0.1;
-          addDriverMarker({ ...driver, lat, lng });
-        });
+  function getCurrentPosition(){
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error("Géolocalisation non supportée"));
+        return;
       }
-    } catch (error) {
-      console.error('Erreur chargement chauffeurs:', error);
-      setSupabaseStatus(false, 'Hors ligne');
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => resolve({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          accuracy: pos.coords.accuracy || null
+        }),
+        reject,
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    });
+  }
+
+  async function useMyPositionAsPickup(){
+    try{
+      const pos = await getCurrentPosition();
+      myPosition = pos;
+      setGpsState(true, "GPS ON");
+      booking.pickup = { lat: pos.lat, lng: pos.lng };
+      booking.pickupName = "Ma position actuelle";
+      el.pickupInput.value = "Ma position actuelle";
+      maybeEstimate();
+    }catch(err){
+      console.error(err);
+      setGpsState(false, "GPS OFF");
+      alert("GPS non disponible. Active la localisation puis réessaie.");
     }
   }
 
-  function addDriverMarker(driver) {
-    const icon = L.divIcon({
-      className: 'driver-marker',
-      html: `<div style="
-        background: #00C853;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        border: 2px solid #fff;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      ">🚗</div>`,
-      iconSize: [30, 30],
-      iconAnchor: [15, 15]
-    });
-
-    const marker = L.marker([driver.lat, driver.lng], { icon }).addTo(map);
-    marker.bindPopup(`<b>${driver.full_name || 'Chauffeur DIGIY'}</b><br>${driver.car_model || 'Véhicule'}`);
-    driverMarkers.push(marker);
-  }
-
-  function addPickupMarker(lat, lng) {
-    if (pickupMarker) map.removeLayer(pickupMarker);
-
-    const icon = L.divIcon({
-      className: 'pickup-marker',
-      html: `<div style="
-        background: #00C853;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      "></div>`,
-      iconSize: [20, 20],
-      iconAnchor: [10, 10]
-    });
-
-    pickupMarker = L.marker([lat, lng], { icon }).addTo(map);
-  }
-
-  function addDropoffMarker(lat, lng) {
-    if (dropoffMarker) map.removeLayer(dropoffMarker);
-
-    const icon = L.divIcon({
-      className: 'dropoff-marker',
-      html: `<div style="
-        background: #FFD700;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      "></div>`,
-      iconSize: [20, 20],
-      iconAnchor: [10, 10]
-    });
-
-    dropoffMarker = L.marker([lat, lng], { icon }).addTo(map);
-  }
-
-  function checkIfReady() {
-    if (booking.pickup && booking.dropoff) calculateRoute();
-  }
-
-  function calculateRoute() {
+  function calcDistanceKm(a, b){
     const R = 6371;
-    const dLat = (booking.dropoff.lat - booking.pickup.lat) * Math.PI / 180;
-    const dLng = (booking.dropoff.lng - booking.pickup.lng) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(booking.pickup.lat * Math.PI / 180) * Math.cos(booking.dropoff.lat * Math.PI / 180) *
-              Math.sin(dLng/2) * Math.sin(dLng/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    let distance = R * c;
+    const dLat = (b.lat - a.lat) * Math.PI / 180;
+    const dLng = (b.lng - a.lng) * Math.PI / 180;
+    const aa = Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(a.lat * Math.PI / 180) * Math.cos(b.lat * Math.PI / 180) *
+      Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(aa), Math.sqrt(1-aa));
+    return R * c;
+  }
 
-    distance = distance * 1.3;
+  function maybeEstimate(){
+    if (!booking.pickup || !booking.dropoff) return;
 
-    booking.distance = distance;
-    booking.duration = Math.round(distance / 30 * 60);
+    const rawKm = calcDistanceKm(booking.pickup, booking.dropoff);
+    booking.distance = rawKm * 1.3;
+    booking.duration = Math.round((booking.distance / 30) * 60);
 
     updatePrices();
-    drawRoute();
-    showPriceSummary();
-
-    document.getElementById('confirmBtn').disabled = false;
+    el.confirmBtn.disabled = false;
   }
 
-  function updatePrices() {
-    const basePrice = Math.max(MIN_PRICE, Math.round(booking.distance * PRICE_PER_KM / 100) * 100);
+  function updatePrices(){
+    const basePrice = Math.max(MIN_PRICE, Math.round((booking.distance * PRICE_PER_KM) / 100) * 100);
+    const eco = basePrice;
+    const confort = Math.round((basePrice * 1.3) / 100) * 100;
+    const premium = Math.round((basePrice * 1.8) / 100) * 100;
+    const moto = Math.round((basePrice * 0.7) / 100) * 100;
 
-    document.getElementById('priceEco').textContent = basePrice.toLocaleString() + ' F';
-    document.getElementById('priceConfort').textContent = (Math.round(basePrice * 1.3 / 100) * 100).toLocaleString() + ' F';
-    document.getElementById('pricePremium').textContent = (Math.round(basePrice * 1.8 / 100) * 100).toLocaleString() + ' F';
-    document.getElementById('priceMoto').textContent = (Math.round(basePrice * 0.7 / 100) * 100).toLocaleString() + ' F';
+    el.priceEco.textContent = eco.toLocaleString() + " F";
+    el.priceConfort.textContent = confort.toLocaleString() + " F";
+    el.pricePremium.textContent = premium.toLocaleString() + " F";
+    el.priceMoto.textContent = moto.toLocaleString() + " F";
 
-    booking.price = Math.round(basePrice * booking.multiplier / 100) * 100;
+    booking.price = Math.round((basePrice * booking.multiplier) / 100) * 100;
+
+    el.summaryDistance.textContent = booking.distance.toFixed(1) + " km";
+    el.summaryDuration.textContent = booking.duration + " min";
+    el.summaryVehicle.textContent = document.querySelector(".vehicle.active .vehicle-name").textContent;
+    el.summaryTotal.textContent = booking.price.toLocaleString() + " FCFA";
+    el.summary.classList.add("show");
   }
 
-  function drawRoute() {
-    if (routeLine) map.removeLayer(routeLine);
+  function setVehicle(type, multiplier){
+    booking.vehicleType = type;
+    booking.multiplier = multiplier;
+    document.querySelectorAll(".vehicle").forEach(v => {
+      v.classList.toggle("active", v.dataset.type === type);
+    });
 
-    routeLine = L.polyline([
-      [booking.pickup.lat, booking.pickup.lng],
-      [booking.dropoff.lat, booking.dropoff.lng]
-    ], {
-      color: '#FFD700',
-      weight: 4,
-      opacity: 0.8,
-      dashArray: '10, 10'
-    }).addTo(map);
-
-    map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
+    if (booking.distance > 0) updatePrices();
   }
 
-  function showPriceSummary() {
-    document.getElementById('summaryDistance').textContent = booking.distance.toFixed(1) + ' km';
-    document.getElementById('summaryDuration').textContent = booking.duration + ' min';
-    document.getElementById('summaryTotal').textContent = booking.price.toLocaleString() + ' FCFA';
-    document.getElementById('summaryVehicle').textContent = document.querySelector('.vehicle-option.selected .vehicle-name').textContent;
-    document.getElementById('priceSummary').classList.add('show');
+  async function pingSupabase(){
+    try{
+      const { error } = await supabase.from("driver_profiles").select("id").limit(1);
+      if (error) throw error;
+      setDbState(true, "Supabase OK");
+    }catch(err){
+      console.error(err);
+      setDbState(false, "Supabase OFF");
+    }
   }
 
-  // ===========================
-  // ✅ COMMANDE — FIX (SUPABASE)
-  // ===========================
-  async function confirmBooking() {
+  function openSearchModal(){
+    el.searchModal.classList.add("show");
+    el.searchModal.setAttribute("aria-hidden", "false");
+  }
+
+  function closeSearchModal(){
+    el.searchModal.classList.remove("show");
+    el.searchModal.setAttribute("aria-hidden", "true");
+  }
+
+  async function confirmBooking(){
     if (!booking.pickup || !booking.dropoff) {
       alert("Choisis un départ et une destination.");
       return;
     }
 
-    const phoneInput = document.getElementById('clientPhone');
-    const clientPhone = normPhone(phoneInput.value.trim());
-
+    const clientPhone = normPhone(el.clientPhone.value);
     if (!clientPhone || !clientPhone.startsWith("+221")) {
-      alert("⚠️ Numéro WhatsApp invalide.\nFormat attendu : +221 77 XXX XX XX");
+      alert("Numéro WhatsApp invalide. Exemple : +221 77 XXX XX XX");
       return;
     }
 
-    const btn = document.getElementById('confirmBtn');
-    btn.disabled = true;
-    btn.innerHTML = "<span>⏳</span><span>Envoi...</span>";
+    el.confirmBtn.disabled = true;
+    el.confirmBtn.textContent = "Envoi...";
+    openSearchModal();
 
-    document.getElementById('searchingModal').classList.add('show');
-    document.getElementById('searchingState').style.display = 'block';
-    document.getElementById('driverFoundState').classList.remove('show');
-
-    try {
+    try{
       await sendRideRequest(clientPhone);
-    } finally {
-      btn.innerHTML = "<span>🚕</span><span>Commander ma course</span>";
+    }finally{
+      el.confirmBtn.textContent = "🚕 Commander ma course";
     }
   }
 
-  async function sendRideRequest(clientPhone) {
-    // ✅ PATCH #2 : rideData avec colonnes sûres
+  async function sendRideRequest(clientPhone){
     const rideData = {
       pickup_address: booking.pickupName,
       pickup_text: booking.pickupName,
       pickup_location: `${booking.pickup.lat},${booking.pickup.lng}`,
-
       dropoff_address: booking.dropoffName,
       dropoff_text: booking.dropoffName,
       dropoff_location: `${booking.dropoff.lat},${booking.dropoff.lng}`,
-
       client_phone: clientPhone,
-      city: extractCity(booking.pickupName) || extractCity(booking.dropoffName),
-
-      status: 'new',
+      city: cityFromName(booking.pickupName) || cityFromName(booking.dropoffName),
+      status: "new",
       price: booking.price,
       price_xof: booking.price,
       distance: booking.distance,
@@ -1622,9 +1161,9 @@
       note: `Course ${booking.vehicleType} - ${booking.distance.toFixed(1)}km`
     };
 
-    try {
+    try{
       const { data, error } = await supabase
-        .from('ride_requests')
+        .from("ride_requests")
         .insert([rideData])
         .select()
         .single();
@@ -1632,71 +1171,59 @@
       if (error) throw error;
 
       currentRideId = data.id;
-      listenToRideUpdates(data.id);
-
-      // Simu pour test
-      setTimeout(() => simulateDriverAcceptance(), Math.random() * 2000 + 3000);
-
-      document.getElementById('confirmBtn').disabled = true;
-
-    } catch (error) {
-      console.error('Erreur création course:', error);
-
-      const msg = (error && error.message) ? error.message : 'Erreur inconnue';
-      alert(
-        "❌ Course non créée.\n\n" +
-        "Détail: " + msg + "\n\n" +
-        "Si tu vois 'row-level security' -> ajoute la policy INSERT sur ride_requests.\n" +
-        "Si tu vois 'column ... not found' -> le nom de colonne n'existe pas dans la table."
-      );
-
-      document.getElementById('searchingModal').classList.remove('show');
-      document.getElementById('confirmBtn').disabled = false;
+      listenToRideUpdates(currentRideId);
+      setTimeout(simulateDriverAcceptance, Math.random() * 1800 + 1800);
+    }catch(err){
+      console.error(err);
+      closeSearchModal();
+      el.confirmBtn.disabled = false;
+      alert("Course non créée. Vérifie les colonnes / policies Supabase.");
     }
   }
 
-  async function simulateDriverAcceptance() {
+  async function simulateDriverAcceptance(){
     if (!currentRideId) return;
 
-    try {
+    try{
       const { data: driver, error } = await supabase
-        .from('driver_profiles')
-        .select('*')
-        .eq('is_online', true)
+        .from("driver_profiles")
+        .select("*")
+        .eq("is_online", true)
         .limit(1)
         .maybeSingle();
 
       if (error) throw error;
 
-      if (driver) {
-        selectedDriver = driver;
-
-        const { error: upErr } = await supabase
-          .from('ride_requests')
-          .update({
-            status: 'accepted',
-            assigned_driver_phone: driver.phone,
-            accepted_at: new Date().toISOString()
-          })
-          .eq('id', currentRideId);
-
-        if (upErr) throw upErr;
-
-        driverFound();
-      } else {
-        document.getElementById('searchingModal').classList.remove('show');
-        alert('Aucun chauffeur disponible pour le moment. Réessaye dans quelques minutes.');
-        document.getElementById('confirmBtn').disabled = false;
+      if (!driver) {
+        closeSearchModal();
+        el.confirmBtn.disabled = false;
+        alert("Aucun chauffeur disponible pour le moment.");
+        return;
       }
-    } catch (error) {
-      console.error('Erreur acceptation:', error);
-      document.getElementById('searchingModal').classList.remove('show');
-      document.getElementById('confirmBtn').disabled = false;
-      alert("❌ Problème côté serveur. Réessaye.");
+
+      selectedDriver = driver;
+
+      const { error: updateError } = await supabase
+        .from("ride_requests")
+        .update({
+          status: "accepted",
+          assigned_driver_phone: driver.phone || null,
+          accepted_at: new Date().toISOString()
+        })
+        .eq("id", currentRideId);
+
+      if (updateError) throw updateError;
+
+      applyAcceptedDriver(driver);
+    }catch(err){
+      console.error(err);
+      closeSearchModal();
+      el.confirmBtn.disabled = false;
+      alert("Problème lors de l’attribution du chauffeur.");
     }
   }
 
-  function listenToRideUpdates(rideId) {
+  function listenToRideUpdates(rideId){
     if (realtimeChannel) {
       supabase.removeChannel(realtimeChannel);
       realtimeChannel = null;
@@ -1704,291 +1231,258 @@
 
     realtimeChannel = supabase
       .channel(`ride_${rideId}`)
-      .on('postgres_changes', {
-        event: 'UPDATE',
-        schema: 'public',
-        table: 'ride_requests',
+      .on("postgres_changes", {
+        event: "UPDATE",
+        schema: "public",
+        table: "ride_requests",
         filter: `id=eq.${rideId}`
       }, (payload) => {
-        const ride = payload.new;
-        handleRideUpdate(ride);
+        handleRideUpdate(payload.new);
       })
       .subscribe();
   }
 
-  function handleRideUpdate(ride) {
-    switch (ride.status) {
-      case 'in_progress':
-        updateRideStatus('Course en cours');
-        break;
-      case 'completed':
-        handleRideCompleted(ride);
-        break;
-      case 'cancelled':
-        handleRideCancelled();
-        break;
+  function handleRideUpdate(ride){
+    if (!ride) return;
+
+    if (ride.status === "accepted") {
+      el.rideStatus.textContent = "Chauffeur attribué";
+    } else if (ride.status === "in_progress") {
+      el.rideStatus.textContent = "En route vers vous";
+    } else if (ride.status === "completed") {
+      alert(`✅ Course terminée — ${Number(ride.price || ride.price_xof || 0).toLocaleString()} FCFA`);
+      resetRide();
+    } else if (ride.status === "cancelled") {
+      alert("La course a été annulée.");
+      resetRide();
     }
   }
 
-  function driverFound() {
-    if (!selectedDriver) return;
+  function applyAcceptedDriver(driver){
+    closeSearchModal();
+    el.trackingPanel.classList.add("show");
+    el.rideStatus.textContent = "Chauffeur attribué";
+    el.trackingDriverName.textContent = driver.full_name || "Chauffeur DIGIY";
+    el.trackingVehicle.textContent = `${driver.car_model || "Véhicule"} • ${driver.car_plate || "—"}`;
+    el.trackingPhone.textContent = driver.phone || "—";
+    el.trackingETA.textContent = `${Math.floor(Math.random() * 4) + 2} min`;
+    el.trackingPrice.textContent = `${booking.price.toLocaleString()} FCFA`;
 
-    const eta = Math.floor(Math.random() * 4) + 2;
-
-    document.getElementById('foundDriverName').textContent = selectedDriver.full_name || 'Chauffeur DIGIY';
-    document.getElementById('foundDriverRating').textContent = '5.0';
-    document.getElementById('foundDriverTrips').textContent = '—';
-    document.getElementById('foundDriverVehicle').textContent =
-      `${selectedDriver.car_model || 'Véhicule'} • ${selectedDriver.car_plate || 'DK-XXXX-XX'}`;
-
-    // ✅ PATCH #3 : Téléphone dans MODAL
-    const foundPhoneEl = document.getElementById('foundDriverPhone');
-    if (foundPhoneEl) {
-      foundPhoneEl.textContent = selectedDriver.phone || '+221 77 XXX XX XX';
-    }
-
-    document.getElementById('foundDriverETA').textContent = `${eta} min`;
-    document.getElementById('foundPrice').textContent = booking.price.toLocaleString();
-
-    document.getElementById('searchingState').style.display = 'none';
-    document.getElementById('driverFoundState').classList.add('show');
-
-    document.getElementById('trackingDriverName').textContent = selectedDriver.full_name || '—';
-    document.getElementById('trackingVehicle').textContent =
-      `${selectedDriver.car_model || '—'} • ${selectedDriver.car_plate || '—'}`;
-    document.getElementById('trackingETA').textContent = `${eta} min`;
-    document.getElementById('trackingPrice').textContent = `${booking.price.toLocaleString()} FCFA`;
-
-    // ✅ PATCH #3 : TÉLÉPHONE DANS TRACKING
-    const trackingPhoneEl = document.getElementById('trackingPhone');
-    if (trackingPhoneEl && selectedDriver.phone) {
-      trackingPhoneEl.textContent = selectedDriver.phone;
-    }
-
-    setTimeout(() => confirmRideStart(), 2500);
-  }
-
-  async function confirmRideStart() {
-    document.getElementById('searchingModal').classList.remove('show');
-    document.getElementById('bookingPanel').style.display = 'none';
-    document.getElementById('trackingPanel').classList.add('show');
-
-    if (currentRideId) {
+    setTimeout(async () => {
+      if (!currentRideId) return;
       await supabase
-        .from('ride_requests')
+        .from("ride_requests")
         .update({
-          status: 'in_progress',
+          status: "in_progress",
           started_at: new Date().toISOString()
         })
-        .eq('id', currentRideId);
-    }
+        .eq("id", currentRideId);
+
+      el.rideStatus.textContent = "En route vers vous";
+    }, 1800);
   }
 
-  function updateRideStatus(status) {
-    document.getElementById('rideStatus').textContent = status;
-  }
-
-  function handleRideCompleted(ride) {
-    alert(`✅ Course terminée ! Montant: ${Number(ride.price||ride.price_xof||0).toLocaleString()} FCFA\nMerci d'avoir choisi DIGIY DRIVER !`);
-    resetBooking();
-  }
-
-  function handleRideCancelled() {
-    alert('La course a été annulée.');
-    resetBooking();
-  }
-
-  async function cancelSearch() {
-    document.getElementById('searchingModal').classList.remove('show');
+  async function cancelSearch(){
+    closeSearchModal();
 
     if (currentRideId) {
       await supabase
-        .from('ride_requests')
+        .from("ride_requests")
         .update({
-          status: 'cancelled',
-          cancelled_by: 'client',
+          status: "cancelled",
+          cancelled_by: "client",
           cancelled_at: new Date().toISOString()
         })
-        .eq('id', currentRideId);
+        .eq("id", currentRideId);
     }
 
     currentRideId = null;
-    document.getElementById('confirmBtn').disabled = false;
+    el.confirmBtn.disabled = false;
   }
 
-  async function cancelRide() {
-    if (!confirm('Êtes-vous sûr de vouloir annuler cette course ?')) return;
-
-    document.getElementById('searchingModal').classList.remove('show');
-    document.getElementById('trackingPanel').classList.remove('show');
-    document.getElementById('bookingPanel').style.display = 'block';
+  async function cancelRide(){
+    const ok = window.confirm("Annuler cette course ?");
+    if (!ok) return;
 
     if (currentRideId) {
       await supabase
-        .from('ride_requests')
+        .from("ride_requests")
         .update({
-          status: 'cancelled',
-          cancelled_by: 'client',
+          status: "cancelled",
+          cancelled_by: "client",
           cancelled_at: new Date().toISOString()
         })
-        .eq('id', currentRideId);
-
-      if (realtimeChannel) supabase.removeChannel(realtimeChannel);
+        .eq("id", currentRideId);
     }
 
-    selectedDriver = null;
-    currentRideId = null;
-    document.getElementById('confirmBtn').disabled = false;
+    resetRide();
   }
 
-  function resetBooking() {
-    document.getElementById('searchingModal').classList.remove('show');
-    document.getElementById('trackingPanel').classList.remove('show');
-    document.getElementById('bookingPanel').style.display = 'block';
-
-    selectedDriver = null;
+  function resetRide(){
     currentRideId = null;
+    selectedDriver = null;
+    el.trackingPanel.classList.remove("show");
+    el.confirmBtn.disabled = booking.pickup && booking.dropoff ? false : true;
 
     if (realtimeChannel) {
       supabase.removeChannel(realtimeChannel);
       realtimeChannel = null;
     }
-
-    document.getElementById('confirmBtn').disabled = false;
   }
 
-  function callDriver() {
+  function callDriver(){
     if (selectedDriver && selectedDriver.phone) {
       window.location.href = `tel:${selectedDriver.phone}`;
-    } else {
-      alert("Numéro chauffeur indisponible.");
-    }
-  }
-
-  function openGoogleMapsRoute() {
-    if (!booking.pickup || !booking.dropoff) {
-      alert("Départ/destination manquants.");
       return;
     }
+    alert("Numéro chauffeur indisponible.");
+  }
+
+  function openGoogleMapsRoute(){
+    if (!booking.pickup || !booking.dropoff) {
+      alert("Départ ou destination manquants.");
+      return;
+    }
+
     const origin = `${booking.pickup.lat},${booking.pickup.lng}`;
-    const dest   = `${booking.dropoff.lat},${booking.dropoff.lng}`;
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(dest)}&travelmode=driving`;
-    window.open(url, '_blank');
+    const destination = `${booking.dropoff.lat},${booking.dropoff.lng}`;
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=driving`;
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 
-  function triggerSOS() {
-    getCurrentPosition().then(position => {
-      const lat = position.lat;
-      const lng = position.lng;
+  function openSOS(){
+    (myPosition ? Promise.resolve(myPosition) : getCurrentPosition())
+      .then((pos) => {
+        myPosition = pos;
+        setGpsState(true, "GPS ON");
+        el.sosCoords.textContent = `${pos.lat.toFixed(6)}, ${pos.lng.toFixed(6)}`;
+      })
+      .catch(() => {
+        el.sosCoords.textContent = "Position non disponible";
+      });
 
-      document.getElementById('sosModal').classList.add('show');
-      document.getElementById('sosCoords').textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-
-      if (navigator.vibrate) navigator.vibrate([500, 200, 500, 200, 500]);
-    }).catch(error => {
-      document.getElementById('sosModal').classList.add('show');
-      document.getElementById('sosCoords').textContent = 'Position non disponible';
-      console.error('Erreur SOS:', error);
-    });
+    el.sosModal.classList.add("show");
+    el.sosModal.setAttribute("aria-hidden", "false");
   }
 
-  function getCurrentPosition() {
-    return new Promise((resolve, reject) => {
-      if (myPosition) {
-        resolve(myPosition);
-      } else if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-          reject,
-          { enableHighAccuracy: true, timeout: 10000 }
-        );
-      } else {
-        reject(new Error('Géolocalisation non supportée'));
-      }
-    });
+  function closeSOS(){
+    el.sosModal.classList.remove("show");
+    el.sosModal.setAttribute("aria-hidden", "true");
   }
 
-  function callEmergency() {
-    window.location.href = EMERGENCY_NUMBER;
+  function callPolice(){
+    window.location.href = POLICE_PHONE;
   }
 
-  function shareLocation() {
-    getCurrentPosition().then(position => {
-      const lat = position.lat;
-      const lng = position.lng;
-      const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+  async function buildMyPointPayload(){
+    const pos = myPosition || await getCurrentPosition();
+    const mapsUrl = `https://www.google.com/maps?q=${pos.lat},${pos.lng}`;
+    const text = `📍 Mon point exact :\n${pos.lat.toFixed(6)}, ${pos.lng.toFixed(6)}\n${mapsUrl}`;
+    return { text, mapsUrl, pos };
+  }
 
-      const payloadText =
-        `🆘 URGENCE - Ma position:\n${lat.toFixed(6)}, ${lng.toFixed(6)}\n${mapsUrl}`;
+  async function shareMyPoint(){
+    try{
+      const { text, mapsUrl, pos } = await buildMyPointPayload();
+      myPosition = pos;
+      setGpsState(true, "GPS ON");
 
       if (navigator.share) {
-        navigator.share({
-          title: '🆘 URGENCE - Ma position',
-          text: payloadText,
-          url: mapsUrl
-        }).catch(()=>{});
+        await navigator.share({ title: "📍 Mon point", text, url: mapsUrl });
       } else {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(payloadText)
-            .then(() => alert("✅ Position copiée. Colle-la sur WhatsApp."))
-            .catch(() => prompt("Copie/colle :", payloadText));
-        } else {
-          prompt("Copie/colle :", payloadText);
-        }
+        window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank", "noopener,noreferrer");
       }
-    }).catch(() => {
-      alert("Position non disponible.");
-    });
-  }
-
-  function closeSOS() {
-    document.getElementById('sosModal').classList.remove('show');
-  }
-
-  // ✅ ASTUCE TERRAIN GPS (simple pour tout le monde)
-  async function buildMyPointPayload(){
-    const pos = await getCurrentPosition();
-    const lat = pos.lat, lng = pos.lng;
-    const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
-    const text = `📍 Mon point exact:\n${lat.toFixed(6)}, ${lng.toFixed(6)}\n${mapsUrl}`;
-    return { text, mapsUrl };
-  }
-
-  async function shareMyPointToDriver(){
-    try{
-      const { text, mapsUrl } = await buildMyPointPayload();
-      if(navigator.share){
-        await navigator.share({ title:"📍 Mon point", text, url: mapsUrl });
-      }else{
-        // fallback WhatsApp share (universel)
-        window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank");
-      }
-    }catch(e){
-      alert("GPS non dispo. Active le GPS puis réessaie.");
+    }catch(err){
+      console.error(err);
+      alert("GPS non disponible. Active la localisation puis réessaie.");
     }
   }
 
   async function copyMyPoint(){
     try{
-      const { text } = await buildMyPointPayload();
-      if(navigator.clipboard?.writeText){
+      const { text, pos } = await buildMyPointPayload();
+      myPosition = pos;
+      setGpsState(true, "GPS ON");
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(text);
-        alert("✅ GPS copié. Colle-le sur WhatsApp au chauffeur.");
-      }else{
-        prompt("Copie/colle :", text);
+        alert("✅ Point GPS copié.");
+      } else {
+        window.prompt("Copie/colle :", text);
       }
-    }catch(e){
-      alert("GPS non dispo. Active le GPS puis réessaie.");
+    }catch(err){
+      console.error(err);
+      alert("GPS non disponible. Active la localisation puis réessaie.");
     }
   }
 
-  function boot() {
-    buildZoneButtons();
-    initMap();
+  async function shareEmergencyLocation(){
+    try{
+      const { text, mapsUrl, pos } = await buildMyPointPayload();
+      myPosition = pos;
+      setGpsState(true, "GPS ON");
+
+      if (navigator.share) {
+        await navigator.share({
+          title: "🆘 URGENCE - Ma position",
+          text: "🆘 URGENCE\n" + text,
+          url: mapsUrl
+        });
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText("🆘 URGENCE\n" + text);
+        alert("✅ Position d’urgence copiée.");
+      } else {
+        window.prompt("Copie/colle :", "🆘 URGENCE\n" + text);
+      }
+    }catch(err){
+      console.error(err);
+      alert("Position non disponible.");
+    }
   }
 
-  window.addEventListener('load', boot);
+  function bindEvents(){
+    el.pickupRow.addEventListener("click", () => openPicker("pickup"));
+    el.dropoffRow.addEventListener("click", () => openPicker("dropoff"));
+    el.closeLocationBtn.addEventListener("click", closePicker);
+    el.locationOverlay.addEventListener("click", (e) => {
+      if (e.target === el.locationOverlay) closePicker();
+    });
 
+    el.btnUseMyPosition.addEventListener("click", useMyPositionAsPickup);
+    el.btnShareMyPoint.addEventListener("click", shareMyPoint);
+    el.btnCopyMyPoint.addEventListener("click", copyMyPoint);
+
+    el.vehicleOptions.addEventListener("click", (e) => {
+      const card = e.target.closest(".vehicle");
+      if (!card) return;
+      setVehicle(card.dataset.type, parseFloat(card.dataset.multiplier || "1"));
+    });
+
+    el.confirmBtn.addEventListener("click", confirmBooking);
+    el.cancelSearchBtn.addEventListener("click", cancelSearch);
+
+    el.callDriverBtn.addEventListener("click", callDriver);
+    el.openGmapsBtn.addEventListener("click", openGoogleMapsRoute);
+    el.cancelRideBtn.addEventListener("click", cancelRide);
+
+    el.sosBtn.addEventListener("click", openSOS);
+    el.trackingSosBtn.addEventListener("click", openSOS);
+    el.sosCloseBtn.addEventListener("click", closeSOS);
+    el.sosModal.addEventListener("click", (e) => {
+      if (e.target === el.sosModal) closeSOS();
+    });
+    el.sosCallBtn.addEventListener("click", callPolice);
+    el.sosShareBtn.addEventListener("click", shareEmergencyLocation);
+  }
+
+  function boot(){
+    buildZones();
+    bindEvents();
+    pingSupabase();
+    setGpsState(false, "GPS OFF");
+  }
+
+  window.addEventListener("load", boot);
 })();
 </script>
 </body>
