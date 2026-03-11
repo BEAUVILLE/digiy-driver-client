@@ -574,11 +574,9 @@
     </div>
 
     <div class="header-actions">
-  <a class="btn ghost" id="galleryBtn" href="https://beauville.github.io/galerie-chauffeurs/" target="_blank" rel="noopener">
-    🚕 Voir les chauffeurs
-  </a>
-  <a class="btn ghost" href="https://digiylyfe.com">← Retour site</a>
-</div>
+      <a class="btn ghost" id="galleryBtn" href="#">🚕 Voir les chauffeurs</a>
+      <a class="btn ghost" href="https://digiylyfe.com">← Retour site</a>
+    </div>
   </header>
 
   <section class="hero">
@@ -656,12 +654,12 @@
 
     <div class="actions">
       <button class="btn" id="confirmBtn" type="button" disabled>🚕 Commander ma course</button>
-      <a class="btn ghost" href="http://digiylyfe.com">← Retour DIGIYLYFE</a>
+      <a class="btn ghost" href="https://digiylyfe.com">← Retour DIGIYLYFE</a>
     </div>
 
     <div class="foot-note">
       Paiement direct au chauffeur • 0% commission DIGIY •
-      <a href="http://digiylyfe.com" target="_blank" rel="noopener">Site principal</a>
+      <a href="https://digiylyfe.com" target="_blank" rel="noopener">Site principal</a>
     </div>
 
     <div class="tracking" id="trackingPanel">
@@ -720,6 +718,7 @@
   const supabase = window.__digiyDriverSb || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   window.__digiyDriverSb = supabase;
 
+  const GALLERY_BASE_URL = "https://beauville.github.io/galerie-chauffeurs/";
   const PRICE_PER_KM = 400;
   const MIN_PRICE = 1000;
 
@@ -763,6 +762,7 @@
   const el = {
     dbPill: document.getElementById("dbPill"),
     dbText: document.getElementById("dbText"),
+    galleryBtn: document.getElementById("galleryBtn"),
 
     pickupRow: document.getElementById("pickupRow"),
     dropoffRow: document.getElementById("dropoffRow"),
@@ -826,6 +826,22 @@
   function setDbState(ok, label){
     el.dbPill.classList.toggle("ok", !!ok);
     el.dbText.textContent = label || (ok ? "Supabase OK" : "Supabase OFF");
+  }
+
+  function buildGalleryLink(){
+    if (!el.galleryBtn) return;
+
+    const pageUrl = new URL(location.href);
+    const slug = (pageUrl.searchParams.get("slug") || "").trim();
+
+    const galleryUrl = new URL(GALLERY_BASE_URL);
+    galleryUrl.searchParams.set("return", location.href);
+
+    if (slug) {
+      galleryUrl.searchParams.set("slug", slug);
+    }
+
+    el.galleryBtn.href = galleryUrl.toString();
   }
 
   function buildZones(){
@@ -1238,6 +1254,7 @@
   }
 
   function boot(){
+    buildGalleryLink();
     buildZones();
     bindEvents();
     pingSupabase();
