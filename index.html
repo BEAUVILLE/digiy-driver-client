@@ -15,16 +15,20 @@
       --card:#0b2a1f;
       --card2:#103728;
       --line:rgba(255,255,255,.12);
+      --line-strong:rgba(255,255,255,.18);
       --text:#ecfdf5;
       --muted:rgba(236,253,245,.72);
+      --muted2:rgba(236,253,245,.52);
       --gold:#facc15;
       --green:#22c55e;
       --red:#ef4444;
       --blue:#3b82f6;
       --shadow:0 18px 55px rgba(0,0,0,.40);
+      --radius:22px;
     }
 
     *{box-sizing:border-box}
+
     html,body{
       margin:0;
       padding:0;
@@ -39,11 +43,15 @@
         radial-gradient(circle at top, rgba(250,204,21,.10), transparent 35%),
         radial-gradient(circle at bottom, rgba(34,197,94,.10), transparent 40%),
         var(--bg);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
     }
+
+    a{text-decoration:none;color:inherit}
 
     .app{
       min-height:100vh;
-      max-width:860px;
+      max-width:920px;
       margin:0 auto;
       padding:0 0 28px;
     }
@@ -87,12 +95,14 @@
       font-weight:950;
       letter-spacing:.04em;
       font-size:18px;
+      line-height:1.05;
     }
 
     .brand-sub{
       font-size:12px;
       color:var(--muted);
       margin-top:2px;
+      line-height:1.35;
     }
 
     .header-actions{
@@ -118,12 +128,16 @@
       align-items:center;
       justify-content:center;
       gap:8px;
+      transition:.18s ease;
     }
+
+    .btn:hover{transform:translateY(-1px)}
 
     .btn:disabled{
       opacity:.55;
       cursor:not-allowed;
       box-shadow:none;
+      transform:none;
     }
 
     .btn.ghost{
@@ -149,21 +163,53 @@
 
     .hero{
       margin:16px 14px 0;
-      padding:18px;
-      border-radius:22px;
+      padding:20px;
+      border-radius:var(--radius);
       border:1px solid var(--line);
       background:
         radial-gradient(circle at top left, rgba(34,197,94,.12), transparent 35%),
         radial-gradient(circle at bottom right, rgba(250,204,21,.10), transparent 35%),
         linear-gradient(180deg, rgba(11,42,31,.98), rgba(9,30,22,.98));
       box-shadow:var(--shadow);
+      display:grid;
+      gap:14px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:14px;
+      align-items:stretch;
+    }
+
+    .hero-main{
+      display:grid;
+      gap:12px;
+      align-content:start;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      width:max-content;
+      max-width:100%;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(250,204,21,.24);
+      background:rgba(250,204,21,.08);
+      color:#fde68a;
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.08em;
     }
 
     .hero-title{
-      font-size:24px;
+      font-size:32px;
       font-weight:950;
-      line-height:1.15;
-      margin:0 0 8px;
+      line-height:1.05;
+      margin:0;
     }
 
     .hero-title span{color:#fde68a}
@@ -171,12 +217,86 @@
     .hero-sub{
       color:var(--muted);
       font-size:14px;
-      line-height:1.55;
+      line-height:1.6;
       margin:0;
+      max-width:58ch;
+      font-weight:700;
+    }
+
+    .hero-mini{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+    }
+
+    .mini{
+      padding:14px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      display:grid;
+      gap:4px;
+      min-height:102px;
+      align-content:start;
+    }
+
+    .mini-k{
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted2);
+    }
+
+    .mini-v{
+      font-size:19px;
+      font-weight:950;
+      line-height:1.08;
+      color:#fff8dc;
+    }
+
+    .mini-s{
+      font-size:12px;
+      line-height:1.45;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .hero-aside{
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:16px;
+      background:
+        radial-gradient(circle at right top, rgba(34,197,94,.08), transparent 40%),
+        linear-gradient(180deg, rgba(16,55,40,.96), rgba(9,30,22,.96));
+      display:grid;
+      gap:12px;
+      align-content:start;
+    }
+
+    .aside-title{
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:#bbf7d0;
+    }
+
+    .aside-big{
+      font-size:26px;
+      font-weight:950;
+      line-height:1.08;
+      color:#fff8dc;
+    }
+
+    .aside-sub{
+      font-size:13px;
+      line-height:1.5;
+      color:var(--muted);
+      font-weight:700;
     }
 
     .status-row{
-      margin-top:12px;
       display:flex;
       gap:8px;
       flex-wrap:wrap;
@@ -203,11 +323,60 @@
 
     .pill.ok .dot{background:var(--green)}
     .pill.blue .dot{background:var(--blue)}
+    .pill.gold .dot{background:var(--gold)}
+
+    .hud-links{
+      display:grid;
+      gap:10px;
+    }
+
+    .hud-link{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      transition:.18s ease;
+    }
+
+    .hud-link:hover{
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.06);
+      transform:translateY(-1px);
+    }
+
+    .hud-link-main{
+      display:grid;
+      gap:2px;
+    }
+
+    .hud-link-k{
+      font-size:13px;
+      font-weight:900;
+      color:#fff;
+    }
+
+    .hud-link-s{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.4;
+      font-weight:700;
+    }
+
+    .hud-link-arrow{
+      color:#fde68a;
+      font-size:18px;
+      font-weight:900;
+      flex-shrink:0;
+    }
 
     .panel{
       margin:16px 14px 0;
       padding:16px;
-      border-radius:22px;
+      border-radius:var(--radius);
       border:1px solid var(--line);
       background:linear-gradient(180deg, rgba(11,42,31,.98), rgba(9,30,22,.98));
       box-shadow:var(--shadow);
@@ -223,8 +392,9 @@
     }
 
     .panel-title{
-      font-size:20px;
+      font-size:22px;
       font-weight:950;
+      line-height:1.1;
     }
 
     .panel-sub{
@@ -232,6 +402,41 @@
       color:var(--muted);
       margin-top:4px;
       line-height:1.5;
+      max-width:58ch;
+    }
+
+    .focus-box{
+      margin-bottom:14px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px;
+      background:
+        radial-gradient(circle at right top, rgba(250,204,21,.08), transparent 42%),
+        linear-gradient(180deg, rgba(16,55,40,.94), rgba(11,42,31,.94));
+      display:grid;
+      gap:6px;
+    }
+
+    .focus-k{
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:#fde68a;
+    }
+
+    .focus-v{
+      font-size:22px;
+      font-weight:950;
+      line-height:1.1;
+      color:#fff8dc;
+    }
+
+    .focus-s{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.5;
+      font-weight:700;
     }
 
     .stack{display:grid;gap:10px}
@@ -246,9 +451,19 @@
       border:1px solid var(--line);
       background:rgba(255,255,255,.04);
       cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .field:hover{
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
     }
 
     .field.static{cursor:default}
+    .field.static:hover{
+      border-color:var(--line);
+      background:rgba(255,255,255,.04);
+    }
 
     .field-icon{
       width:36px;
@@ -291,6 +506,13 @@
       background:rgba(255,255,255,.04);
       text-align:center;
       cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .vehicle:hover{
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.06);
+      transform:translateY(-1px);
     }
 
     .vehicle.active{
@@ -354,7 +576,6 @@
 
     .foot-note a{
       color:#fde68a;
-      text-decoration:none;
       font-weight:900;
     }
 
@@ -375,6 +596,7 @@
       align-items:center;
       gap:10px;
       margin-bottom:10px;
+      flex-wrap:wrap;
     }
 
     .tracking-status{
@@ -397,6 +619,10 @@
       padding:12px;
       border:1px solid var(--line);
       background:rgba(0,0,0,.14);
+    }
+
+    .tracking-card .row{
+      padding:7px 0;
     }
 
     .overlay{
@@ -551,12 +777,17 @@
       to{transform:translateY(0)}
     }
 
+    @media (max-width:840px){
+      .hero-grid{grid-template-columns:1fr}
+    }
+
     @media (max-width:720px){
       .vehicles{grid-template-columns:repeat(2,minmax(0,1fr))}
       .actions{display:grid;grid-template-columns:1fr}
       .header{padding:12px}
       .brand-title{font-size:16px}
       .header-actions{width:100%}
+      .hero-mini{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -580,16 +811,68 @@
   </header>
 
   <section class="hero">
-    <h1 class="hero-title">Commander une course <span>sans détour</span></h1>
-    <p class="hero-sub">
-      Choisis ton départ, ta destination, ton type de véhicule, puis envoie.
-      DIGIY ne prend pas la commission du chauffeur.
-    </p>
+    <div class="hero-grid">
+      <div class="hero-main">
+        <div class="eyebrow">Client DRIVER • commande rapide</div>
+        <h1 class="hero-title">Commander une course <span>sans détour</span></h1>
+        <p class="hero-sub">
+          Choisis ton départ, ta destination, ton type de véhicule, puis envoie.
+          DIGIY ne prend pas la commission du chauffeur. Le client voit vite, le chauffeur répond direct.
+        </p>
 
-    <div class="status-row">
-      <div class="pill ok" id="dbPill"><span class="dot"></span><span id="dbText">Supabase OK</span></div>
-      <div class="pill blue"><span class="dot"></span><span>Client DRIVER</span></div>
-      <div class="pill"><span class="dot"></span><span>0% commission</span></div>
+        <div class="hero-mini">
+          <div class="mini">
+            <div class="mini-k">En 2 gestes</div>
+            <div class="mini-v">Départ + arrivée</div>
+            <div class="mini-s">Le client choisit juste l’essentiel pour lancer la demande.</div>
+          </div>
+
+          <div class="mini">
+            <div class="mini-k">En 1 lecture</div>
+            <div class="mini-v">Prix estimé</div>
+            <div class="mini-s">Distance, durée et total visibles avant validation.</div>
+          </div>
+
+          <div class="mini">
+            <div class="mini-k">En 1 suivi</div>
+            <div class="mini-v">Chauffeur attribué</div>
+            <div class="mini-s">Une fois accepté, le client suit l’arrivée sans friction.</div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="hero-aside">
+        <div class="aside-title">Lecture rapide client</div>
+        <div class="aside-big">Choisir vite.<br>Voir le prix.<br>Envoyer.</div>
+        <div class="aside-sub">
+          Cette page doit rester simple : pas de bruit, pas de détour,
+          juste le minimum pour commander proprement.
+        </div>
+
+        <div class="status-row">
+          <div class="pill ok" id="dbPill"><span class="dot"></span><span id="dbText">Supabase OK</span></div>
+          <div class="pill blue"><span class="dot"></span><span>Client DRIVER</span></div>
+          <div class="pill gold"><span class="dot"></span><span>0% commission</span></div>
+        </div>
+
+        <div class="hud-links">
+          <a class="hud-link" id="heroOrderLink" href="#bookingPanel">
+            <div class="hud-link-main">
+              <div class="hud-link-k">Commander maintenant</div>
+              <div class="hud-link-s">Aller directement au bloc départ / destination / prix.</div>
+            </div>
+            <div class="hud-link-arrow">→</div>
+          </a>
+
+          <a class="hud-link" id="heroDriversLink" href="#">
+            <div class="hud-link-main">
+              <div class="hud-link-k">Voir les chauffeurs</div>
+              <div class="hud-link-s">Ouvrir la galerie DIGIY DRIVER avant de commander.</div>
+            </div>
+            <div class="hud-link-arrow">→</div>
+          </a>
+        </div>
+      </aside>
     </div>
   </section>
 
@@ -597,7 +880,15 @@
     <div class="panel-head">
       <div>
         <div class="panel-title">Commander une course</div>
-        <div class="panel-sub">Remplis les infos utiles, puis commande.</div>
+        <div class="panel-sub">Remplis les infos utiles, puis commande. Le client reste dans une logique simple et claire.</div>
+      </div>
+    </div>
+
+    <div class="focus-box">
+      <div class="focus-k">Lecture avant action</div>
+      <div class="focus-v">Départ + destination + téléphone = demande prête</div>
+      <div class="focus-s">
+        Ensuite seulement tu choisis le véhicule, tu regardes le prix estimé, puis tu envoies.
       </div>
     </div>
 
@@ -714,7 +1005,7 @@
   "use strict";
 
   const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3"
   const supabase = window.__digiyDriverSb || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   window.__digiyDriverSb = supabase;
 
@@ -763,6 +1054,8 @@
     dbPill: document.getElementById("dbPill"),
     dbText: document.getElementById("dbText"),
     galleryBtn: document.getElementById("galleryBtn"),
+    heroDriversLink: document.getElementById("heroDriversLink"),
+    heroOrderLink: document.getElementById("heroOrderLink"),
 
     pickupRow: document.getElementById("pickupRow"),
     dropoffRow: document.getElementById("dropoffRow"),
@@ -841,7 +1134,9 @@
       galleryUrl.searchParams.set("slug", slug);
     }
 
-    el.galleryBtn.href = galleryUrl.toString();
+    const finalUrl = galleryUrl.toString();
+    el.galleryBtn.href = finalUrl;
+    if (el.heroDriversLink) el.heroDriversLink.href = finalUrl;
   }
 
   function buildZones(){
@@ -942,7 +1237,7 @@
 
     const rawKm = calcDistanceKm(booking.pickup, booking.dropoff);
     booking.distance = rawKm * 1.3;
-    booking.duration = Math.round((booking.distance / 30) * 60);
+    booking.duration = Math.max(2, Math.round((booking.distance / 30) * 60));
 
     updatePrices();
     el.confirmBtn.disabled = false;
@@ -953,7 +1248,7 @@
     const eco = basePrice;
     const confort = Math.round((basePrice * 1.3) / 100) * 100;
     const premium = Math.round((basePrice * 1.8) / 100) * 100;
-    const moto = Math.round((basePrice * 0.7) / 100) * 100;
+    const moto = Math.max(700, Math.round((basePrice * 0.7) / 100) * 100);
 
     el.priceEco.textContent = eco.toLocaleString() + " F";
     el.priceConfort.textContent = confort.toLocaleString() + " F";
@@ -962,9 +1257,10 @@
 
     booking.price = Math.round((basePrice * booking.multiplier) / 100) * 100;
 
+    const activeVehicle = document.querySelector(".vehicle.active .vehicle-name");
     el.summaryDistance.textContent = booking.distance.toFixed(1) + " km";
     el.summaryDuration.textContent = booking.duration + " min";
-    el.summaryVehicle.textContent = document.querySelector(".vehicle.active .vehicle-name").textContent;
+    el.summaryVehicle.textContent = activeVehicle ? activeVehicle.textContent : "Éco";
     el.summaryTotal.textContent = booking.price.toLocaleString() + " FCFA";
     el.summary.classList.add("show");
   }
@@ -1234,6 +1530,7 @@
   function bindEvents(){
     el.pickupRow.addEventListener("click", () => openPicker("pickup"));
     el.dropoffRow.addEventListener("click", () => openPicker("dropoff"));
+
     el.closeLocationBtn.addEventListener("click", closePicker);
     el.locationOverlay.addEventListener("click", (e) => {
       if (e.target === el.locationOverlay) closePicker();
@@ -1251,6 +1548,14 @@
     el.callDriverBtn.addEventListener("click", callDriver);
     el.openGmapsBtn.addEventListener("click", openGoogleMapsRoute);
     el.cancelRideBtn.addEventListener("click", cancelRide);
+
+    if (el.heroOrderLink) {
+      el.heroOrderLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        const target = document.getElementById("bookingPanel");
+        if (target) target.scrollIntoView({ behavior:"smooth", block:"start" });
+      });
+    }
   }
 
   function boot(){
