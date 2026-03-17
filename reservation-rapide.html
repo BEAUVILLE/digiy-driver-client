@@ -8,86 +8,191 @@
   <meta name="description" content="Réservez sans compte - VTC, restaurant, logement, livraison" />
 
   <style>
-    :root{ --green:#16a34a; --gold:#facc15; --orange:#f97316; }
+    :root{
+      --green:#16a34a;
+      --gold:#facc15;
+      --orange:#f97316;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#e2e8f0;
+    }
+
     *{box-sizing:border-box;margin:0;padding:0}
+
     body{
       font-family:system-ui,-apple-system,sans-serif;
       background:
         radial-gradient(circle at 20% 10%, rgba(250,204,21,0.15), transparent 50%),
         radial-gradient(circle at 80% 90%, rgba(22,163,74,0.12), transparent 50%),
         linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
-      min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      color:var(--text);
     }
+
     .box{
-      background:#ffffff; padding:40px; border-radius:24px;
+      background:#ffffff;
+      padding:40px;
+      border-radius:24px;
       box-shadow:0 20px 60px rgba(0,0,0,.12);
-      max-width:500px; width:100%;
+      max-width:520px;
+      width:100%;
       border:1px solid rgba(148,163,184,0.2);
     }
+
     .logo{
-      width:64px; height:64px; border-radius:20px;
+      width:64px;
+      height:64px;
+      border-radius:20px;
       background:linear-gradient(135deg,var(--gold),var(--orange));
-      display:flex; align-items:center; justify-content:center;
-      font-size:32px; margin:0 auto 20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:32px;
+      margin:0 auto 20px;
       box-shadow:0 12px 32px rgba(249,115,22,0.25);
     }
+
     h1{
-      margin:0 0 10px; font-size:28px; text-align:center;
+      margin:0 0 10px;
+      font-size:28px;
+      text-align:center;
       background:linear-gradient(135deg,var(--green),var(--gold));
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
       font-weight:900;
+      line-height:1.15;
     }
+
     .sub{
-      color:#64748b; margin:0 0 28px; font-size:15px; line-height:1.6;
-      text-align:center; font-weight:600;
+      color:var(--muted);
+      margin:0 0 28px;
+      font-size:15px;
+      line-height:1.6;
+      text-align:center;
+      font-weight:600;
     }
-    .sub strong{color:#0f172a}
+
+    .sub strong{color:var(--text)}
+
     .badge{
       background:linear-gradient(135deg, #dcfce7, #d1fae5);
       border:2px solid #22c55e;
-      padding:10px 16px; border-radius:12px; margin-bottom:28px;
-      font-weight:800; color:#065f46; text-align:center;
-      font-size:12px; letter-spacing:.08em;
+      padding:10px 16px;
+      border-radius:12px;
+      margin-bottom:28px;
+      font-weight:800;
+      color:#065f46;
+      text-align:center;
+      font-size:12px;
+      letter-spacing:.08em;
       display:inline-block;
     }
+
     .form-group{margin-bottom:18px}
+
     label{
-      display:block; margin-bottom:8px; font-weight:800; 
-      font-size:14px; color:#0f172a;
-      display:flex; align-items:center; gap:8px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:14px;
+      color:var(--text);
     }
+
     input{
-      width:100%; padding:14px 16px;
-      border:2px solid #e2e8f0; border-radius:12px;
-      font-size:15px; background:#ffffff; color:#0f172a; font-weight:600;
+      width:100%;
+      padding:14px 16px;
+      border:2px solid var(--line);
+      border-radius:12px;
+      font-size:15px;
+      background:#ffffff;
+      color:var(--text);
+      font-weight:600;
       transition:all .2s;
     }
-    input:focus{outline:none; border-color:var(--green); box-shadow:0 0 0 3px rgba(22,163,74,0.1)}
+
+    input:focus{
+      outline:none;
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(22,163,74,0.1);
+    }
+
     input::placeholder{color:#94a3b8}
+
     .btn{
-      width:100%; padding:16px;
+      width:100%;
+      padding:16px;
       background:linear-gradient(135deg,var(--green),#22c55e);
-      color:#fff; border:none; border-radius:12px;
-      font-weight:900; font-size:16px; cursor:pointer;
+      color:#fff;
+      border:none;
+      border-radius:12px;
+      font-weight:900;
+      font-size:16px;
+      cursor:pointer;
       letter-spacing:.05em;
       box-shadow:0 8px 20px rgba(22,163,74,0.3);
       transition:all .2s;
     }
-    .btn:hover{transform:translateY(-2px); box-shadow:0 12px 28px rgba(22,163,74,0.4)}
-    .btn:disabled{opacity:.6; cursor:not-allowed; transform:none}
-    .msg{
-      margin:16px 0 0; padding:14px; border-radius:10px;
-      font-size:14px; display:none; font-weight:700;
+
+    .btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 12px 28px rgba(22,163,74,0.4);
     }
-    .msg.error{background:#fee2e2; color:#991b1b; border:2px solid #fca5a5; display:block}
-    .msg.success{background:#dcfce7; color:#065f46; border:2px solid #86efac; display:block}
+
+    .btn:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
+
+    .msg{
+      margin:16px 0 0;
+      padding:14px;
+      border-radius:10px;
+      font-size:14px;
+      display:none;
+      font-weight:700;
+      line-height:1.5;
+    }
+
+    .msg.error{
+      background:#fee2e2;
+      color:#991b1b;
+      border:2px solid #fca5a5;
+      display:block;
+    }
+
+    .msg.success{
+      background:#dcfce7;
+      color:#065f46;
+      border:2px solid #86efac;
+      display:block;
+    }
+
     .footer{
-      text-align:center; margin:24px 0 0;
-      color:#64748b; font-size:14px; font-weight:600;
+      text-align:center;
+      margin:24px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      font-weight:600;
       line-height:1.8;
     }
-    .footer a{color:var(--green); text-decoration:none; font-weight:800; transition:color .2s}
+
+    .footer a{
+      color:var(--green);
+      text-decoration:none;
+      font-weight:800;
+      transition:color .2s;
+    }
+
     .footer a:hover{color:var(--gold)}
+
     @media(max-width:480px){
       .box{padding:28px 20px}
       h1{font-size:24px}
@@ -109,46 +214,47 @@
 
   <form id="quickBookForm">
     <div class="form-group">
-      <label>
+      <label for="guestPhone">
         <span>📱</span>
         <span>Votre numéro de téléphone *</span>
       </label>
-      <input 
-        type="tel" 
-        id="guestPhone" 
-        required 
-        placeholder="+221 77 123 45 67" 
+      <input
+        type="tel"
+        id="guestPhone"
+        required
+        placeholder="+221 77 123 45 67"
         autocomplete="tel"
+        inputmode="tel"
         pattern="[\+]?[0-9\s]+"
       />
     </div>
 
     <div class="form-group" id="nameField">
-      <label>
+      <label for="guestName">
         <span>👤</span>
         <span>Votre nom (pour la réservation) *</span>
       </label>
-      <input 
-        type="text" 
-        id="guestName" 
-        placeholder="Astou Diop" 
+      <input
+        type="text"
+        id="guestName"
+        placeholder="Astou Diop"
         autocomplete="name"
       />
     </div>
 
     <div class="form-group" id="emailField" style="display:none;">
-      <label>
+      <label for="guestEmail">
         <span>📧</span>
         <span>Votre email *</span>
       </label>
-      <input 
-        type="email" 
-        id="guestEmail" 
-        placeholder="astou@example.com" 
+      <input
+        type="email"
+        id="guestEmail"
+        placeholder="astou@example.com"
         autocomplete="email"
       />
     </div>
-    
+
     <button type="submit" class="btn" id="btnContinue">
       <span id="btnText">⚡ Continuer</span>
     </button>
@@ -158,7 +264,7 @@
 
   <div class="footer">
     Vous avez déjà un compte ? <a href="connexion-client.html">Se connecter</a><br>
-    <a href="digiy-hub/" style="color:#94a3b8;font-weight:600;">← Retour DIGIY Hub</a>
+    <a href="./digiy-hub/" style="color:#94a3b8;font-weight:600;">← Retour DIGIY Hub</a>
   </div>
 </div>
 
@@ -166,188 +272,192 @@
 
 <script>
 console.log("🦅 DIGIYLYFE - Réservation rapide chargée");
-console.log("🔧 VERSION: 2.0 - FIX 404 - " + new Date().toISOString());
+console.log("🔧 VERSION: 2.2 - PUBLISHABLE KEY + REDIRECTION PROPRE - " + new Date().toISOString());
 
-/* 🔐 SUPABASE — DÉJÀ POSÉ */
+/* 🔐 SUPABASE — PUBLISHABLE KEY */
 const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc3Ftd2pqdHNlZnlqbmx1b3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxNzg4ODIsImV4cCI6MjA4MDc1NDg4Mn0.dZfYOc2iL2_wRYL3zExZFsFSBK6AbMeOid2LrIjcTdA";
+const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* 🎯 CONFIGURATION DES MODULES */
 const MODULES = {
   driver: {
-    logo: '🚗',
-    title: 'Commander sans compte',
-    subtitle: 'Réservez votre VTC rapidement',
+    logo: "🚗",
+    title: "Commander sans compte",
+    subtitle: "Réservez votre VTC rapidement",
     needName: true,
     needEmail: false,
-    nextPage: '/digiy-driver-order.html',
-    buttonText: '🚗 Commander maintenant'
+    nextPage: "digiy-driver-order.html",
+    buttonText: "🚗 Commander maintenant"
   },
-  
+
   resa: {
-    logo: '🍽️',
-    title: 'Réserver sans compte',
-    subtitle: 'Réservez votre table au restaurant',
+    logo: "🍽️",
+    title: "Réserver sans compte",
+    subtitle: "Réservez votre table au restaurant",
     needName: true,
     needEmail: true,
-    nextPage: '/digiy-resa-booking.html',
-    buttonText: '🍽️ Réserver maintenant'
+    nextPage: "digiy-resa-booking.html",
+    buttonText: "🍽️ Réserver maintenant"
   },
-  
+
   loc: {
-    logo: '🏠',
-    title: 'Louer sans compte',
-    subtitle: 'Réservez votre logement',
+    logo: "🏠",
+    title: "Louer sans compte",
+    subtitle: "Réservez votre logement",
     needName: true,
     needEmail: true,
-    nextPage: '/digiy-loc-booking.html',
-    buttonText: '🏠 Voir les disponibilités'
+    nextPage: "digiy-loc-booking.html",
+    buttonText: "🏠 Voir les disponibilités"
   },
-  
+
   ndimbal: {
-    logo: '📦',
-    title: 'Livraison express',
-    subtitle: 'Commandez votre livraison rapidement',
+    logo: "📦",
+    title: "Livraison express",
+    subtitle: "Commandez votre livraison rapidement",
     needName: true,
     needEmail: false,
-    nextPage: '/digiy-ndimbal-order.html',
-    buttonText: '📦 Commander livraison'
+    nextPage: "digiy-ndimbal-order.html",
+    buttonText: "📦 Commander livraison"
   },
 
   market: {
-    logo: '🛒',
-    title: 'Acheter sans compte',
-    subtitle: 'Commandez sur notre marketplace',
+    logo: "🛒",
+    title: "Acheter sans compte",
+    subtitle: "Commandez sur notre marketplace",
     needName: true,
     needEmail: false,
-    nextPage: '/digiy-market-shop.html',
-    buttonText: '🛒 Découvrir le market'
+    nextPage: "digiy-market-shop.html",
+    buttonText: "🛒 Découvrir le market"
   }
 };
 
 /* 📱 DÉTECTION DU MODULE */
 const urlParams = new URLSearchParams(window.location.search);
-const moduleKey = (urlParams.get('module') || 'driver').toLowerCase();
+const moduleKey = (urlParams.get("module") || "driver").toLowerCase();
 const config = MODULES[moduleKey] || MODULES.driver;
 
 /* 🎨 PERSONNALISATION DE LA PAGE */
-document.getElementById('moduleLogo').textContent = config.logo;
-document.getElementById('moduleTitle').textContent = config.title;
-document.getElementById('moduleSubtitle').innerHTML = config.subtitle + '<br><strong>Sans créer de compte</strong>';
-document.getElementById('btnText').textContent = config.buttonText;
+document.getElementById("moduleLogo").textContent = config.logo;
+document.getElementById("moduleTitle").textContent = config.title;
+document.getElementById("moduleSubtitle").innerHTML = `${config.subtitle}<br><strong>Sans créer de compte</strong>`;
+document.getElementById("btnText").textContent = config.buttonText;
 
-// Afficher/masquer les champs selon le module
-const nameField = document.getElementById('nameField');
-const emailField = document.getElementById('emailField');
-const guestName = document.getElementById('guestName');
-const guestEmail = document.getElementById('guestEmail');
+const nameField = document.getElementById("nameField");
+const emailField = document.getElementById("emailField");
+const guestName = document.getElementById("guestName");
+const guestEmail = document.getElementById("guestEmail");
 
 if (config.needName) {
-  nameField.style.display = 'block';
+  nameField.style.display = "block";
   guestName.required = true;
 } else {
-  nameField.style.display = 'none';
+  nameField.style.display = "none";
   guestName.required = false;
 }
 
 if (config.needEmail) {
-  emailField.style.display = 'block';
+  emailField.style.display = "block";
   guestEmail.required = true;
 } else {
-  emailField.style.display = 'none';
+  emailField.style.display = "none";
   guestEmail.required = false;
 }
 
 /* 🛠️ FONCTIONS UTILITAIRES */
-function showMsg(text, type = 'error') {
-  const msg = document.getElementById('msg');
+function showMsg(text, type = "error") {
+  const msg = document.getElementById("msg");
   msg.textContent = text;
-  msg.className = 'msg ' + type;
-}
-
-function validatePhone(phone) {
-  // Format Sénégal: +221 XX XXX XX XX
-  const cleaned = phone.replace(/\s+/g, '');
-  const regex = /^(\+?221)?[7][0-9]{8}$/;
-  return regex.test(cleaned);
+  msg.className = "msg " + type;
 }
 
 function normalizePhone(phone) {
-  // Normalise au format +221XXXXXXXXX
-  let cleaned = phone.replace(/\s+/g, '').replace(/^00/, '+');
-  if (cleaned.startsWith('221')) cleaned = '+' + cleaned;
-  if (cleaned.startsWith('7')) cleaned = '+221' + cleaned;
+  let cleaned = String(phone || "")
+    .trim()
+    .replace(/\s+/g, "")
+    .replace(/[^\d+]/g, "")
+    .replace(/^00/, "+");
+
+  if (cleaned.startsWith("221")) cleaned = "+" + cleaned;
+  if (/^7\d{8}$/.test(cleaned)) cleaned = "+221" + cleaned;
+
   return cleaned;
 }
 
+function validatePhone(phone) {
+  const normalized = normalizePhone(phone);
+  return /^\+2217\d{8}$/.test(normalized);
+}
+
+function buildNextUrl(bookingId) {
+  const next = String(config.nextPage || "").trim() || "digiy-driver-order.html";
+  const target = new URL(next, window.location.href);
+  target.searchParams.set("guest", "true");
+  target.searchParams.set("bookingId", bookingId);
+  return target.toString();
+}
+
 /* 📝 SOUMISSION DU FORMULAIRE */
-document.getElementById('quickBookForm').addEventListener('submit', async (e) => {
+document.getElementById("quickBookForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  
-  const phone = document.getElementById('guestPhone').value.trim();
+
+  const phone = document.getElementById("guestPhone").value.trim();
   const name = guestName.value.trim();
   const email = guestEmail.value.trim();
-  
-  // Validation téléphone
+
   if (!validatePhone(phone)) {
-    showMsg('⚠️ Numéro de téléphone invalide. Format: +221 77 123 45 67');
+    showMsg("⚠️ Numéro de téléphone invalide. Format attendu : +221 77 123 45 67");
     return;
   }
 
-  // Validation nom si requis
   if (config.needName && !name) {
-    showMsg('⚠️ Veuillez entrer votre nom');
+    showMsg("⚠️ Veuillez entrer votre nom");
     return;
   }
 
-  // Validation email si requis
   if (config.needEmail && !email) {
-    showMsg('⚠️ Veuillez entrer votre email');
+    showMsg("⚠️ Veuillez entrer votre email");
     return;
   }
-  
-  const btnContinue = document.getElementById('btnContinue');
-  const btnText = document.getElementById('btnText');
-  
+
+  const btnContinue = document.getElementById("btnContinue");
+  const btnText = document.getElementById("btnText");
+
   btnContinue.disabled = true;
-  btnText.textContent = '⏳ Vérification...';
-  
+  btnText.textContent = "⏳ Vérification...";
+
   try {
     const normalizedPhone = normalizePhone(phone);
-    
-    console.log('📞 Création réservation guest:', {
+
+    console.log("📞 Création réservation guest:", {
       phone: normalizedPhone,
       name: name || null,
       email: email || null,
       module: moduleKey
     });
 
-    // Insertion dans guest_bookings
     const { data, error } = await sb
-      .from('guest_bookings')
+      .from("guest_bookings")
       .insert({
         phone: normalizedPhone,
         name: name || null,
         email: email || null,
         module: moduleKey,
-        status: 'initiated',
-        booking_details: {},
-        created_at: new Date().toISOString()
+        status: "initiated",
+        booking_details: {}
       })
       .select()
       .single();
-    
+
     if (error) {
-      console.error('❌ Erreur Supabase:', error);
-      throw new Error(error.message);
+      console.error("❌ Erreur Supabase:", error);
+      throw new Error(error.message || "Erreur lors de la création de la réservation.");
     }
-    
-    console.log('✅ Réservation créée:', data);
-    
-    // Sauvegarde en localStorage (backup)
-    localStorage.setItem('guestSession', JSON.stringify({
+
+    console.log("✅ Réservation créée:", data);
+
+    localStorage.setItem("guestSession", JSON.stringify({
       bookingId: data.id,
       phone: normalizedPhone,
       name: name || null,
@@ -355,37 +465,32 @@ document.getElementById('quickBookForm').addEventListener('submit', async (e) =>
       module: moduleKey,
       timestamp: Date.now()
     }));
-    
-    showMsg('✅ Vérification réussie ! Redirection...', 'success');
-    
-    // Redirection vers la page du module avec URL propre
+
+    showMsg("✅ Vérification réussie ! Redirection...", "success");
+
     setTimeout(() => {
-      const baseUrl = window.location.origin;
-      const nextPage = config.nextPage.startsWith('/') ? config.nextPage : '/' + config.nextPage;
-      const redirectUrl = `${baseUrl}${nextPage}?guest=true&bookingId=${data.id}`;
-      
-      console.log('🔄 DEBUG Redirection:');
-      console.log('  - baseUrl:', baseUrl);
-      console.log('  - config.nextPage:', config.nextPage);
-      console.log('  - nextPage calculé:', nextPage);
-      console.log('  - URL finale:', redirectUrl);
-      
+      const redirectUrl = buildNextUrl(data.id);
+
+      console.log("🔄 DEBUG Redirection:");
+      console.log("  - module:", moduleKey);
+      console.log("  - nextPage:", config.nextPage);
+      console.log("  - URL finale:", redirectUrl);
+
       window.location.href = redirectUrl;
     }, 800);
-    
+
   } catch (err) {
-    console.error('❌ Erreur:', err);
-    showMsg('❌ ' + (err.message || 'Erreur de connexion. Réessayez.'));
+    console.error("❌ Erreur:", err);
+    showMsg("❌ " + (err.message || "Erreur de connexion. Réessayez."));
     btnContinue.disabled = false;
     btnText.textContent = config.buttonText;
   }
 });
 
 /* 📊 ANALYTICS (optionnel) */
-// Track page view
 if (window.gtag) {
-  gtag('event', 'page_view', {
-    page_title: 'Guest Booking - ' + moduleKey,
+  gtag("event", "page_view", {
+    page_title: "Guest Booking - " + moduleKey,
     page_location: window.location.href
   });
 }
