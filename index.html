@@ -28,7 +28,6 @@
     }
 
     *{box-sizing:border-box}
-
     html,body{
       margin:0;
       padding:0;
@@ -46,8 +45,6 @@
       -webkit-font-smoothing:antialiased;
       text-rendering:optimizeLegibility;
     }
-
-    a{text-decoration:none;color:inherit}
 
     .app{
       min-height:100vh;
@@ -132,7 +129,6 @@
     }
 
     .btn:hover{transform:translateY(-1px)}
-
     .btn:disabled{
       opacity:.55;
       cursor:not-allowed;
@@ -151,6 +147,13 @@
       background:rgba(34,197,94,.16);
       color:#bbf7d0;
       border:1px solid rgba(34,197,94,.45);
+      box-shadow:none;
+    }
+
+    .btn.blue{
+      background:rgba(59,130,246,.16);
+      color:#bfdbfe;
+      border:1px solid rgba(59,130,246,.38);
       box-shadow:none;
     }
 
@@ -576,10 +579,11 @@
 
     .foot-note a{
       color:#fde68a;
+      text-decoration:none;
       font-weight:900;
     }
 
-    .tracking{
+    .contact-panel{
       display:none;
       margin-top:16px;
       padding:14px;
@@ -588,40 +592,39 @@
       background:rgba(255,255,255,.04);
     }
 
-    .tracking.show{display:block}
+    .contact-panel.show{display:block}
 
-    .tracking-top{
+    .contact-head{
       display:flex;
       justify-content:space-between;
-      align-items:center;
+      align-items:flex-start;
       gap:10px;
       margin-bottom:10px;
       flex-wrap:wrap;
     }
 
-    .tracking-status{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-weight:900;
-      color:#86efac;
+    .contact-title{
+      font-size:18px;
+      font-weight:950;
+      color:#fde68a;
     }
 
-    .tracking-status .dot{
-      width:10px;
-      height:10px;
-      border-radius:50%;
-      background:var(--green);
+    .contact-sub{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.45;
+      margin-top:4px;
+      max-width:56ch;
     }
 
-    .tracking-card{
+    .contact-card{
       border-radius:16px;
       padding:12px;
       border:1px solid var(--line);
       background:rgba(0,0,0,.14);
     }
 
-    .tracking-card .row{
+    .contact-card .row{
       padding:7px 0;
     }
 
@@ -639,7 +642,7 @@
 
     .picker{
       width:100%;
-      max-width:520px;
+      max-width:560px;
       max-height:92vh;
       border-top-left-radius:22px;
       border-top-right-radius:22px;
@@ -768,14 +771,8 @@
       font-size:14px;
     }
 
-    @keyframes spin{
-      to{transform:rotate(360deg)}
-    }
-
-    @keyframes slideUp{
-      from{transform:translateY(100%)}
-      to{transform:translateY(0)}
-    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 
     @media (max-width:840px){
       .hero-grid{grid-template-columns:1fr}
@@ -814,52 +811,51 @@
     <div class="hero-grid">
       <div class="hero-main">
         <div class="eyebrow">Client DRIVER • commande rapide</div>
-        <h1 class="hero-title">Commander une course <span>sans détour</span></h1>
+        <h1 class="hero-title">Commander une course <span>sans casser le métier</span></h1>
         <p class="hero-sub">
-          Choisis ton départ, ta destination, ton type de véhicule, puis envoie.
-          DIGIY ne prend pas la commission du chauffeur. Le client voit vite, le chauffeur répond direct.
+          Choisis ton départ, ta destination, ton type de véhicule, puis contacte directement un chauffeur.
+          DIGIY ne prend pas la commission et ne tire pas les prix vers le bas.
         </p>
 
         <div class="hero-mini">
           <div class="mini">
             <div class="mini-k">En 2 gestes</div>
             <div class="mini-v">Départ + arrivée</div>
-            <div class="mini-s">Le client choisit juste l’essentiel pour lancer la demande.</div>
+            <div class="mini-s">Le client choisit juste l’essentiel pour lancer sa demande.</div>
           </div>
 
           <div class="mini">
             <div class="mini-k">En 1 lecture</div>
-            <div class="mini-v">Prix estimé</div>
-            <div class="mini-s">Distance, durée et total visibles avant validation.</div>
+            <div class="mini-v">Tarif digne</div>
+            <div class="mini-s">Le prix affiché protège le métier du chauffeur.</div>
           </div>
 
           <div class="mini">
-            <div class="mini-k">En 1 suivi</div>
-            <div class="mini-v">Chauffeur attribué</div>
-            <div class="mini-s">Une fois accepté, le client suit l’arrivée sans friction.</div>
+            <div class="mini-k">En direct</div>
+            <div class="mini-v">WhatsApp / appel</div>
+            <div class="mini-s">Pas de realtime lourd. Le contact se fait humainement.</div>
           </div>
         </div>
       </div>
 
       <aside class="hero-aside">
-        <div class="aside-title">Lecture rapide client</div>
-        <div class="aside-big">Choisir vite.<br>Voir le prix.<br>Envoyer.</div>
+        <div class="aside-title">Doctrine terrain</div>
+        <div class="aside-big">Prix dignes.<br>Contact direct.<br>0% commission.</div>
         <div class="aside-sub">
-          Cette page doit rester simple : pas de bruit, pas de détour,
-          juste le minimum pour commander proprement.
+          DIGIY DRIVER sert à mettre en relation proprement. Le téléphone fait le reste.
         </div>
 
         <div class="status-row">
           <div class="pill ok" id="dbPill"><span class="dot"></span><span id="dbText">Supabase OK</span></div>
           <div class="pill blue"><span class="dot"></span><span>Client DRIVER</span></div>
-          <div class="pill gold"><span class="dot"></span><span>0% commission</span></div>
+          <div class="pill gold"><span class="dot"></span><span>Tarif terrain</span></div>
         </div>
 
         <div class="hud-links">
           <a class="hud-link" id="heroOrderLink" href="#bookingPanel">
             <div class="hud-link-main">
               <div class="hud-link-k">Commander maintenant</div>
-              <div class="hud-link-s">Aller directement au bloc départ / destination / prix.</div>
+              <div class="hud-link-s">Aller directement au bloc départ / destination / tarif.</div>
             </div>
             <div class="hud-link-arrow">→</div>
           </a>
@@ -867,7 +863,7 @@
           <a class="hud-link" id="heroDriversLink" href="#">
             <div class="hud-link-main">
               <div class="hud-link-k">Voir les chauffeurs</div>
-              <div class="hud-link-s">Ouvrir la galerie DIGIY DRIVER avant de commander.</div>
+              <div class="hud-link-s">Ouvrir la galerie DIGIY DRIVER avant de contacter.</div>
             </div>
             <div class="hud-link-arrow">→</div>
           </a>
@@ -880,7 +876,7 @@
     <div class="panel-head">
       <div>
         <div class="panel-title">Commander une course</div>
-        <div class="panel-sub">Remplis les infos utiles, puis commande. Le client reste dans une logique simple et claire.</div>
+        <div class="panel-sub">Départ, destination, véhicule, téléphone. Puis contact direct avec le chauffeur.</div>
       </div>
     </div>
 
@@ -888,7 +884,7 @@
       <div class="focus-k">Lecture avant action</div>
       <div class="focus-v">Départ + destination + téléphone = demande prête</div>
       <div class="focus-s">
-        Ensuite seulement tu choisis le véhicule, tu regardes le prix estimé, puis tu envoies.
+        Le prix affiché est un tarif terrain conseillé. Il doit aider le chauffeur à vivre, pas l’écraser.
       </div>
     </div>
 
@@ -914,25 +910,25 @@
         <div class="vehicle-ico">🚗</div>
         <div class="vehicle-name">Éco</div>
         <div class="vehicle-price" id="priceEco">—</div>
-        <div class="vehicle-time">3 min</div>
+        <div class="vehicle-time">terrain</div>
       </div>
-      <div class="vehicle" data-type="confort" data-multiplier="1.3">
+      <div class="vehicle" data-type="confort" data-multiplier="1.2">
         <div class="vehicle-ico">🚙</div>
         <div class="vehicle-name">Confort</div>
         <div class="vehicle-price" id="priceConfort">—</div>
-        <div class="vehicle-time">5 min</div>
+        <div class="vehicle-time">terrain</div>
       </div>
-      <div class="vehicle" data-type="premium" data-multiplier="1.8">
+      <div class="vehicle" data-type="premium" data-multiplier="1.5">
         <div class="vehicle-ico">🚘</div>
         <div class="vehicle-name">Premium</div>
         <div class="vehicle-price" id="pricePremium">—</div>
-        <div class="vehicle-time">8 min</div>
+        <div class="vehicle-time">terrain</div>
       </div>
-      <div class="vehicle" data-type="moto" data-multiplier="0.7">
+      <div class="vehicle" data-type="moto" data-multiplier="0.75">
         <div class="vehicle-ico">🏍️</div>
         <div class="vehicle-name">Moto</div>
         <div class="vehicle-price" id="priceMoto">—</div>
-        <div class="vehicle-time">2 min</div>
+        <div class="vehicle-time">trajets compatibles</div>
       </div>
     </div>
 
@@ -940,11 +936,11 @@
       <div class="row"><span class="label">Distance estimée</span><span id="summaryDistance">—</span></div>
       <div class="row"><span class="label">Durée estimée</span><span id="summaryDuration">—</span></div>
       <div class="row"><span class="label">Véhicule</span><span id="summaryVehicle">Éco</span></div>
-      <div class="row total"><span>Total</span><span id="summaryTotal">—</span></div>
+      <div class="row total"><span>Tarif conseillé</span><span id="summaryTotal">—</span></div>
     </div>
 
     <div class="actions">
-      <button class="btn" id="confirmBtn" type="button" disabled>🚕 Commander ma course</button>
+      <button class="btn" id="confirmBtn" type="button" disabled>🚕 Préparer ma demande</button>
       <a class="btn ghost" href="https://digiylyfe.com">← Retour DIGIYLYFE</a>
     </div>
 
@@ -953,23 +949,28 @@
       <a href="https://digiylyfe.com" target="_blank" rel="noopener">Site principal</a>
     </div>
 
-    <div class="tracking" id="trackingPanel">
-      <div class="tracking-top">
-        <div class="tracking-status"><span class="dot"></span><span id="rideStatus">Recherche chauffeur…</span></div>
+    <div class="contact-panel" id="contactPanel">
+      <div class="contact-head">
+        <div>
+          <div class="contact-title">Demande prête</div>
+          <div class="contact-sub">
+            Tu peux maintenant envoyer directement ta demande à un chauffeur DIGIY. Pas de realtime lourd, pas d’intermédiaire qui mange la marge.
+          </div>
+        </div>
       </div>
 
-      <div class="tracking-card">
-        <div class="row"><span class="label">Chauffeur</span><span id="trackingDriverName">—</span></div>
-        <div class="row"><span class="label">Véhicule</span><span id="trackingVehicle">—</span></div>
-        <div class="row"><span class="label">Téléphone</span><span id="trackingPhone">—</span></div>
-        <div class="row"><span class="label">ETA</span><span id="trackingETA" style="color:#86efac;font-weight:900">—</span></div>
-        <div class="row"><span class="label">Prix</span><span id="trackingPrice" style="color:#fde68a;font-weight:900">—</span></div>
+      <div class="contact-card">
+        <div class="row"><span class="label">Départ</span><span id="contactPickup">—</span></div>
+        <div class="row"><span class="label">Destination</span><span id="contactDropoff">—</span></div>
+        <div class="row"><span class="label">Véhicule</span><span id="contactVehicle">—</span></div>
+        <div class="row"><span class="label">Téléphone client</span><span id="contactPhone">—</span></div>
+        <div class="row"><span class="label">Tarif conseillé</span><span id="contactPrice" style="color:#fde68a;font-weight:900">—</span></div>
       </div>
 
       <div class="actions">
-        <button class="btn green" id="callDriverBtn" type="button">📞 Appeler</button>
-        <button class="btn ghost" id="openGmapsBtn" type="button">🗺️ Itinéraire</button>
-        <button class="btn red" id="cancelRideBtn" type="button">✕ Annuler</button>
+        <button class="btn green" id="whatsappBtn" type="button">💬 Envoyer WhatsApp</button>
+        <button class="btn blue" id="callBtn" type="button">📞 Appeler</button>
+        <button class="btn red" id="resetBtn" type="button">✕ Recommencer</button>
       </div>
     </div>
   </section>
@@ -990,12 +991,9 @@
 <div class="modal" id="searchModal" aria-hidden="true">
   <div class="modal-card">
     <div class="spinner"></div>
-    <div class="modal-title">Recherche d’un chauffeur…</div>
+    <div class="modal-title">Préparation de la demande…</div>
     <div class="modal-sub">
-      La demande part vers les chauffeurs DIGIY à proximité.
-    </div>
-    <div class="actions" style="margin-top:16px">
-      <button class="btn red" id="cancelSearchBtn" type="button">✕ Annuler</button>
+      DIGIY prépare un message propre avec ton trajet et le tarif conseillé.
     </div>
   </div>
 </div>
@@ -1005,44 +1003,310 @@
   "use strict";
 
   const SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3"
+  const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
   const supabase = window.__digiyDriverSb || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   window.__digiyDriverSb = supabase;
 
   const GALLERY_BASE_URL = "https://beauville.github.io/galerie-chauffeurs/";
-  const PRICE_PER_KM = 400;
-  const MIN_PRICE = 1000;
+  const DEFAULT_DRIVER_PHONE = "+221771342889";
 
-  const LOCATIONS = {
+  const ZONE_GROUPS = [
+    { id: "aeroports", label: "✈️ AÉROPORTS" },
+    { id: "petite_cote", label: "🏖️ SALY & PETITE CÔTE" },
+    { id: "mbour", label: "🏙️ MBOUR" },
+    { id: "dakar", label: "🏙️ DAKAR & BANLIEUE" },
+    { id: "autres_villes", label: "🇸🇳 AUTRES VILLES" }
+  ];
+
+  const LOCATIONS_BY_ZONE = {
+    aeroports: [
+      "Aéroport International Blaise Diagne (AIBD)",
+      "AIBD Départs",
+      "AIBD Arrivées",
+      "AIBD Zone Hôtels",
+      "Aéroport Léopold Sédar Senghor (LSS)",
+      "Diass",
+      "Ndiass"
+    ],
+
+    petite_cote: [
+      "Saly Centre",
+      "Saly Portudal",
+      "Saly Niakh Niakhal",
+      "Saly Joseph",
+      "Saly Carrefour",
+      "Saly Tapée",
+      "Saly Koulang",
+      "Ngaparou",
+      "Ngaparou Plage",
+      "Somone",
+      "Somone Plage",
+      "Somone Lagune",
+      "Nianing",
+      "Nianing Plage",
+      "Malicounda",
+      "Popenguine",
+      "Warang",
+      "Sindia"
+    ],
+
+    mbour: [
+      "Mbour Centre",
+      "Mbour Plage",
+      "Mbour Sérère",
+      "Mbour Gare Routière",
+      "Mbour Thiocé",
+      "Dialaw",
+      "Toubab Dialaw",
+      "Joal",
+      "Joal-Fadiouth",
+      "Île aux coquillages",
+      "Nguékhokh"
+    ],
+
+    dakar: [
+      "Dakar Plateau",
+      "Médina",
+      "Almadies",
+      "Ouakam",
+      "Yoff",
+      "Parcelles Assainies U1",
+      "Parcelles Assainies U10",
+      "Parcelles Assainies U20",
+      "Guédiawaye",
+      "Golf Sud",
+      "Médina Gounass",
+      "Sam Notaire",
+      "Pikine",
+      "Pikine Rue 10",
+      "Tally Boubess",
+      "Guinaw Rail",
+      "Thiaroye",
+      "HLM",
+      "Sicap",
+      "Mermoz",
+      "Sacré-Cœur",
+      "Fann",
+      "Point E",
+      "Rufisque",
+      "Bargny",
+      "Sendou",
+      "Diamniadio",
+      "Sebikotane",
+      "Keur Massar",
+      "Malika",
+      "Yeumbeul",
+      "Mbao",
+      "Gare Routière Pompiers",
+      "Port de Dakar",
+      "Gare Ferroviaire"
+    ],
+
+    autres_villes: [
+      "Thiès Centre",
+      "Saint-Louis",
+      "Kaolack",
+      "Ziguinchor",
+      "Touba",
+      "Louga",
+      "Tambacounda",
+      "Kolda",
+      "Matam",
+      "Diourbel",
+      "Fatick",
+      "Kaffrine",
+      "Kédougou",
+      "Sédhiou"
+    ]
+  };
+
+  const PLACE_COORDS = {
     "Aéroport International Blaise Diagne (AIBD)": { lat: 14.6700, lng: -17.0733 },
     "AIBD Départs": { lat: 14.6712, lng: -17.0745 },
     "AIBD Arrivées": { lat: 14.6689, lng: -17.0723 },
+    "AIBD Zone Hôtels": { lat: 14.6668, lng: -17.0688 },
+    "Aéroport Léopold Sédar Senghor (LSS)": { lat: 14.7397, lng: -17.4902 },
+    "Diass": { lat: 14.6550, lng: -17.0720 },
+    "Ndiass": { lat: 14.6605, lng: -17.0660 },
+
     "Saly Centre": { lat: 14.4500, lng: -16.9833 },
+    "Saly Portudal": { lat: 14.4418, lng: -16.9994 },
+    "Saly Niakh Niakhal": { lat: 14.4368, lng: -16.9896 },
+    "Saly Joseph": { lat: 14.4475, lng: -16.9881 },
+    "Saly Carrefour": { lat: 14.4528, lng: -16.9805 },
+    "Saly Tapée": { lat: 14.4595, lng: -16.9789 },
     "Saly Koulang": { lat: 14.4567, lng: -16.9823 },
-    "Dakar Plateau": { lat: 14.6695, lng: -17.4390 },
-    "Dakar Almadies": { lat: 14.7445, lng: -17.5095 },
+    "Ngaparou": { lat: 14.4734, lng: -16.9686 },
+    "Ngaparou Plage": { lat: 14.4782, lng: -16.9658 },
+    "Somone": { lat: 14.4867, lng: -17.0728 },
+    "Somone Plage": { lat: 14.4900, lng: -17.0780 },
+    "Somone Lagune": { lat: 14.4879, lng: -17.0712 },
+    "Nianing": { lat: 14.3538, lng: -16.9431 },
+    "Nianing Plage": { lat: 14.3507, lng: -16.9479 },
+    "Malicounda": { lat: 14.3955, lng: -16.9910 },
+    "Popenguine": { lat: 14.5498, lng: -17.1107 },
+    "Warang": { lat: 14.3742, lng: -16.9539 },
+    "Sindia": { lat: 14.5932, lng: -17.0410 },
+
     "Mbour Centre": { lat: 14.4167, lng: -16.9667 },
-    "Thiès Centre": { lat: 14.7886, lng: -16.9317 }
+    "Mbour Plage": { lat: 14.4095, lng: -16.9601 },
+    "Mbour Sérère": { lat: 14.4206, lng: -16.9725 },
+    "Mbour Gare Routière": { lat: 14.4230, lng: -16.9590 },
+    "Mbour Thiocé": { lat: 14.4305, lng: -16.9582 },
+    "Dialaw": { lat: 14.7243, lng: -17.1558 },
+    "Toubab Dialaw": { lat: 14.7215, lng: -17.1433 },
+    "Joal": { lat: 14.1667, lng: -16.8500 },
+    "Joal-Fadiouth": { lat: 14.1690, lng: -16.8335 },
+    "Île aux coquillages": { lat: 14.1710, lng: -16.8315 },
+    "Nguékhokh": { lat: 14.5127, lng: -17.0040 },
+
+    "Dakar Plateau": { lat: 14.6695, lng: -17.4390 },
+    "Médina": { lat: 14.6802, lng: -17.4445 },
+    "Almadies": { lat: 14.7445, lng: -17.5095 },
+    "Ouakam": { lat: 14.7240, lng: -17.4940 },
+    "Yoff": { lat: 14.7475, lng: -17.4630 },
+    "Parcelles Assainies U1": { lat: 14.7640, lng: -17.4305 },
+    "Parcelles Assainies U10": { lat: 14.7700, lng: -17.4210 },
+    "Parcelles Assainies U20": { lat: 14.7765, lng: -17.4140 },
+    "Guédiawaye": { lat: 14.7761, lng: -17.3995 },
+    "Golf Sud": { lat: 14.7792, lng: -17.3890 },
+    "Médina Gounass": { lat: 14.7816, lng: -17.3779 },
+    "Sam Notaire": { lat: 14.7831, lng: -17.4044 },
+    "Pikine": { lat: 14.7647, lng: -17.3908 },
+    "Pikine Rue 10": { lat: 14.7568, lng: -17.3924 },
+    "Tally Boubess": { lat: 14.7484, lng: -17.3834 },
+    "Guinaw Rail": { lat: 14.7481, lng: -17.3661 },
+    "Thiaroye": { lat: 14.7460, lng: -17.3502 },
+    "HLM": { lat: 14.7006, lng: -17.4547 },
+    "Sicap": { lat: 14.7090, lng: -17.4585 },
+    "Mermoz": { lat: 14.7060, lng: -17.4755 },
+    "Sacré-Cœur": { lat: 14.7195, lng: -17.4678 },
+    "Fann": { lat: 14.6934, lng: -17.4666 },
+    "Point E": { lat: 14.6958, lng: -17.4568 },
+    "Rufisque": { lat: 14.7171, lng: -17.2733 },
+    "Bargny": { lat: 14.6940, lng: -17.2334 },
+    "Sendou": { lat: 14.6690, lng: -17.2110 },
+    "Diamniadio": { lat: 14.7300, lng: -17.1980 },
+    "Sebikotane": { lat: 14.7467, lng: -17.1352 },
+    "Keur Massar": { lat: 14.7870, lng: -17.3150 },
+    "Malika": { lat: 14.7950, lng: -17.3600 },
+    "Yeumbeul": { lat: 14.7810, lng: -17.3620 },
+    "Mbao": { lat: 14.7360, lng: -17.3230 },
+    "Gare Routière Pompiers": { lat: 14.6845, lng: -17.4420 },
+    "Port de Dakar": { lat: 14.6800, lng: -17.4245 },
+    "Gare Ferroviaire": { lat: 14.6737, lng: -17.4338 },
+
+    "Thiès Centre": { lat: 14.7886, lng: -16.9317 },
+    "Saint-Louis": { lat: 16.0326, lng: -16.4818 },
+    "Kaolack": { lat: 14.1460, lng: -16.0726 },
+    "Ziguinchor": { lat: 12.5833, lng: -16.2667 },
+    "Touba": { lat: 14.8667, lng: -15.8833 },
+    "Louga": { lat: 15.6187, lng: -16.2244 },
+    "Tambacounda": { lat: 13.7707, lng: -13.6673 },
+    "Kolda": { lat: 12.8939, lng: -14.9413 },
+    "Matam": { lat: 15.6559, lng: -13.2554 },
+    "Diourbel": { lat: 14.6558, lng: -16.2348 },
+    "Fatick": { lat: 14.3390, lng: -16.4111 },
+    "Kaffrine": { lat: 14.1059, lng: -15.5508 },
+    "Kédougou": { lat: 12.5605, lng: -12.1743 },
+    "Sédhiou": { lat: 12.7062, lng: -15.5569 }
   };
 
-  const ZONES = [
-    { id: "aeroports", label: "✈️ AÉROPORTS" },
-    { id: "saly", label: "🏖️ SALY" },
-    { id: "dakar", label: "🏙️ DAKAR" },
-    { id: "mbour", label: "🏙️ MBOUR" },
-    { id: "thies", label: "🏙️ THIÈS" }
-  ];
+  const ZONE_CENTROIDS = {
+    aeroports: { lat: 14.6688, lng: -17.0710 },
+    petite_cote: { lat: 14.4450, lng: -16.9850 },
+    mbour: { lat: 14.4170, lng: -16.9660 },
+    dakar: { lat: 14.7160, lng: -17.4060 },
+    autres_villes: { lat: 14.7886, lng: -16.9317 }
+  };
 
-  let currentRideId = null;
-  let realtimeChannel = null;
+  const ZONE_CITY = {
+    aeroports: "Diass",
+    petite_cote: "Saly",
+    mbour: "Mbour",
+    dakar: "Dakar",
+    autres_villes: "Sénégal"
+  };
+
+  /*
+    Barème terrain DIGIY DRIVER
+    - prix qui laissent vivre
+    - priorité aux trajets réels clés
+    - fallback distance si trajet non mappé
+  */
+  const ROUTE_PRICES = {
+    "Saly Centre|Aéroport International Blaise Diagne (AIBD)": 25000,
+    "Saly Centre|AIBD Départs": 25000,
+    "Saly Centre|AIBD Arrivées": 25000,
+    "Saly Portudal|Aéroport International Blaise Diagne (AIBD)": 26000,
+    "Ngaparou|Aéroport International Blaise Diagne (AIBD)": 23000,
+    "Ngaparou Plage|Aéroport International Blaise Diagne (AIBD)": 24000,
+    "Somone|Aéroport International Blaise Diagne (AIBD)": 20000,
+    "Somone Plage|Aéroport International Blaise Diagne (AIBD)": 21000,
+    "Mbour Centre|Aéroport International Blaise Diagne (AIBD)": 18000,
+    "Nguékhokh|Aéroport International Blaise Diagne (AIBD)": 12000,
+
+    "Saly Centre|Dakar Plateau": 45000,
+    "Saly Centre|Almadies": 50000,
+    "Saly Centre|Ouakam": 48000,
+    "Saly Centre|Yoff": 47000,
+    "Ngaparou|Dakar Plateau": 47000,
+    "Somone|Dakar Plateau": 42000,
+    "Mbour Centre|Dakar Plateau": 40000,
+
+    "Saly Centre|Ngaparou": 3500,
+    "Saly Centre|Ngaparou Plage": 4000,
+    "Saly Centre|Somone": 7000,
+    "Saly Centre|Somone Plage": 8000,
+    "Saly Centre|Somone Lagune": 8000,
+    "Saly Centre|Mbour Centre": 5000,
+    "Saly Centre|Mbour Gare Routière": 5500,
+    "Saly Centre|Nguékhokh": 6500,
+    "Saly Centre|Nianing": 8500,
+    "Saly Centre|Nianing Plage": 9000,
+    "Saly Centre|Warang": 11000,
+    "Saly Centre|Popenguine": 12000,
+
+    "Ngaparou|Somone": 4500,
+    "Ngaparou|Mbour Centre": 7000,
+    "Somone|Mbour Centre": 9000,
+    "Mbour Centre|Joal": 20000,
+    "Mbour Centre|Joal-Fadiouth": 20000,
+
+    "Dakar Plateau|Aéroport International Blaise Diagne (AIBD)": 18000,
+    "Almadies|Aéroport International Blaise Diagne (AIBD)": 22000,
+    "Ouakam|Aéroport International Blaise Diagne (AIBD)": 21000,
+    "Yoff|Aéroport International Blaise Diagne (AIBD)": 19000,
+    "Rufisque|Aéroport International Blaise Diagne (AIBD)": 12000,
+    "Diamniadio|Aéroport International Blaise Diagne (AIBD)": 8000,
+    "Thiès Centre|Aéroport International Blaise Diagne (AIBD)": 15000
+  };
+
+  const VEHICLE_MULTIPLIERS = {
+    eco: 1,
+    confort: 1.2,
+    premium: 1.5,
+    moto: 0.75
+  };
+
+  const MIN_PRICES = {
+    eco: 3000,
+    confort: 4000,
+    premium: 6000,
+    moto: 1500
+  };
+
   let currentLocationType = "pickup";
-  let selectedDriver = null;
+  let currentZoneId = "aeroports";
+  let currentOrder = null;
 
   const booking = {
     pickup: null,
     dropoff: null,
     pickupName: "",
     dropoffName: "",
+    pickupZoneId: "",
+    dropoffZoneId: "",
     vehicleType: "eco",
     multiplier: 1,
     distance: 0,
@@ -1077,16 +1341,15 @@ const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3"
 
     confirmBtn: document.getElementById("confirmBtn"),
 
-    trackingPanel: document.getElementById("trackingPanel"),
-    rideStatus: document.getElementById("rideStatus"),
-    trackingDriverName: document.getElementById("trackingDriverName"),
-    trackingVehicle: document.getElementById("trackingVehicle"),
-    trackingPhone: document.getElementById("trackingPhone"),
-    trackingETA: document.getElementById("trackingETA"),
-    trackingPrice: document.getElementById("trackingPrice"),
-    callDriverBtn: document.getElementById("callDriverBtn"),
-    openGmapsBtn: document.getElementById("openGmapsBtn"),
-    cancelRideBtn: document.getElementById("cancelRideBtn"),
+    contactPanel: document.getElementById("contactPanel"),
+    contactPickup: document.getElementById("contactPickup"),
+    contactDropoff: document.getElementById("contactDropoff"),
+    contactVehicle: document.getElementById("contactVehicle"),
+    contactPhone: document.getElementById("contactPhone"),
+    contactPrice: document.getElementById("contactPrice"),
+    whatsappBtn: document.getElementById("whatsappBtn"),
+    callBtn: document.getElementById("callBtn"),
+    resetBtn: document.getElementById("resetBtn"),
 
     locationOverlay: document.getElementById("locationOverlay"),
     locationTitle: document.getElementById("locationTitle"),
@@ -1094,26 +1357,73 @@ const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3"
     locationList: document.getElementById("locationList"),
     closeLocationBtn: document.getElementById("closeLocationBtn"),
 
-    searchModal: document.getElementById("searchModal"),
-    cancelSearchBtn: document.getElementById("cancelSearchBtn")
+    searchModal: document.getElementById("searchModal")
   };
 
   function normPhone(p){
     p = String(p || "").trim().replace(/\s+/g, "").replace(/[^\d+]/g, "");
     if (p.startsWith("00221")) p = "+221" + p.slice(5);
     if (!p.startsWith("+") && p.startsWith("221")) p = "+" + p;
-    if (!p.startsWith("+221") && /^\d{9}$/.test(p)) p = "+221" + p;
+    if (!p.startsWith("+221") && /^7\d{8}$/.test(p)) p = "+221" + p;
     return p;
+  }
+
+  function cityFromZone(zoneId){
+    return ZONE_CITY[zoneId] || "Sénégal";
   }
 
   function cityFromName(name){
     if (!name) return null;
-    if (name.includes("Saly")) return "Saly";
-    if (name.includes("Dakar")) return "Dakar";
-    if (name.includes("Mbour")) return "Mbour";
+    if (name.includes("Saly") || name.includes("Ngaparou") || name.includes("Somone") || name.includes("Nianing") || name.includes("Popenguine") || name.includes("Warang") || name.includes("Sindia")) return "Saly";
+    if (name.includes("Mbour") || name.includes("Dialaw") || name.includes("Joal") || name.includes("Nguékhokh")) return "Mbour";
+    if (name.includes("Dakar") || name.includes("Almadies") || name.includes("Ouakam") || name.includes("Yoff") || name.includes("Pikine") || name.includes("Guédiawaye") || name.includes("Rufisque") || name.includes("Keur Massar") || name.includes("Diamniadio")) return "Dakar";
+    if (name.includes("AIBD") || name.includes("Aéroport") || name.includes("Diass") || name.includes("Ndiass")) return "Diass";
     if (name.includes("Thiès")) return "Thiès";
-    if (name.includes("AIBD") || name.includes("Aéroport")) return "Diass";
     return null;
+  }
+
+  function getPlaceCoords(name, zoneId){
+    return PLACE_COORDS[name] || ZONE_CENTROIDS[zoneId] || ZONE_CENTROIDS.aeroports;
+  }
+
+  function getRouteKey(a, b){
+    return [a, b].sort((x, y) => x.localeCompare(y, "fr")).join("|");
+  }
+
+  function calcDistanceKm(a, b){
+    const R = 6371;
+    const dLat = (b.lat - a.lat) * Math.PI / 180;
+    const dLng = (b.lng - a.lng) * Math.PI / 180;
+    const aa = Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(a.lat * Math.PI / 180) * Math.cos(b.lat * Math.PI / 180) *
+      Math.sin(dLng/2) * Math.sin(dLng/2);
+    const c = 2 * Math.atan2(Math.sqrt(aa), Math.sqrt(1-aa));
+    return R * c;
+  }
+
+  function computeBaseTariff(pickupName, dropoffName, distanceKm){
+    const direct = ROUTE_PRICES[getRouteKey(pickupName, dropoffName)];
+    if (direct) return direct;
+
+    /*
+      fallback terrain:
+      - pas un sous-prix
+      - base forte + km raisonnable
+    */
+    const base = 2500;
+    const perKm = 550;
+    return Math.max(base, Math.round(((base + (distanceKm * perKm)) / 100)) * 100);
+  }
+
+  function vehicleLabel(type){
+    if (type === "confort") return "Confort";
+    if (type === "premium") return "Premium";
+    if (type === "moto") return "Moto";
+    return "Éco";
+  }
+
+  function money(n){
+    return Number(n || 0).toLocaleString("fr-FR") + " FCFA";
   }
 
   function setDbState(ok, label){
@@ -1141,7 +1451,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3"
 
   function buildZones(){
     el.locationZones.innerHTML = "";
-    ZONES.forEach((zone, index) => {
+    ZONE_GROUPS.forEach((zone, index) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "zone" + (index === 0 ? " active" : "");
@@ -1152,14 +1462,8 @@ const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3"
     });
   }
 
-  function filterLocations(zoneId){
-    const names = Object.keys(LOCATIONS);
-    if (zoneId === "aeroports") return names.filter(x => x.includes("AIBD") || x.includes("Aéroport"));
-    if (zoneId === "saly") return names.filter(x => x.includes("Saly"));
-    if (zoneId === "dakar") return names.filter(x => x.includes("Dakar"));
-    if (zoneId === "mbour") return names.filter(x => x.includes("Mbour"));
-    if (zoneId === "thies") return names.filter(x => x.includes("Thiès"));
-    return names;
+  function getZonePlaces(zoneId){
+    return Array.isArray(LOCATIONS_BY_ZONE[zoneId]) ? LOCATIONS_BY_ZONE[zoneId] : [];
   }
 
   function renderLocationList(list){
@@ -1178,16 +1482,17 @@ const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3"
       btn.type = "button";
       btn.className = "loc-item";
       btn.textContent = name;
-      btn.addEventListener("click", () => chooseLocation(name));
+      btn.addEventListener("click", () => chooseLocation(name, currentZoneId));
       el.locationList.appendChild(btn);
     });
   }
 
   function selectZone(zoneId){
+    currentZoneId = zoneId;
     el.locationZones.querySelectorAll(".zone").forEach(btn => {
       btn.classList.toggle("active", btn.dataset.zoneId === zoneId);
     });
-    renderLocationList(filterLocations(zoneId));
+    renderLocationList(getZonePlaces(zoneId));
   }
 
   function openPicker(type){
@@ -1195,7 +1500,13 @@ const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3"
     el.locationTitle.textContent = type === "pickup" ? "Choisir le point de départ" : "Choisir la destination";
     el.locationOverlay.classList.add("show");
     el.locationOverlay.setAttribute("aria-hidden", "false");
-    selectZone(ZONES[0].id);
+    selectZone(
+      currentLocationType === "pickup" && booking.pickupZoneId
+        ? booking.pickupZoneId
+        : (currentLocationType === "dropoff" && booking.dropoffZoneId
+          ? booking.dropoffZoneId
+          : ZONE_GROUPS[0].id)
+    );
   }
 
   function closePicker(){
@@ -1203,17 +1514,18 @@ const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3"
     el.locationOverlay.setAttribute("aria-hidden", "true");
   }
 
-  function chooseLocation(name){
-    const coords = LOCATIONS[name];
-    if (!coords) return;
+  function chooseLocation(name, zoneId){
+    const coords = getPlaceCoords(name, zoneId);
 
     if (currentLocationType === "pickup") {
       booking.pickup = coords;
       booking.pickupName = name;
+      booking.pickupZoneId = zoneId;
       el.pickupInput.value = name;
     } else {
       booking.dropoff = coords;
       booking.dropoffName = name;
+      booking.dropoffZoneId = zoneId;
       el.dropoffInput.value = name;
     }
 
@@ -1221,47 +1533,45 @@ const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3"
     maybeEstimate();
   }
 
-  function calcDistanceKm(a, b){
-    const R = 6371;
-    const dLat = (b.lat - a.lat) * Math.PI / 180;
-    const dLng = (b.lng - a.lng) * Math.PI / 180;
-    const aa = Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(a.lat * Math.PI / 180) * Math.cos(b.lat * Math.PI / 180) *
-      Math.sin(dLng/2) * Math.sin(dLng/2);
-    const c = 2 * Math.atan2(Math.sqrt(aa), Math.sqrt(1-aa));
-    return R * c;
-  }
-
   function maybeEstimate(){
     if (!booking.pickup || !booking.dropoff) return;
 
     const rawKm = calcDistanceKm(booking.pickup, booking.dropoff);
-    booking.distance = rawKm * 1.3;
-    booking.duration = Math.max(2, Math.round((booking.distance / 30) * 60));
+    booking.distance = Math.max(1, rawKm * 1.18);
+    booking.duration = Math.max(3, Math.round((booking.distance / 32) * 60));
 
     updatePrices();
     el.confirmBtn.disabled = false;
   }
 
   function updatePrices(){
-    const basePrice = Math.max(MIN_PRICE, Math.round((booking.distance * PRICE_PER_KM) / 100) * 100);
-    const eco = basePrice;
-    const confort = Math.round((basePrice * 1.3) / 100) * 100;
-    const premium = Math.round((basePrice * 1.8) / 100) * 100;
-    const moto = Math.max(700, Math.round((basePrice * 0.7) / 100) * 100);
+    const baseTariff = computeBaseTariff(
+      booking.pickupName,
+      booking.dropoffName,
+      booking.distance
+    );
 
-    el.priceEco.textContent = eco.toLocaleString() + " F";
-    el.priceConfort.textContent = confort.toLocaleString() + " F";
-    el.pricePremium.textContent = premium.toLocaleString() + " F";
-    el.priceMoto.textContent = moto.toLocaleString() + " F";
+    const eco = Math.max(MIN_PRICES.eco, Math.round(baseTariff / 100) * 100);
+    const confort = Math.max(MIN_PRICES.confort, Math.round((eco * VEHICLE_MULTIPLIERS.confort) / 100) * 100);
+    const premium = Math.max(MIN_PRICES.premium, Math.round((eco * VEHICLE_MULTIPLIERS.premium) / 100) * 100);
+    const moto = Math.max(MIN_PRICES.moto, Math.round((eco * VEHICLE_MULTIPLIERS.moto) / 100) * 100);
 
-    booking.price = Math.round((basePrice * booking.multiplier) / 100) * 100;
+    el.priceEco.textContent = money(eco);
+    el.priceConfort.textContent = money(confort);
+    el.pricePremium.textContent = money(premium);
+    el.priceMoto.textContent = money(moto);
 
-    const activeVehicle = document.querySelector(".vehicle.active .vehicle-name");
+    let finalPrice = eco;
+    if (booking.vehicleType === "confort") finalPrice = confort;
+    else if (booking.vehicleType === "premium") finalPrice = premium;
+    else if (booking.vehicleType === "moto") finalPrice = moto;
+
+    booking.price = finalPrice;
+
     el.summaryDistance.textContent = booking.distance.toFixed(1) + " km";
     el.summaryDuration.textContent = booking.duration + " min";
-    el.summaryVehicle.textContent = activeVehicle ? activeVehicle.textContent : "Éco";
-    el.summaryTotal.textContent = booking.price.toLocaleString() + " FCFA";
+    el.summaryVehicle.textContent = vehicleLabel(booking.vehicleType);
+    el.summaryTotal.textContent = money(booking.price);
     el.summary.classList.add("show");
   }
 
@@ -1308,223 +1618,97 @@ const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3"
       return;
     }
 
-    el.confirmBtn.disabled = true;
-    el.confirmBtn.textContent = "Envoi...";
     openSearchModal();
 
     try{
-      await sendRideRequest(clientPhone);
-    }finally{
-      el.confirmBtn.textContent = "🚕 Commander ma course";
-    }
-  }
+      const orderPayload = {
+        pickup_address: booking.pickupName,
+        pickup_text: booking.pickupName,
+        pickup_location: `${booking.pickup.lat},${booking.pickup.lng}`,
+        dropoff_address: booking.dropoffName,
+        dropoff_text: booking.dropoffName,
+        dropoff_location: `${booking.dropoff.lat},${booking.dropoff.lng}`,
+        client_phone: clientPhone,
+        city: cityFromName(booking.pickupName) || cityFromZone(booking.pickupZoneId) || cityFromName(booking.dropoffName) || cityFromZone(booking.dropoffZoneId),
+        status: "new",
+        price: booking.price,
+        price_xof: booking.price,
+        distance: booking.distance,
+        duration: booking.duration,
+        vehicle_type: booking.vehicleType,
+        note: `Demande client directe ${vehicleLabel(booking.vehicleType)} - ${booking.distance.toFixed(1)}km`
+      };
 
-  async function sendRideRequest(clientPhone){
-    const rideData = {
-      pickup_address: booking.pickupName,
-      pickup_text: booking.pickupName,
-      pickup_location: `${booking.pickup.lat},${booking.pickup.lng}`,
-      dropoff_address: booking.dropoffName,
-      dropoff_text: booking.dropoffName,
-      dropoff_location: `${booking.dropoff.lat},${booking.dropoff.lng}`,
-      client_phone: clientPhone,
-      city: cityFromName(booking.pickupName) || cityFromName(booking.dropoffName),
-      status: "new",
-      price: booking.price,
-      price_xof: booking.price,
-      distance: booking.distance,
-      duration: booking.duration,
-      vehicle_type: booking.vehicleType,
-      note: `Course ${booking.vehicleType} - ${booking.distance.toFixed(1)}km`
-    };
+      /*
+        On garde une trace légère si possible,
+        mais le coeur du flux reste humain/direct.
+      */
+      try{
+        const { data, error } = await supabase
+          .from("ride_requests")
+          .insert([orderPayload])
+          .select("id")
+          .single();
 
-    try{
-      const { data, error } = await supabase
-        .from("ride_requests")
-        .insert([rideData])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      currentRideId = data.id;
-      listenToRideUpdates(currentRideId);
-      setTimeout(simulateDriverAcceptance, Math.random() * 1800 + 1800);
-    }catch(err){
-      console.error(err);
-      closeSearchModal();
-      el.confirmBtn.disabled = false;
-      alert("Course non créée. Vérifie les colonnes / policies Supabase.");
-    }
-  }
-
-  async function simulateDriverAcceptance(){
-    if (!currentRideId) return;
-
-    try{
-      const { data: driver, error } = await supabase
-        .from("driver_profiles")
-        .select("*")
-        .eq("is_online", true)
-        .limit(1)
-        .maybeSingle();
-
-      if (error) throw error;
-
-      if (!driver) {
-        closeSearchModal();
-        el.confirmBtn.disabled = false;
-        alert("Aucun chauffeur disponible pour le moment.");
-        return;
+        if (!error && data) {
+          currentOrder = { id: data.id, ...orderPayload };
+        } else {
+          currentOrder = { id: null, ...orderPayload };
+        }
+      }catch(_err){
+        currentOrder = { id: null, ...orderPayload };
       }
 
-      selectedDriver = driver;
+      el.contactPickup.textContent = booking.pickupName;
+      el.contactDropoff.textContent = booking.dropoffName;
+      el.contactVehicle.textContent = vehicleLabel(booking.vehicleType);
+      el.contactPhone.textContent = clientPhone;
+      el.contactPrice.textContent = money(booking.price);
 
-      const { error: updateError } = await supabase
-        .from("ride_requests")
-        .update({
-          status: "accepted",
-          assigned_driver_phone: driver.phone || null,
-          accepted_at: new Date().toISOString()
-        })
-        .eq("id", currentRideId);
+      el.contactPanel.classList.add("show");
+      closeSearchModal();
 
-      if (updateError) throw updateError;
-
-      applyAcceptedDriver(driver);
-    }catch(err){
+      const top = el.contactPanel.getBoundingClientRect().top + window.scrollY - 90;
+      window.scrollTo({ top, behavior:"smooth" });
+    } catch(err){
       console.error(err);
       closeSearchModal();
-      el.confirmBtn.disabled = false;
-      alert("Problème lors de l’attribution du chauffeur.");
+      alert("Impossible de préparer la demande.");
     }
   }
 
-  function listenToRideUpdates(rideId){
-    if (realtimeChannel) {
-      supabase.removeChannel(realtimeChannel);
-      realtimeChannel = null;
-    }
-
-    realtimeChannel = supabase
-      .channel(`ride_${rideId}`)
-      .on("postgres_changes", {
-        event: "UPDATE",
-        schema: "public",
-        table: "ride_requests",
-        filter: `id=eq.${rideId}`
-      }, (payload) => {
-        handleRideUpdate(payload.new);
-      })
-      .subscribe();
+  function getWhatsappMessage(){
+    const phone = normPhone(el.clientPhone.value);
+    const lines = [
+      "Bonjour, je souhaite commander une course DIGIY DRIVER.",
+      "",
+      "📍 Départ : " + booking.pickupName,
+      "🏁 Destination : " + booking.dropoffName,
+      "🚘 Véhicule : " + vehicleLabel(booking.vehicleType),
+      "📏 Distance estimée : " + booking.distance.toFixed(1) + " km",
+      "⏱️ Durée estimée : " + booking.duration + " min",
+      "💰 Tarif conseillé : " + money(booking.price),
+      "📞 Mon numéro : " + phone,
+      "",
+      "Merci."
+    ];
+    return lines.join("\n");
   }
 
-  function handleRideUpdate(ride){
-    if (!ride) return;
-
-    if (ride.status === "accepted") {
-      el.rideStatus.textContent = "Chauffeur attribué";
-    } else if (ride.status === "in_progress") {
-      el.rideStatus.textContent = "En route vers vous";
-    } else if (ride.status === "completed") {
-      alert(`✅ Course terminée — ${Number(ride.price || ride.price_xof || 0).toLocaleString()} FCFA`);
-      resetRide();
-    } else if (ride.status === "cancelled") {
-      alert("La course a été annulée.");
-      resetRide();
-    }
-  }
-
-  function applyAcceptedDriver(driver){
-    closeSearchModal();
-    el.trackingPanel.classList.add("show");
-    el.rideStatus.textContent = "Chauffeur attribué";
-    el.trackingDriverName.textContent = driver.full_name || "Chauffeur DIGIY";
-    el.trackingVehicle.textContent = `${driver.car_model || "Véhicule"} • ${driver.car_plate || "—"}`;
-    el.trackingPhone.textContent = driver.phone || "—";
-    el.trackingETA.textContent = `${Math.floor(Math.random() * 4) + 2} min`;
-    el.trackingPrice.textContent = `${booking.price.toLocaleString()} FCFA`;
-
-    setTimeout(async () => {
-      if (!currentRideId) return;
-      await supabase
-        .from("ride_requests")
-        .update({
-          status: "in_progress",
-          started_at: new Date().toISOString()
-        })
-        .eq("id", currentRideId);
-
-      el.rideStatus.textContent = "En route vers vous";
-    }, 1800);
-  }
-
-  async function cancelSearch(){
-    closeSearchModal();
-
-    if (currentRideId) {
-      await supabase
-        .from("ride_requests")
-        .update({
-          status: "cancelled",
-          cancelled_by: "client",
-          cancelled_at: new Date().toISOString()
-        })
-        .eq("id", currentRideId);
-    }
-
-    currentRideId = null;
-    el.confirmBtn.disabled = false;
-  }
-
-  async function cancelRide(){
-    const ok = window.confirm("Annuler cette course ?");
-    if (!ok) return;
-
-    if (currentRideId) {
-      await supabase
-        .from("ride_requests")
-        .update({
-          status: "cancelled",
-          cancelled_by: "client",
-          cancelled_at: new Date().toISOString()
-        })
-        .eq("id", currentRideId);
-    }
-
-    resetRide();
-  }
-
-  function resetRide(){
-    currentRideId = null;
-    selectedDriver = null;
-    el.trackingPanel.classList.remove("show");
-    el.confirmBtn.disabled = booking.pickup && booking.dropoff ? false : true;
-
-    if (realtimeChannel) {
-      supabase.removeChannel(realtimeChannel);
-      realtimeChannel = null;
-    }
+  function openWhatsapp(){
+    const text = getWhatsappMessage();
+    const wa = `https://wa.me/${DEFAULT_DRIVER_PHONE.replace(/[^\d]/g, "")}?text=${encodeURIComponent(text)}`;
+    window.open(wa, "_blank", "noopener,noreferrer");
   }
 
   function callDriver(){
-    if (selectedDriver && selectedDriver.phone) {
-      window.location.href = `tel:${selectedDriver.phone}`;
-      return;
-    }
-    alert("Numéro chauffeur indisponible.");
+    window.location.href = `tel:${DEFAULT_DRIVER_PHONE}`;
   }
 
-  function openGoogleMapsRoute(){
-    if (!booking.pickup || !booking.dropoff) {
-      alert("Départ ou destination manquants.");
-      return;
-    }
-
-    const origin = `${booking.pickup.lat},${booking.pickup.lng}`;
-    const destination = `${booking.dropoff.lat},${booking.dropoff.lng}`;
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=driving`;
-    window.open(url, "_blank", "noopener,noreferrer");
+  function resetRide(){
+    currentOrder = null;
+    el.contactPanel.classList.remove("show");
+    el.confirmBtn.disabled = !(booking.pickup && booking.dropoff);
   }
 
   function bindEvents(){
@@ -1543,11 +1727,9 @@ const SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3"
     });
 
     el.confirmBtn.addEventListener("click", confirmBooking);
-    el.cancelSearchBtn.addEventListener("click", cancelSearch);
-
-    el.callDriverBtn.addEventListener("click", callDriver);
-    el.openGmapsBtn.addEventListener("click", openGoogleMapsRoute);
-    el.cancelRideBtn.addEventListener("click", cancelRide);
+    el.whatsappBtn.addEventListener("click", openWhatsapp);
+    el.callBtn.addEventListener("click", callDriver);
+    el.resetBtn.addEventListener("click", resetRide);
 
     if (el.heroOrderLink) {
       el.heroOrderLink.addEventListener("click", (e) => {
