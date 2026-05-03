@@ -915,6 +915,149 @@
       font-size:14px;
     }
 
+
+
+    /* DIGIY AUDIO — voix terrain */
+    .driver-audio{
+      position:relative;
+      margin-top:4px;
+      border:1px solid rgba(250,204,21,.44);
+      border-radius:20px;
+      padding:14px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at top right, rgba(250,204,21,.22), transparent 38%),
+        radial-gradient(circle at bottom left, rgba(34,197,94,.16), transparent 42%),
+        linear-gradient(180deg, rgba(250,204,21,.11), rgba(34,197,94,.08) 58%, rgba(0,0,0,.10));
+      box-shadow:0 18px 40px rgba(0,0,0,.22),0 0 0 1px rgba(250,204,21,.06) inset;
+    }
+
+    .driver-audio-top{
+      position:relative;
+      z-index:1;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .driver-audio-lead{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      margin-bottom:8px;
+      padding:6px 11px;
+      border-radius:999px;
+      background:rgba(250,204,21,.16);
+      border:1px solid rgba(250,204,21,.42);
+      color:#fff3cf;
+      font-size:11px;
+      font-weight:950;
+      letter-spacing:.02em;
+      box-shadow:0 0 18px rgba(250,204,21,.10);
+    }
+
+    .driver-audio-lead .dot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:#facc15;
+      box-shadow:0 0 14px rgba(250,204,21,.75);
+      animation:audioPulse 1.5s ease-in-out infinite;
+    }
+
+    .driver-audio-title{
+      font-size:16px;
+      font-weight:950;
+      line-height:1.25;
+      color:#fff8db;
+    }
+
+    .driver-audio-text{
+      margin-top:5px;
+      max-width:560px;
+      color:#e9f7ee;
+      font-size:13px;
+      line-height:1.5;
+      font-weight:700;
+    }
+
+    .driver-audio-hint{
+      margin-top:8px;
+      color:#fff3cf;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .driver-audio-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .driver-audio-btn{
+      min-height:46px;
+      border-radius:999px;
+      border:1px solid rgba(250,204,21,.65);
+      background:linear-gradient(135deg,#facc15,#f59e0b);
+      color:#062014;
+      font-weight:950;
+      padding:10px 15px;
+      cursor:pointer;
+      box-shadow:0 10px 24px rgba(250,204,21,.26);
+      transition:transform .15s ease,box-shadow .15s ease,filter .15s ease;
+    }
+
+    .driver-audio-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 14px 30px rgba(250,204,21,.34);
+      filter:saturate(1.05);
+    }
+
+    .driver-audio-btn:active{transform:translateY(1px)}
+
+    .driver-audio-btn.stop{
+      border-color:rgba(239,68,68,.44);
+      background:rgba(239,68,68,.10);
+      color:#fecaca;
+      box-shadow:none;
+    }
+
+    .driver-audio-progress-wrap{
+      position:relative;
+      z-index:1;
+      height:6px;
+      margin-top:12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      overflow:hidden;
+    }
+
+    .driver-audio-progress{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#facc15,#22c55e);
+      transition:width .2s linear;
+    }
+
+    .driver-audio-glow{
+      position:absolute;
+      right:14px;
+      bottom:12px;
+      width:86px;
+      height:86px;
+      border-radius:999px;
+      background:radial-gradient(circle,rgba(250,204,21,.20),transparent 65%);
+      pointer-events:none;
+      filter:blur(3px);
+    }
+
+    @keyframes audioPulse{
+      0%,100%{transform:scale(1);opacity:1}
+      50%{transform:scale(1.25);opacity:.75}
+    }
+
     @keyframes spin{to{transform:rotate(360deg)}}
     @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 
@@ -929,6 +1072,9 @@
       .brand-title{font-size:16px}
       .header-actions{width:100%}
       .hero-mini{grid-template-columns:1fr}
+      .driver-audio-actions,.driver-audio-btn{width:100%}
+      .driver-audio-btn{justify-content:center}
+      .driver-audio-glow{display:none}
     }
   </style>
 </head>
@@ -947,7 +1093,7 @@
 
     <div class="header-actions">
       <a class="btn ghost" href="https://digiylyfe.com/">🌍 Site DIGIYLYFE</a>
-      <a class="btn ghost" href="https://digiy-hub.digiylyfe.com/">🧭 HUB DIGIY</a>
+      <a class="btn ghost" href="https://pro-espace.digiylyfe.com/">🧭 HUB</a>
       <a class="btn ghost" href="https://tarifs.digiylyfe.com/">📦 Tarifs</a>
       <a class="btn ghost" id="galleryBtn" href="#">🚕 Voir les chauffeurs</a>
     </div>
@@ -962,6 +1108,23 @@
           Choisis ton départ, ta destination, ton type de véhicule, puis contacte directement un chauffeur.
           DIGIY ne prend pas la commission et ne tire pas les prix vers le bas.
         </p>
+
+        <div class="driver-audio" aria-label="Explication audio DIGIY DRIVER">
+          <div class="driver-audio-top">
+            <div>
+              <div class="driver-audio-lead"><span class="dot"></span> Conseil DIGIY · écoute d'abord</div>
+              <div class="driver-audio-title">🎧 Comprendre avant de commander</div>
+              <div class="driver-audio-text">Une voix explique comment demander une course, garder le contact direct et respecter le tarif terrain du chauffeur.</div>
+              <div class="driver-audio-hint">👉 35 secondes pour ne pas se tromper.</div>
+            </div>
+            <div class="driver-audio-actions">
+              <button class="driver-audio-btn" id="btnDriverAudio" type="button">🎧 Écouter DIGIY</button>
+              <button class="driver-audio-btn stop" id="btnDriverAudioStop" type="button">⏹ Stop</button>
+            </div>
+          </div>
+          <div class="driver-audio-progress-wrap" aria-hidden="true"><div class="driver-audio-progress" id="driverAudioProgress"></div></div>
+          <div class="driver-audio-glow" aria-hidden="true"></div>
+        </div>
 
         <div class="hero-mini">
           <div class="mini">
@@ -979,7 +1142,7 @@
           <div class="mini">
             <div class="mini-k">En direct</div>
             <div class="mini-v">WhatsApp / appel</div>
-            <div class="mini-s">Pas de realtime lourd. Le contact se fait humainement.</div>
+            <div class="mini-s">Pas d’intermédiaire lourd. Le contact se fait humainement.</div>
           </div>
         </div>
       </div>
@@ -992,7 +1155,7 @@
         </div>
 
         <div class="status-row">
-          <div class="pill ok" id="dbPill"><span class="dot"></span><span id="dbText">Supabase …</span></div>
+          <div class="pill ok" id="dbPill"><span class="dot"></span><span id="dbText">Service …</span></div>
           <div class="pill blue"><span class="dot"></span><span>Client DRIVER</span></div>
           <div class="pill gold"><span class="dot"></span><span>Tarif terrain</span></div>
         </div>
@@ -1022,9 +1185,9 @@
             <div class="hud-link-arrow">→</div>
           </a>
 
-          <a class="hud-link" href="https://digiy-hub.digiylyfe.com/">
+          <a class="hud-link" href="https://pro-espace.digiylyfe.com/">
             <div class="hud-link-main">
-              <div class="hud-link-k">🧭 HUB DIGIY</div>
+              <div class="hud-link-k">🧭 HUB</div>
               <div class="hud-link-s">Ouvrir le carrefour des modules et garder le circuit complet.</div>
             </div>
             <div class="hud-link-arrow">→</div>
@@ -1124,7 +1287,7 @@
         <div>
           <div class="contact-title">Demande prête</div>
           <div class="contact-sub">
-            Tu peux maintenant envoyer directement ta demande à un chauffeur DIGIY. Pas de realtime lourd, pas d'intermédiaire qui mange la marge.
+            Tu peux maintenant envoyer directement ta demande à un chauffeur DIGIY. Pas d’intermédiaire qui mange la marge. Le client contacte directement le chauffeur.
           </div>
         </div>
       </div>
@@ -1679,13 +1842,13 @@
   async function pingSupabase(){
     try {
       const sb = getSb();
-      if (!sb) { setDbState(false, "Supabase OFF"); return; }
+      if (!sb) { setDbState(false, "Mode simple"); return; }
       const { error } = await sb.from("driver_profiles").select("id").limit(1);
       if (error) throw error;
-      setDbState(true, "Supabase OK");
+      setDbState(true, "Service prêt");
     } catch(err){
       console.error("[DIGIY DRIVER] ping error:", err);
-      setDbState(false, "Supabase OFF");
+      setDbState(false, "Mode simple");
     }
   }
 
@@ -1843,5 +2006,99 @@
   window.addEventListener("load", boot);
 })();
 </script>
+
+
+<script>
+(function(){
+  "use strict";
+
+  const AUDIO_TEXT = [
+    "Bienvenue sur DIGIY DRIVER.",
+    "Ici, tu demandes une course simplement : tu choisis ton point de départ, ta destination, puis ton type de véhicule.",
+    "DIGIY affiche un tarif terrain conseillé pour protéger le travail du chauffeur.",
+    "Ensuite, tu contactes directement le chauffeur par WhatsApp ou par appel.",
+    "Le paiement se fait directement au chauffeur. DIGIY ne prend aucune commission.",
+    "L'objectif est simple : trouver vite, parler direct, payer juste, et garder le métier debout."
+  ].join(" ");
+
+  const synth = window.speechSynthesis;
+  const btnPlay = document.getElementById("btnDriverAudio");
+  const btnStop = document.getElementById("btnDriverAudioStop");
+  const bar = document.getElementById("driverAudioProgress");
+  let playing = false;
+  let timer = null;
+
+  function getVoice(){
+    if(!synth) return null;
+    const voices = synth.getVoices() || [];
+    return voices.find(v => /^fr/i.test(v.lang || "") && /audrey|amelie|hortense|julie|thomas|paul|french/i.test(v.name || ""))
+      || voices.find(v => /^fr/i.test(v.lang || ""))
+      || null;
+  }
+
+  function resetAudio(){
+    clearInterval(timer);
+    timer = null;
+    playing = false;
+    if(bar) bar.style.width = "0%";
+    if(btnPlay) btnPlay.textContent = "🎧 Écouter DIGIY";
+  }
+
+  function stopAudio(){
+    try{ if(synth) synth.cancel(); }catch(_){ }
+    resetAudio();
+  }
+
+  function playAudio(){
+    if(!("speechSynthesis" in window)){
+      alert("Audio indisponible sur ce navigateur.");
+      return;
+    }
+
+    if(playing){
+      stopAudio();
+      return;
+    }
+
+    try{ synth.cancel(); }catch(_){ }
+    clearInterval(timer);
+
+    const utt = new SpeechSynthesisUtterance(AUDIO_TEXT);
+    utt.lang = "fr-FR";
+    utt.rate = 0.88;
+    utt.pitch = 1.05;
+    utt.volume = 1;
+
+    const voice = getVoice();
+    if(voice) utt.voice = voice;
+
+    playing = true;
+    if(btnPlay) btnPlay.textContent = "⏸️ Lecture en cours";
+    if(bar) bar.style.width = "0%";
+
+    let progress = 0;
+    const duration = Math.max(8000, AUDIO_TEXT.split(" ").length * 470);
+
+    timer = setInterval(() => {
+      progress += 250;
+      if(bar) bar.style.width = Math.min(96, (progress / duration) * 100) + "%";
+    }, 250);
+
+    utt.onend = () => {
+      if(bar) bar.style.width = "100%";
+      setTimeout(resetAudio, 350);
+    };
+    utt.onerror = resetAudio;
+
+    synth.speak(utt);
+  }
+
+  if(btnPlay) btnPlay.addEventListener("click", playAudio);
+  if(btnStop) btnStop.addEventListener("click", stopAudio);
+  if(synth && typeof synth.onvoiceschanged !== "undefined") synth.onvoiceschanged = getVoice;
+  window.addEventListener("beforeunload", stopAudio);
+})();
+</script>
+
 </body>
 </html>
