@@ -5,6 +5,7 @@
   <title>Taxi Saly — Chauffeur Mbour & Petite Côte | DIGIY DRIVER</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#061b14">
+  <meta name="digiy-version" content="driver-client-appel-inscription-chauffeur-2026-05-29">
 
   <!-- SEO principal -->
   <meta name="description" content="Commande un taxi à Saly, Mbour, Ngaparou, Somone, AIBD. Chauffeur DIGIY — tarif terrain digne, paiement direct, 0% commission. Course Saly-AIBD dès 25 000 FCFA.">
@@ -1076,6 +1077,99 @@
       .driver-audio-btn{justify-content:center}
       .driver-audio-glow{display:none}
     }
+
+    /* DIGIY DRIVER — bouton flottant inscription chauffeur, sans confusion client */
+    .driver-tarif-float{
+      position:fixed;
+      right:16px;
+      bottom:calc(16px + env(safe-area-inset-bottom,0px));
+      z-index:1800;
+      min-width:230px;
+      min-height:62px;
+      padding:12px 18px;
+      border-radius:999px;
+      border:1px solid rgba(250,204,21,.72);
+      background:
+        radial-gradient(circle at top right,rgba(255,255,255,.28),transparent 34%),
+        linear-gradient(135deg,#facc15,#f59e0b);
+      color:#07140f;
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      box-shadow:0 18px 42px rgba(250,204,21,.32),0 10px 28px rgba(0,0,0,.36);
+      font-weight:950;
+      letter-spacing:.01em;
+      transition:transform .16s ease, filter .16s ease, box-shadow .16s ease;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .driver-tarif-float:hover{
+      transform:translateY(-2px);
+      filter:saturate(1.05);
+      box-shadow:0 22px 48px rgba(250,204,21,.38),0 12px 30px rgba(0,0,0,.38);
+    }
+
+    .driver-tarif-float:active{
+      transform:translateY(1px);
+    }
+
+    .driver-tarif-float .tarif-ico{
+      width:38px;
+      height:38px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(6,27,20,.14);
+      font-size:20px;
+      flex:0 0 auto;
+    }
+
+    .driver-tarif-float .tarif-txt{
+      display:grid;
+      gap:1px;
+      line-height:1.1;
+      text-align:left;
+    }
+
+    .driver-tarif-float .tarif-txt strong{
+      font-size:16px;
+      font-weight:1000;
+      color:#061b14;
+    }
+
+    .driver-tarif-float .tarif-txt small{
+      font-size:12px;
+      font-weight:900;
+      color:rgba(6,27,20,.78);
+    }
+
+    @media (max-width:720px){
+      body{
+        padding-bottom:86px;
+      }
+
+      .driver-tarif-float{
+        left:12px;
+        right:12px;
+        bottom:calc(12px + env(safe-area-inset-bottom,0px));
+        min-width:0;
+        width:calc(100% - 24px);
+        min-height:64px;
+        border-radius:18px;
+      }
+
+      .driver-tarif-float .tarif-txt strong{
+        font-size:17px;
+      }
+
+      .driver-tarif-float .tarif-txt small{
+        font-size:12.5px;
+      }
+    }
+
   </style>
 </head>
 
@@ -1308,6 +1402,16 @@
     </div>
   </section>
 </div>
+
+<a class="driver-tarif-float"
+   href="./inscription-driver.html"
+   aria-label="Inscription chauffeur DIGIY DRIVER">
+  <span class="tarif-ico">🚕</span>
+  <span class="tarif-txt">
+    <strong>Je suis chauffeur</strong>
+    <small>M’inscrire sur DIGIY DRIVER</small>
+  </span>
+</a>
 
 <!-- Overlay picker lieu -->
 <div class="overlay" id="locationOverlay" aria-hidden="true">
@@ -2102,3 +2206,4 @@
 
 </body>
 </html>
+
