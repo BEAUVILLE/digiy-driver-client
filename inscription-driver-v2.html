@@ -627,8 +627,8 @@
           </label>
 
           <label>
-            Note
-            <textarea id="clientNote" placeholder="Ex : Chauffeur voiture, transferts AIBD, disponible semaine et week-end."></textarea>
+            Note pour identifier le paiement
+            <textarea id="clientNote" placeholder="Ex : Paiement Wave envoyé pour DRIVER 1C — 19 900 FCFA — au nom de Mamadou Diop — tél +221 77 000 00 00."></textarea>
           </label>
         </form>
 
@@ -694,7 +694,7 @@
       const name = getValue("clientName") || "Nom non renseigné";
       const phone = getValue("clientPhone") || "Téléphone non renseigné";
       const zone = getValue("clientZone") || "Zone non renseignée";
-      const note = getValue("clientNote") || "Aucune note";
+      const note = getValue("clientNote") || "Paiement Wave à vérifier avec nom, téléphone, module choisi et montant.";
 
       if(!selectedPlan){
         return "Bonjour DIGIY, je souhaite m’inscrire au module DRIVER. Je n’ai pas encore choisi mon tarif. Paiement Wave indiqué : " + WAVE_NAME + " · " + WAVE_PHONE + ". Merci de m’orienter.";
@@ -710,7 +710,7 @@
         "Nom : " + name,
         "Téléphone : " + phone,
         "Zone : " + zone,
-        "Note : " + note,
+        "Note / preuve : " + note,
         "",
         "Je vais envoyer ma preuve de paiement pour préparation de mon accès."
       ].join("\n");
@@ -749,5 +749,6 @@
   </script>
 </body>
 </html>
+
 
 
