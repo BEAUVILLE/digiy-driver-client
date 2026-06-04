@@ -5,79 +5,741 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#155f43" />
   <meta name="robots" content="index,follow" />
-  <meta name="digiy-version" content="driver-inscription-v2-stable-20260604" />
+  <meta name="digiy-version" content="driver-inscription-vraie-page-abos-20260604" />
   <title>Inscription DRIVER — DIGIYLYFE</title>
+  <meta name="description" content="Inscription au module DRIVER DIGIYLYFE : chauffeur, Jakarta, bus, taxi-local, VTC. 0% commission, contact direct, validation humaine." />
+
   <style>
+    :root{
+      --bg:#f7f0df;
+      --paper:#fffaf0;
+      --ink:#183326;
+      --muted:#5b5141;
+      --green:#155f43;
+      --green2:#0f4a35;
+      --gold:#facc15;
+      --gold2:#f59e0b;
+      --line:rgba(21,95,67,.18);
+      --shadow:0 18px 46px rgba(28,45,30,.13);
+      --radius:24px;
+    }
+
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
       margin:0;
       min-height:100vh;
-      display:grid;
-      place-items:center;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:linear-gradient(180deg,#1c7a55,#0d3f30);
-      color:#fff;
-      padding:18px;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left,rgba(250,204,21,.22),transparent 32%),
+        radial-gradient(circle at bottom right,rgba(21,95,67,.16),transparent 30%),
+        linear-gradient(180deg,#fffaf0,var(--bg));
+      color:var(--ink);
       padding-bottom:110px;
-      text-align:center;
-      font-size:18px;
-      font-weight:900;
     }
-    main{
-      width:min(620px,100%);
-      border:1px solid rgba(255,255,255,.28);
-      border-radius:24px;
-      background:rgba(255,255,255,.10);
-      padding:22px;
-      box-shadow:0 18px 44px rgba(0,0,0,.24);
+
+    a{color:inherit;text-decoration:none}
+    button,input,select,textarea{font:inherit}
+
+    .wrap{
+      width:min(1080px,100%);
+      margin:0 auto;
+      padding:14px;
     }
-    h1{
-      margin:0 0 10px;
-      font-size:34px;
-      line-height:1.05;
+
+    .top{
+      position:sticky;
+      top:0;
+      z-index:40;
+      margin:-14px -14px 16px;
+      padding:12px 14px;
+      background:rgba(255,250,240,.94);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
     }
-    p{
-      line-height:1.55;
-      color:rgba(255,255,255,.92);
-      margin:10px 0;
+
+    .brand{
+      font-weight:1000;
+      letter-spacing:-.02em;
+      color:var(--green);
+      display:flex;
+      align-items:center;
+      gap:8px;
     }
-    .badge{
+
+    .nav{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:0;
+      min-height:46px;
+      border-radius:999px;
+      padding:0 15px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-height:34px;
-      padding:0 12px;
-      border-radius:999px;
-      background:rgba(250,204,21,.16);
-      border:1px solid rgba(250,204,21,.35);
+      gap:8px;
+      font-weight:1000;
+      cursor:pointer;
+      background:#efe3ca;
+      color:#26341e;
+      box-shadow:0 8px 18px rgba(37,37,20,.08);
+    }
+
+    .btn.primary{
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      color:#061b14;
+    }
+
+    .btn.green{
+      background:linear-gradient(135deg,var(--green),var(--green2));
+      color:white;
+    }
+
+    .hero{
+      border-radius:30px;
+      border:1px solid var(--line);
+      background:
+        linear-gradient(135deg,rgba(21,95,67,.96),rgba(9,49,34,.96)),
+        var(--green);
+      color:white;
+      padding:22px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero:after{
+      content:"";
+      position:absolute;
+      right:-80px;
+      top:-80px;
+      width:230px;
+      height:230px;
+      border-radius:50%;
+      background:rgba(250,204,21,.22);
+    }
+
+    .hero-content{position:relative;z-index:2}
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(255,255,255,.26);
+      background:rgba(255,255,255,.10);
       color:#fff8db;
+      border-radius:999px;
+      padding:8px 12px;
       font-size:13px;
       font-weight:1000;
-      margin-bottom:12px;
+      margin-bottom:14px;
     }
-    .note{
+
+    h1{
+      margin:0;
+      font-size:clamp(38px,7vw,72px);
+      line-height:.96;
+      letter-spacing:-.055em;
+      color:#fff8db;
+    }
+
+    .lead{
+      max-width:760px;
+      margin:14px 0 0;
+      color:rgba(255,255,255,.90);
+      font-size:19px;
+      line-height:1.55;
+      font-weight:780;
+    }
+
+    .pills{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    .pill{
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(255,255,255,.10);
+      color:#fff8db;
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:1000;
+      font-size:13px;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:14px;
       margin-top:14px;
-      font-size:15px;
-      color:rgba(255,255,255,.82);
+      align-items:start;
+    }
+
+    .card{
+      background:rgba(255,250,240,.88);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+
+    .card h2{
+      margin:0 0 8px;
+      font-size:25px;
+      line-height:1.1;
+      letter-spacing:-.025em;
+      color:#123c2d;
+    }
+
+    .hint{
+      margin:0 0 14px;
+      color:var(--muted);
+      line-height:1.55;
+      font-weight:760;
+    }
+
+    .plans{
+      display:grid;
+      gap:10px;
+    }
+
+    .plan{
+      width:100%;
+      text-align:left;
+      border:1px solid rgba(21,95,67,.20);
+      border-radius:20px;
+      padding:14px;
+      background:#fffdf7;
+      cursor:pointer;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      align-items:center;
+      color:var(--ink);
+      box-shadow:0 8px 18px rgba(40,50,30,.07);
+    }
+
+    .plan:hover,.plan.is-selected{
+      border-color:rgba(250,176,20,.86);
+      background:#fff7d8;
+      transform:translateY(-1px);
+    }
+
+    .plan strong{
+      display:block;
+      font-size:19px;
+      color:#102f23;
+      line-height:1.15;
+    }
+
+    .plan small{
+      display:block;
+      margin-top:5px;
+      color:#655942;
+      font-weight:760;
+      line-height:1.45;
+    }
+
+    .price{
+      text-align:right;
+      color:#0f4a35;
+      font-weight:1000;
+      white-space:nowrap;
+      font-size:18px;
+    }
+
+    .price span{
+      display:block;
+      font-size:13px;
+      color:#6b5a2c;
+      margin-top:3px;
+    }
+
+    .summary{
+      position:sticky;
+      top:82px;
+    }
+
+    .total-box{
+      border-radius:22px;
+      background:linear-gradient(135deg,#123c2d,#0b2b20);
+      color:white;
+      padding:16px;
+      margin:12px 0;
+    }
+
+    .summary-line{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:8px 0;
+      border-bottom:1px solid rgba(255,255,255,.14);
+      font-weight:850;
+    }
+
+    .summary-line:last-child{border-bottom:0}
+    .summary-line b{color:#fff8db}
+
+    .total{
+      font-size:24px;
+      font-weight:1000;
+      color:#fff8db;
+    }
+
+    .form{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    label{
+      display:grid;
+      gap:6px;
+      font-weight:950;
+      color:#183326;
+    }
+
+    input,textarea,select{
+      width:100%;
+      border:1px solid rgba(21,95,67,.23);
+      border-radius:16px;
+      padding:13px 14px;
+      background:#fffdf7;
+      color:#16281f;
+      outline:none;
+      font-weight:780;
+    }
+
+    textarea{min-height:92px;resize:vertical}
+    input:focus,textarea:focus,select:focus{
+      border-color:#f59e0b;
+      box-shadow:0 0 0 4px rgba(250,204,21,.20);
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .notice{
+      border-radius:20px;
+      border:1px solid rgba(21,95,67,.16);
+      background:#fff7db;
+      padding:14px;
+      color:#4b3b16;
+      font-weight:820;
+      line-height:1.55;
+      margin-top:12px;
+    }
+
+
+    .wave-payment{
+      margin-top:12px;
+      border:2px solid rgba(250,204,21,.95);
+      border-radius:22px;
+      padding:15px;
+      background:
+        linear-gradient(135deg,rgba(250,204,21,.34),rgba(245,158,11,.18)),
+        #fff8db;
+      color:#3a2a05;
+      box-shadow:0 14px 34px rgba(245,158,11,.20);
+    }
+
+    .wave-payment .wave-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:8px;
+      font-weight:1000;
+      color:#123c2d;
+      font-size:18px;
+    }
+
+    .wave-payment .wave-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      padding:7px 11px;
+      background:linear-gradient(135deg,#facc15,#f59e0b);
+      color:#061b14;
+      font-size:13px;
+      font-weight:1000;
+      box-shadow:0 8px 18px rgba(245,158,11,.22);
+    }
+
+    .wave-payment p{
+      margin:0;
+      line-height:1.5;
+      font-weight:850;
+      color:#3f3210;
+    }
+
+    .wave-payment .wave-line{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns:96px 1fr;
+      gap:8px;
+      align-items:center;
+      font-weight:950;
+    }
+
+    .wave-payment .wave-line span:first-child{
+      color:#6f5208;
+    }
+
+    .wave-payment .wave-value{
+      display:inline-flex;
+      align-items:center;
+      width:max-content;
+      max-width:100%;
+      border-radius:14px;
+      padding:8px 10px;
+      background:rgba(255,255,255,.72);
+      border:1px solid rgba(245,158,11,.35);
+      color:#123c2d;
+      font-weight:1000;
+      word-break:break-word;
+    }
+
+    @media(max-width:640px){
+      .wave-payment .wave-line{
+        grid-template-columns:1fr;
+        gap:4px;
+      }
+      .wave-payment .wave-value{
+        width:100%;
+      }
+    }
+
+
+    .steps{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .step{
+      background:#fffdf7;
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:14px;
+      min-height:126px;
+    }
+
+    .step b{
+      display:block;
+      color:#123c2d;
+      font-size:18px;
+      margin-bottom:6px;
+    }
+
+    .step span{
+      color:var(--muted);
+      line-height:1.48;
+      font-weight:760;
+    }
+
+    .footer{
+      margin-top:14px;
+      text-align:center;
+      color:#685d48;
+      font-weight:850;
+      line-height:1.5;
+      padding:16px;
+    }
+
+    @media(max-width:860px){
+      .layout{grid-template-columns:1fr}
+      .summary{position:static}
+      .steps{grid-template-columns:1fr}
+    }
+
+    @media(max-width:640px){
+      body{padding-bottom:124px}
+      .top{position:relative}
+      .nav{width:100%}
+      .nav .btn{flex:1}
+      .hero{padding:18px;border-radius:24px}
+      .plan{grid-template-columns:1fr}
+      .price{text-align:left}
+      .actions{grid-template-columns:1fr}
+      .btn{width:100%}
     }
   </style>
 </head>
+
 <body>
-  <main>
-    <span class="badge">DRIVER · inscription</span>
-    <h1>🚕 Inscription DRIVER</h1>
-    <p>
-      Bienvenue dans l’inscription DRIVER.
-      La page est maintenant stabilisée : aucune redirection automatique ne tourne en boucle.
-    </p>
-    <p>
-      Le bouton flottant de bienvenue DIGIY reste disponible en bas de l’écran pour rassurer l’abonné.
-    </p>
-    <p class="note">
-      DIGIYLYFE · 0% commission · contact direct · validation humaine.
-    </p>
+  <main class="wrap">
+
+    <header class="top">
+      <a class="brand" href="./">🚕 DIGIY DRIVER</a>
+      <nav class="nav">
+        <a class="btn" href="https://digiylyfe.com/">🌍 Site</a>
+        <a class="btn" href="https://digiy-hub.digiylyfe.com/">🧭 HUB</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-content">
+        <span class="kicker">Inscription module · chauffeur · transport local</span>
+        <h1>Active ton module DRIVER</h1>
+        <p class="lead">
+          Choisis ton accès, prépare ton inscription et envoie ta preuve. DIGIY t’aide à recevoir les demandes,
+          garder le contact direct avec tes clients et travailler sans commission sur tes courses.
+        </p>
+        <div class="pills">
+          <span class="pill">0% commission</span>
+          <span class="pill">Contact direct client</span>
+          <span class="pill">Fiche partageable</span>
+          <span class="pill">Validation humaine</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="layout">
+
+      <div class="card">
+        <h2>Choisis ton tarif DRIVER</h2>
+        <p class="hint">
+          Aucun choix n’est imposé. Clique sur le tarif qui correspond à ton activité.
+          Le total se prépare automatiquement, puis tu peux envoyer ton message WhatsApp ou SMS.
+        </p>
+
+        <div class="plans" id="plans">
+          <button class="plan" type="button" data-code="1A" data-name="Jakarta / moto" data-fcfa="5500" data-eur="9">
+            <span>
+              <strong>1A · Jakarta / moto</strong>
+              <small>Pour chauffeur moto, petit transport local, première présence DIGIY.</small>
+            </span>
+            <span class="price">5 500 FCFA <span>9 € / mois</span></span>
+          </button>
+
+          <button class="plan" type="button" data-code="1B" data-name="Bus / navette" data-fcfa="12000" data-eur="19">
+            <span>
+              <strong>1B · Bus / navette</strong>
+              <small>Pour transport régulier, navette, groupe, circuit simple.</small>
+            </span>
+            <span class="price">12 000 FCFA <span>19 € / mois</span></span>
+          </button>
+
+          <button class="plan" type="button" data-code="1C" data-name="Driver / VTC" data-fcfa="19900" data-eur="29">
+            <span>
+              <strong>1C · Driver / VTC</strong>
+              <small>Pour chauffeur voiture, transfert AIBD, taxi-local, service privé.</small>
+            </span>
+            <span class="price">19 900 FCFA <span>29 € / mois</span></span>
+          </button>
+        </div>
+
+        <div class="notice">
+          Ton abonnement apporte une présence professionnelle, une fiche partageable, un lien, un QR,
+          des messages prêts à envoyer et un accès métier DRIVER. DIGIY ne prend pas de commission sur tes courses.
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <b>1 · Choisir</b>
+            <span>Tu choisis ton tarif DRIVER selon ton activité réelle.</span>
+          </div>
+          <div class="step">
+            <b>2 · Payer</b>
+            <span>Tu paies par Wave au nom de JB BEAUVILLE : +221 77 134 28 89.</span>
+          </div>
+          <div class="step">
+            <b>3 · Envoyer</b>
+            <span>Tu envoies la preuve. DIGIY prépare ton accès proprement.</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="card summary" aria-label="Résumé inscription DRIVER">
+        <h2>Résumé</h2>
+        <p class="hint">Ton choix s’affiche ici avant l’envoi du message.</p>
+
+        <div class="total-box">
+          <div class="summary-line">
+            <span>Module</span>
+            <b>DRIVER</b>
+          </div>
+          <div class="summary-line">
+            <span>Choix</span>
+            <b id="summaryPlan">Aucun tarif choisi</b>
+          </div>
+          <div class="summary-line">
+            <span>Montant</span>
+            <b id="summaryPrice">—</b>
+          </div>
+          <div class="summary-line">
+            <span>Total</span>
+            <b class="total" id="summaryTotal">—</b>
+          </div>
+        </div>
+
+        <div class="wave-payment" aria-label="Paiement Wave DIGIY">
+          <div class="wave-title">
+            <span>💳 Paiement Wave officiel</span>
+            <span class="wave-badge">À régler avant validation</span>
+          </div>
+          <p>
+            Après avoir choisi ton tarif DRIVER, règle le montant par Wave, puis envoie la preuve par WhatsApp ou SMS.
+          </p>
+          <div class="wave-line">
+            <span>Nom</span>
+            <strong class="wave-value">JB BEAUVILLE</strong>
+          </div>
+          <div class="wave-line">
+            <span>Téléphone</span>
+            <strong class="wave-value">+221 77 134 28 89</strong>
+          </div>
+        </div>
+
+        <form class="form" onsubmit="return false;">
+          <label>
+            Ton nom
+            <input id="clientName" type="text" placeholder="Ex : Mamadou Diop" autocomplete="name">
+          </label>
+
+          <label>
+            Téléphone
+            <input id="clientPhone" type="tel" placeholder="Ex : +221 77 000 00 00" autocomplete="tel">
+          </label>
+
+          <label>
+            Zone / ville
+            <input id="clientZone" type="text" placeholder="Ex : Saly, Mbour, Dakar, AIBD">
+          </label>
+
+          <label>
+            Note
+            <textarea id="clientNote" placeholder="Ex : Chauffeur voiture, transferts AIBD, disponible semaine et week-end."></textarea>
+          </label>
+        </form>
+
+        <div class="actions">
+          <button class="btn primary" type="button" onclick="sendWhatsApp()">📲 WhatsApp</button>
+          <button class="btn green" type="button" onclick="sendSMS()">💬 SMS</button>
+          <button class="btn" type="button" onclick="clearChoice()">Effacer</button>
+          <button class="btn" type="button" onclick="copyMessage()">Copier</button>
+        </div>
+
+        <p class="hint" id="feedback" style="margin-top:12px;"></p>
+      </aside>
+
+    </section>
+
+    <footer class="footer">
+      DIGIYLYFE · DRIVER · 0% commission · contact direct · le chauffeur garde son client, son argent et sa relation.
+    </footer>
+
   </main>
+
+  <script>
+    const WHATSAPP_NUMBER = "221771342889";
+    const WAVE_NAME = "JB BEAUVILLE";
+    const WAVE_PHONE = "+221 77 134 28 89";
+    let selectedPlan = null;
+
+    function formatFcfa(value){
+      return Number(value || 0).toLocaleString("fr-FR") + " FCFA";
+    }
+
+    function selectPlan(btn){
+      document.querySelectorAll(".plan").forEach(p => p.classList.remove("is-selected"));
+      btn.classList.add("is-selected");
+
+      selectedPlan = {
+        code: btn.dataset.code,
+        name: btn.dataset.name,
+        fcfa: Number(btn.dataset.fcfa),
+        eur: Number(btn.dataset.eur)
+      };
+
+      document.getElementById("summaryPlan").textContent = selectedPlan.code + " · " + selectedPlan.name;
+      document.getElementById("summaryPrice").textContent = formatFcfa(selectedPlan.fcfa) + " · " + selectedPlan.eur + " € / mois";
+      document.getElementById("summaryTotal").textContent = formatFcfa(selectedPlan.fcfa);
+      document.getElementById("feedback").textContent = "Choix préparé. Tu peux envoyer le message avec WhatsApp ou SMS.";
+    }
+
+    function clearChoice(){
+      selectedPlan = null;
+      document.querySelectorAll(".plan").forEach(p => p.classList.remove("is-selected"));
+      document.getElementById("summaryPlan").textContent = "Aucun tarif choisi";
+      document.getElementById("summaryPrice").textContent = "—";
+      document.getElementById("summaryTotal").textContent = "—";
+      document.getElementById("feedback").textContent = "Choix effacé.";
+    }
+
+    function getValue(id){
+      return (document.getElementById(id)?.value || "").trim();
+    }
+
+    function buildMessage(){
+      const name = getValue("clientName") || "Nom non renseigné";
+      const phone = getValue("clientPhone") || "Téléphone non renseigné";
+      const zone = getValue("clientZone") || "Zone non renseignée";
+      const note = getValue("clientNote") || "Aucune note";
+
+      if(!selectedPlan){
+        return "Bonjour DIGIY, je souhaite m’inscrire au module DRIVER. Je n’ai pas encore choisi mon tarif. Paiement Wave indiqué : " + WAVE_NAME + " · " + WAVE_PHONE + ". Merci de m’orienter.";
+      }
+
+      return [
+        "Bonjour DIGIY, je souhaite activer mon module DRIVER.",
+        "",
+        "Tarif choisi : " + selectedPlan.code + " · " + selectedPlan.name,
+        "Montant : " + formatFcfa(selectedPlan.fcfa) + " · " + selectedPlan.eur + " € / mois",
+        "Paiement Wave : " + WAVE_NAME + " · " + WAVE_PHONE,
+        "",
+        "Nom : " + name,
+        "Téléphone : " + phone,
+        "Zone : " + zone,
+        "Note : " + note,
+        "",
+        "Je vais envoyer ma preuve de paiement pour préparation de mon accès."
+      ].join("\n");
+    }
+
+    function sendWhatsApp(){
+      const message = encodeURIComponent(buildMessage());
+      window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + message, "_blank", "noopener,noreferrer");
+    }
+
+    function sendSMS(){
+      const message = encodeURIComponent(buildMessage());
+      window.location.href = "sms:?&body=" + message;
+    }
+
+    async function copyMessage(){
+      const message = buildMessage();
+      try{
+        await navigator.clipboard.writeText(message);
+        document.getElementById("feedback").textContent = "Message copié.";
+      }catch(e){
+        document.getElementById("feedback").textContent = "Copie impossible sur ce navigateur. Utilise WhatsApp ou SMS.";
+      }
+    }
+
+    document.querySelectorAll(".plan").forEach(btn => {
+      btn.addEventListener("click", () => selectPlan(btn));
+    });
+  </script>
 
   <!-- 🎧 DIGIY ACCUEIL — bouton flottant de bienvenue -->
   <script
@@ -87,4 +749,5 @@
   </script>
 </body>
 </html>
+
 
