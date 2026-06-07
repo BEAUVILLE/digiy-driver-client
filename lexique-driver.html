@@ -2,209 +2,53 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DIGIY DRIVER · Lexique Wolof</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>DIGIY DRIVER · Lexique Wolof V2</title>
 <meta name="robots" content="noindex,nofollow"/>
+<meta name="digiy-version" content="lexique-driver-mobile-v2-20260607"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Noto+Sans:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --c: #168143;
-  --a: #F6C453;
-  --bg: #fafaf8;
-  --card: #ffffff;
-  --text: #111;
-  --muted: #666;
-  --radius: 14px;
+  --c:#168143;--c2:#0f5f35;--a:#F6C453;--bg:#fafaf8;--card:#ffffff;
+  --text:#111;--muted:#666;--line:#e9eee9;--radius:18px;--shadow:0 10px 24px rgba(0,0,0,.06);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  background: var(--bg);
-  font-family: 'Noto Sans', sans-serif;
-  color: var(--text);
-  min-height: 100vh;
-  padding-bottom: 2rem;
-}
-.header{
-  background: var(--c);
-  color: #fff;
-  padding: 1.2rem 1rem 1rem;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-.header-top{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 4px;
-}
-.emoji{ font-size: 28px; line-height:1; }
-.module-name{
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-}
-.module-sub{
-  font-size: 13px;
-  opacity: 0.8;
-  padding-left: 38px;
-}
-.badge{
-  display: inline-block;
-  background: var(--a);
-  color: #1a0a00;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 20px;
-  margin-left: auto;
-  white-space: nowrap;
-}
-.col-labels{
-  display: grid;
-  grid-template-columns: 110px 1fr 1fr;
-  gap: 6px;
-  padding: 8px 1rem 4px;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border-bottom: 1px solid #e0e0e0;
-  background: var(--bg);
-  position: sticky;
-  top: 82px;
-  z-index: 9;
-}
-.rows{ padding: 0 0.75rem; }
-.row{
-  display: grid;
-  grid-template-columns: 110px 1fr 1fr;
-  gap: 6px;
-  padding: 10px 8px;
-  border-radius: 10px;
-  align-items: center;
-  margin: 3px 0;
-}
-.even{ background: var(--card); border: 1px solid #efefef; }
-.odd{ background: transparent; }
-.situation{
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--c);
-  line-height: 1.3;
-}
-.fr{
-  font-size: 13px;
-  color: #333;
-  line-height: 1.45;
-}
-.wo{
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--c);
-  line-height: 1.45;
-  font-family: 'Space Grotesk', sans-serif;
-}
-.footer{
-  margin: 1.5rem 1rem 0;
-  padding: 12px 16px;
-  background: var(--c);
-  border-radius: var(--radius);
-  color: rgba(255,255,255,0.85);
-  font-size: 12px;
-  text-align: center;
-  line-height: 1.7;
-}
-.footer strong{ color: #fff; font-family: 'Space Grotesk', sans-serif; }
-@media(max-width:380px){
-  .row{ grid-template-columns: 90px 1fr 1fr; }
-  .col-labels{ grid-template-columns: 90px 1fr 1fr; }
-  .fr,.wo{ font-size:12px; }
-}
+html{scroll-behavior:smooth}
+body{background:var(--bg);font-family:'Noto Sans',system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text);min-height:100vh;padding-bottom:2rem}
+.header{background:linear-gradient(135deg,var(--c),var(--c2));color:#fff;padding:1.05rem 1rem 1rem;position:sticky;top:0;z-index:10;box-shadow:0 10px 24px rgba(0,0,0,.13)}
+.header-top{display:flex;align-items:center;gap:10px;margin-bottom:5px}.emoji{font-size:30px;line-height:1}
+.module-name{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.035em}.badge{display:inline-block;background:var(--a);color:#1a0a00;font-size:10px;font-weight:900;padding:4px 9px;border-radius:20px;margin-left:auto;white-space:nowrap}.module-sub{font-size:13px;opacity:.88;padding-left:40px;font-weight:800}
+.intro{margin:12px .75rem 0;padding:14px;border-radius:18px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.intro strong{color:var(--c);font-family:'Space Grotesk',sans-serif;font-size:16px}.intro p{margin-top:5px;color:#444;font-size:13px;line-height:1.55;font-weight:700}
+.rows{padding:.75rem;display:grid;gap:10px}.row{display:grid;grid-template-columns:1fr;gap:9px;padding:14px;border-radius:var(--radius);align-items:start;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.situation{display:inline-flex;align-items:center;width:max-content;max-width:100%;padding:5px 9px;border-radius:999px;background:rgba(22,129,67,.10);color:var(--c);font-size:11px;font-weight:900;line-height:1.25;text-transform:uppercase;letter-spacing:.055em}
+.fr{font-size:14px;color:#202020;line-height:1.45;font-weight:800}.fr::before{content:"🇫🇷 Français";display:block;margin-bottom:4px;font-size:10px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.wo{font-family:'Space Grotesk','Noto Sans',sans-serif;font-size:18px;font-weight:800;color:var(--c);line-height:1.42;padding-top:10px;border-top:1px dashed rgba(22,129,67,.28)}.wo::before{content:"🇸🇳 Wolof à dire";display:block;margin-bottom:5px;font-family:'Noto Sans',sans-serif;font-size:10px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.note{margin:.2rem .75rem 0;padding:12px 14px;border-radius:16px;background:rgba(246,196,83,.18);border:1px solid rgba(246,196,83,.48);color:#2c2105;font-size:12px;font-weight:800;line-height:1.55}.footer{margin:1rem .75rem 0;padding:14px 16px;background:linear-gradient(135deg,var(--c),var(--c2));border-radius:var(--radius);color:rgba(255,255,255,.88);font-size:12px;text-align:center;line-height:1.7;box-shadow:var(--shadow)}.footer strong{color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14px}
+@media(min-width:720px){.rows{grid-template-columns:repeat(2,minmax(0,1fr));max-width:980px;margin:0 auto}.intro,.note,.footer{max-width:980px;margin-left:auto;margin-right:auto}}
+@media(max-width:380px){.module-name{font-size:19px}.badge{font-size:9px;padding:3px 7px}.row{padding:13px}.wo{font-size:17px}}
 </style>
 </head>
 <body>
-<header class="header">
-  <div class="header-top">
-    <span class="emoji">🚗</span>
-    <span class="module-name">DIGIY DRIVER</span>
-    <span class="badge">🇸🇳 Wolof terrain</span>
-  </div>
-  <div class="module-sub">Chauffeur · Transport</div>
-</header>
-<div class="col-labels">
-  <div>Situation</div>
-  <div>🇫🇷 Français</div>
-  <div>🇸🇳 Wolof</div>
-</div>
-<div class="rows">
-    <div class="row even">
-      <div class="situation">Accueil client</div>
-      <div class="fr">Bonjour, je suis votre chauffeur</div>
-      <div class="wo">Maa ngi dem ak yow</div>
-    </div>
-    <div class="row odd">
-      <div class="situation">Où aller ?</div>
-      <div class="fr">Où souhaitez-vous aller ?</div>
-      <div class="wo">Foo bëgg dem ?</div>
-    </div>
-    <div class="row even">
-      <div class="situation">On y va</div>
-      <div class="fr">D'accord, on y va</div>
-      <div class="wo">Waaw, dem nanu</div>
-    </div>
-    <div class="row odd">
-      <div class="situation">Prix course</div>
-      <div class="fr">Le tarif est de … francs</div>
-      <div class="wo">Prix bi … francs la</div>
-    </div>
-    <div class="row even">
-      <div class="situation">En route</div>
-      <div class="fr">Nous sommes en route</div>
-      <div class="wo">Maa ngi dem ci kanam</div>
-    </div>
-    <div class="row odd">
-      <div class="situation">Arrivée</div>
-      <div class="fr">Nous sommes arrivés</div>
-      <div class="wo">Fëkk nanu</div>
-    </div>
-    <div class="row even">
-      <div class="situation">Disponible</div>
-      <div class="fr">Je suis disponible</div>
-      <div class="wo">Maa ngi soxor</div>
-    </div>
-    <div class="row odd">
-      <div class="situation">En course</div>
-      <div class="fr">Je suis en course</div>
-      <div class="wo">Maa ngi dem ak jaambur</div>
-    </div>
-    <div class="row even">
-      <div class="situation">Paiement</div>
-      <div class="fr">Wave ou cash ?</div>
-      <div class="wo">Fay bi, Wave la wala cash ?</div>
-    </div>
-    <div class="row odd">
-      <div class="situation">Merci</div>
-      <div class="fr">Merci, bonne journée</div>
-      <div class="wo">Jërejëf, baal ma</div>
-    </div>
-    <div class="row even">
-      <div class="situation">Embouteillage</div>
-      <div class="fr">Il y a un embouteillage</div>
-      <div class="wo">Kanam dafa sëkk</div>
-    </div>
-    <div class="row odd">
-      <div class="situation">Annulation</div>
-      <div class="fr">Je dois annuler, désolé</div>
-      <div class="wo">Duma mën dem, baal ma</div>
-    </div>
-</div>
-<div class="footer">
-  <strong>DIGIYLYFE · DRIVER</strong><br>
-  0% commission · Contact direct · Pierre par pierre 🦅♾️
-</div>
+<header class="header"><div class="header-top"><span class="emoji">🚗</span><span class="module-name">DIGIY DRIVER</span><span class="badge">V2 · mobile</span></div><div class="module-sub">Lexique Wolof terrain · Chauffeur · Transport</div></header>
+<section class="intro" aria-label="Introduction lexique"><strong>Format téléphone : français devant, Wolof dessous.</strong><p>Le chauffeur lit la situation, comprend en français, puis dit la phrase Wolof juste en dessous. Pas de colonnes serrées. Lecture rapide, terrain propre.</p></section>
+<main class="rows">
+  <article class="row"><div class="situation">Accueil client</div><div class="fr">Bonjour, je suis votre chauffeur</div><div class="wo">Maa ngi dem ak yow</div></article>
+  <article class="row"><div class="situation">Où aller ?</div><div class="fr">Où souhaitez-vous aller ?</div><div class="wo">Foo bëgg dem ?</div></article>
+  <article class="row"><div class="situation">On y va</div><div class="fr">D'accord, on y va</div><div class="wo">Waaw, dem nanu</div></article>
+  <article class="row"><div class="situation">Prix course</div><div class="fr">Le tarif est de … francs</div><div class="wo">Prix bi … francs la</div></article>
+  <article class="row"><div class="situation">En route</div><div class="fr">Nous sommes en route</div><div class="wo">Maa ngi dem ci kanam</div></article>
+  <article class="row"><div class="situation">Arrivée</div><div class="fr">Nous sommes arrivés</div><div class="wo">Fëkk nanu</div></article>
+  <article class="row"><div class="situation">Disponible</div><div class="fr">Je suis disponible</div><div class="wo">Maa ngi soxor</div></article>
+  <article class="row"><div class="situation">En course</div><div class="fr">Je suis en course</div><div class="wo">Maa ngi dem ak jaambur</div></article>
+  <article class="row"><div class="situation">Paiement</div><div class="fr">Le paiement, c'est Wave ou cash ?</div><div class="wo">Fay bi, Wave la wala cash ?</div></article>
+  <article class="row"><div class="situation">Merci</div><div class="fr">Merci, bonne journée</div><div class="wo">Jërejëf, baal ma</div></article>
+  <article class="row"><div class="situation">Embouteillage</div><div class="fr">Il y a un embouteillage</div><div class="wo">Kanam dafa sëkk</div></article>
+  <article class="row"><div class="situation">Annulation</div><div class="fr">Je dois annuler, désolé</div><div class="wo">Duma mën dem, baal ma</div></article>
+</main>
+<div class="note">Doctrine DIGIY : le lexique aide à parler avec respect. Il ne remplace pas le chauffeur. Il accompagne le contact direct.</div>
+<div class="footer"><strong>DIGIYLYFE · DRIVER</strong><br>0% commission · Contact direct · Pierre par pierre 🦅♾️</div>
 </body>
 </html>
+
