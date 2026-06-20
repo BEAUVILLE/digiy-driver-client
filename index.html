@@ -1,42 +1,38 @@
-<!DOCTYPE html>
+><!DOCTYPE html>
+
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>Taxi Saly — Chauffeur Mbour & Petite Côte | DIGIY DRIVER</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#155f43">
-  <meta name="digiy-version" content="driver-client-lexique-wolof-2026-06-07">
-
-  <!-- SEO principal -->
-  <meta name="description" content="Commande un taxi à Saly, Mbour, Ngaparou, Somone, AIBD. Chauffeur DIGIY — tarif terrain digne, paiement direct, 0% commission. Course Saly-AIBD dès 25 000 FCFA.">
-  <meta name="keywords" content="taxi saly, chauffeur mbour, vtc saly, course saly aibd, taxi petite côte, chauffeur sénégal, taxi ngaparou, taxi somone, chauffeur digiy, course mbour dakar">
-  <meta name="author" content="DIGIYLYFE — JB Beauville">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://driver-client.digiylyfe.com/">
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://driver-client.digiylyfe.com/">
-  <meta property="og:title" content="Taxi Saly & Mbour — Chauffeur DIGIY DRIVER">
-  <meta property="og:description" content="Commander un taxi à Saly, Mbour, Ngaparou, Somone, AIBD. Chauffeur direct, tarif terrain, 0% commission DIGIY.">
-  <meta property="og:image" content="https://digiylyfe.net/wp-content/uploads/2026/03/digiy_services_avec_logo.webp">
-  <meta property="og:locale" content="fr_SN">
-  <meta property="og:site_name" content="DIGIYLYFE">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Taxi Saly & Mbour — DIGIY DRIVER">
-  <meta name="twitter:description" content="Commande ta course à Saly, Mbour, Ngaparou, AIBD. Tarif terrain, contact direct chauffeur, 0% commission.">
-  <meta name="twitter:image" content="https://digiylyfe.net/wp-content/uploads/2026/03/digiy_services_avec_logo.webp">
-
-  <!-- Geo -->
-  <meta name="geo.region" content="SN-TH">
-  <meta name="geo.placename" content="Saly, Mbour, Petite Côte, Sénégal">
-  <meta name="geo.position" content="14.4500;-16.9833">
-  <meta name="ICBM" content="14.4500, -16.9833">
-
-  <!-- Schema.org JSON-LD -->
-  <script type="application/ld+json">
+<meta charset="utf-8"/>
+<title>Taxi Saly — Chauffeur Mbour &amp; Petite Côte | DIGIY DRIVER</title>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#155f43" name="theme-color"/>
+<meta content="driver-client-lexique-wolof-2026-06-07" name="digiy-version"/>
+<!-- SEO principal -->
+<meta content="Commande un taxi à Saly, Mbour, Ngaparou, Somone, AIBD. Chauffeur DIGIY — tarif terrain digne, paiement direct, 0% commission. Course Saly-AIBD dès 25 000 FCFA." name="description"/>
+<meta content="taxi saly, chauffeur mbour, vtc saly, course saly aibd, taxi petite côte, chauffeur sénégal, taxi ngaparou, taxi somone, chauffeur digiy, course mbour dakar" name="keywords"/>
+<meta content="DIGIYLYFE — JB Beauville" name="author"/>
+<meta content="index, follow" name="robots"/>
+<link href="https://driver-client.digiylyfe.com/" rel="canonical"/>
+<!-- Open Graph -->
+<meta content="website" property="og:type"/>
+<meta content="https://driver-client.digiylyfe.com/" property="og:url"/>
+<meta content="Taxi Saly &amp; Mbour — Chauffeur DIGIY DRIVER" property="og:title"/>
+<meta content="Commander un taxi à Saly, Mbour, Ngaparou, Somone, AIBD. Chauffeur direct, tarif terrain, 0% commission DIGIY." property="og:description"/>
+<meta content="https://digiylyfe.net/wp-content/uploads/2026/03/digiy_services_avec_logo.webp" property="og:image"/>
+<meta content="fr_SN" property="og:locale"/>
+<meta content="DIGIYLYFE" property="og:site_name"/>
+<!-- Twitter Card -->
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Taxi Saly &amp; Mbour — DIGIY DRIVER" name="twitter:title"/>
+<meta content="Commande ta course à Saly, Mbour, Ngaparou, AIBD. Tarif terrain, contact direct chauffeur, 0% commission." name="twitter:description"/>
+<meta content="https://digiylyfe.net/wp-content/uploads/2026/03/digiy_services_avec_logo.webp" name="twitter:image"/>
+<!-- Geo -->
+<meta content="SN-TH" name="geo.region"/>
+<meta content="Saly, Mbour, Petite Côte, Sénégal" name="geo.placename"/>
+<meta content="14.4500;-16.9833" name="geo.position"/>
+<meta content="14.4500, -16.9833" name="ICBM"/>
+<!-- Schema.org JSON-LD -->
+<script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
@@ -152,9 +148,8 @@
     ]
   }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
     :root{
       --bg:#061b14;
       --card:#0b2a1f;
@@ -1339,282 +1334,278 @@
       .btn,.driver-audio-btn{font-size:15.5px;}
     }
 
-  </style>
-</head>
-
+  
+/* DIGIY — switch FR/EN terrain */
+.digiy-lang-switch{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  padding:4px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.30);
+  background:rgba(255,255,255,.10);
+}
+.digiy-lang-switch button{
+  min-height:36px;
+  padding:0 12px;
+  border:0;
+  border-radius:999px;
+  cursor:pointer;
+  font:inherit;
+  font-size:13px !important;
+  font-weight:1100 !important;
+  background:transparent;
+  color:#fff;
+}
+.digiy-lang-switch button.active{
+  background:#fff;
+  color:#155f43;
+}
+@media(max-width:720px){
+  .digiy-lang-switch{width:100%;justify-content:center}
+  .digiy-lang-switch button{flex:1}
+}
+</style>
+<meta content="fr-master-en-option-20260620" name="digiy-bilingual"/></head>
 <body>
 <div class="app">
-
-  <header class="header">
-    <div class="brand">
-      <div class="brand-logo">🚗</div>
-      <div>
-        <div class="brand-title">DIGIY DRIVER</div>
-        <div class="brand-sub">Client • commande simple • chauffeur direct</div>
-      </div>
-    </div>
-
-    <div class="header-actions">
-      <a class="btn ghost" href="https://digiylyfe.com/">🌍 Site DIGIYLYFE</a>
-      <a class="btn ghost" href="https://pro-espace.digiylyfe.com/">🧭 HUB</a>
-      <a class="btn ghost" id="galleryBtn" href="#">🚕 Voir les chauffeurs</a>
-      <a class="btn ghost" href="./lexique-driver.html">🇸🇳 Wolof DRIVER</a>
-    </div>
-  </header>
-
-  <section class="hero">
-    <div class="hero-grid">
-      <div class="hero-main">
-        <div class="eyebrow">Client DRIVER • commande rapide</div>
-        <h1 class="hero-title">Commander une course <span>sans casser le métier</span></h1>
-        <p class="hero-sub">
+<header class="header">
+<div class="brand">
+<div class="brand-logo">🚗</div>
+<div>
+<div class="brand-title">DIGIY DRIVER</div>
+<div class="brand-sub" data-i18n="brand_sub">Client • commande simple • chauffeur direct</div>
+</div>
+</div>
+<div class="header-actions">
+<a class="btn ghost" data-i18n="top_site" href="https://digiylyfe.com/">🌍 Site DIGIYLYFE</a>
+<a class="btn ghost" data-i18n="top_hub" href="https://pro-espace.digiylyfe.com/">🧭 HUB</a>
+<a class="btn ghost" data-i18n="top_gallery" href="#" id="galleryBtn">🚕 Voir les chauffeurs</a>
+<a class="btn ghost" data-i18n="top_lexique" href="./lexique-driver.html">🇸🇳 Wolof DRIVER</a>
+<div aria-label="Language switch" class="digiy-lang-switch"><button class="active" id="lang-fr" type="button">FR</button><button id="lang-en" type="button">EN</button></div></div>
+</header>
+<section class="hero">
+<div class="hero-grid">
+<div class="hero-main">
+<div class="eyebrow" data-i18n="hero_eyebrow">Client DRIVER • commande rapide</div>
+<h1 class="hero-title" data-i18n="hero_title" data-i18n-mode="html">Commander une course <span>sans casser le métier</span></h1>
+<p class="hero-sub" data-i18n="hero_sub">
           Choisis ton départ, ta destination, ton type de véhicule, puis contacte directement un chauffeur.
           DIGIY ne prend pas la commission et ne tire pas les prix vers le bas.
         </p>
-
-        <div class="driver-audio" aria-label="Explication audio DIGIY DRIVER">
-          <div class="driver-audio-top">
-            <div>
-              <div class="driver-audio-lead"><span class="dot"></span> Conseil DIGIY · écoute d'abord</div>
-              <div class="driver-audio-title">🎧 Comprendre avant de commander</div>
-              <div class="driver-audio-text">Une voix explique comment demander une course, garder le contact direct et respecter le tarif terrain du chauffeur.</div>
-              <div class="driver-audio-hint">👉 35 secondes pour ne pas se tromper.</div>
-            </div>
-            <div class="driver-audio-actions">
-              <button class="driver-audio-btn" id="btnDriverAudio" type="button">🎧 Écouter DIGIY</button>
-              <button class="driver-audio-btn stop" id="btnDriverAudioStop" type="button">⏹ Stop</button>
-            </div>
-          </div>
-          <div class="driver-audio-progress-wrap" aria-hidden="true"><div class="driver-audio-progress" id="driverAudioProgress"></div></div>
-          <div class="driver-audio-glow" aria-hidden="true"></div>
-        </div>
-
-        <div class="hero-mini">
-          <div class="mini">
-            <div class="mini-k">En 2 gestes</div>
-            <div class="mini-v">Départ + arrivée</div>
-            <div class="mini-s">Le client choisit juste l'essentiel pour lancer sa demande.</div>
-          </div>
-
-          <div class="mini">
-            <div class="mini-k">En 1 lecture</div>
-            <div class="mini-v">Tarif digne</div>
-            <div class="mini-s">Le prix affiché protège le métier du chauffeur.</div>
-          </div>
-
-          <div class="mini">
-            <div class="mini-k">En direct</div>
-            <div class="mini-v">WhatsApp / appel</div>
-            <div class="mini-s">Pas d’intermédiaire lourd. Le contact se fait humainement.</div>
-          </div>
-        </div>
-      </div>
-
-      <aside class="hero-aside">
-        <div class="aside-title">Doctrine terrain</div>
-        <div class="aside-big">Prix dignes.<br>Contact direct.<br>0% commission.</div>
-        <div class="aside-sub">
+<div aria-label="Explication audio DIGIY DRIVER" class="driver-audio">
+<div class="driver-audio-top">
+<div>
+<div class="driver-audio-lead" data-i18n="audio_lead"><span class="dot"></span> Conseil DIGIY · écoute d'abord</div>
+<div class="driver-audio-title" data-i18n="audio_title">🎧 Comprendre avant de commander</div>
+<div class="driver-audio-text" data-i18n="audio_text">Une voix explique comment demander une course, garder le contact direct et respecter le tarif terrain du chauffeur.</div>
+<div class="driver-audio-hint" data-i18n="audio_hint">👉 35 secondes pour ne pas se tromper.</div>
+</div>
+<div class="driver-audio-actions">
+<button class="driver-audio-btn" data-i18n="audio_play" id="btnDriverAudio" type="button">🎧 Écouter DIGIY</button>
+<button class="driver-audio-btn stop" data-i18n="audio_stop" id="btnDriverAudioStop" type="button">⏹ Stop</button>
+</div>
+</div>
+<div aria-hidden="true" class="driver-audio-progress-wrap"><div class="driver-audio-progress" id="driverAudioProgress"></div></div>
+<div aria-hidden="true" class="driver-audio-glow"></div>
+</div>
+<div class="hero-mini">
+<div class="mini">
+<div class="mini-k" data-i18n="mini1_k">En 2 gestes</div>
+<div class="mini-v" data-i18n="mini1_v">Départ + arrivée</div>
+<div class="mini-s" data-i18n="mini1_s">Le client choisit juste l'essentiel pour lancer sa demande.</div>
+</div>
+<div class="mini">
+<div class="mini-k" data-i18n="mini2_k">En 1 lecture</div>
+<div class="mini-v" data-i18n="mini2_v">Tarif digne</div>
+<div class="mini-s" data-i18n="mini2_s">Le prix affiché protège le métier du chauffeur.</div>
+</div>
+<div class="mini">
+<div class="mini-k" data-i18n="mini3_k">En direct</div>
+<div class="mini-v" data-i18n="mini3_v">WhatsApp / appel</div>
+<div class="mini-s" data-i18n="mini3_s">Pas d’intermédiaire lourd. Le contact se fait humainement.</div>
+</div>
+</div>
+</div>
+<aside class="hero-aside">
+<div class="aside-title" data-i18n="aside_title">Doctrine terrain</div>
+<div class="aside-big" data-i18n="aside_big" data-i18n-mode="html">Prix dignes.<br/>Contact direct.<br/>0% commission.</div>
+<div class="aside-sub" data-i18n="aside_sub">
           DIGIY DRIVER sert à mettre en relation proprement. Le téléphone fait le reste.
         </div>
-
-        <div class="status-row">
-          <div class="pill ok" id="dbPill"><span class="dot"></span><span id="dbText">Service …</span></div>
-          <div class="pill blue"><span class="dot"></span><span>Client DRIVER</span></div>
-          <div class="pill gold"><span class="dot"></span><span>Tarif terrain</span></div>
-        </div>
-
-        <div class="hud-links">
-          <a class="hud-link" id="heroOrderLink" href="#bookingPanel">
-            <div class="hud-link-main">
-              <div class="hud-link-k">Commander maintenant</div>
-              <div class="hud-link-s">Aller directement au bloc départ / destination / tarif.</div>
-            </div>
-            <div class="hud-link-arrow">→</div>
-          </a>
-
-          <a class="hud-link" id="heroDriversLink" href="#">
-            <div class="hud-link-main">
-              <div class="hud-link-k">Voir les chauffeurs</div>
-              <div class="hud-link-s">Ouvrir la galerie DIGIY DRIVER avant de contacter.</div>
-            </div>
-            <div class="hud-link-arrow">→</div>
-          </a>
-
-          <a class="hud-link" href="./lexique-driver.html">
-            <div class="hud-link-main">
-              <div class="hud-link-k">🇸🇳 Lexique Wolof DRIVER</div>
-              <div class="hud-link-s">Quelques phrases utiles avant de parler avec le chauffeur.</div>
-            </div>
-            <div class="hud-link-arrow">→</div>
-          </a>
-
-          <a class="hud-link" href="https://digiylyfe.com/">
-            <div class="hud-link-main">
-              <div class="hud-link-k">🌍 Site DIGIYLYFE</div>
-              <div class="hud-link-s">Retourner à la vitrine principale et retrouver toutes les portes.</div>
-            </div>
-            <div class="hud-link-arrow">→</div>
-          </a>
-
-          <a class="hud-link" href="https://pro-espace.digiylyfe.com/">
-            <div class="hud-link-main">
-              <div class="hud-link-k">🧭 HUB</div>
-              <div class="hud-link-s">Ouvrir le carrefour des modules et garder le circuit complet.</div>
-            </div>
-            <div class="hud-link-arrow">→</div>
-          </a>
-
-          <a class="hud-link" href="https://tarifs.digiylyfe.com/">
-            <div class="hud-link-main">
-              <div class="hud-link-k">📦 Tarifs</div>
-              <div class="hud-link-s">Voir les offres DIGIYLYFE et choisir la bonne porte d’entrée.</div>
-            </div>
-            <div class="hud-link-arrow">→</div>
-          </a>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <section class="panel" id="bookingPanel">
-    <div class="panel-head">
-      <div>
-        <div class="panel-title">Commander une course</div>
-        <div class="panel-sub">Départ, destination, véhicule, téléphone. Puis contact direct avec le chauffeur.</div>
-      </div>
-    </div>
-
-    <div class="focus-box">
-      <div class="focus-k">Lecture avant action</div>
-      <div class="focus-v">Départ + destination + téléphone = demande prête</div>
-      <div class="focus-s">
+<div class="status-row">
+<div class="pill ok" id="dbPill"><span class="dot"></span><span id="dbText">Service …</span></div>
+<div class="pill blue"><span class="dot"></span><span data-i18n="pill_client">Client DRIVER</span></div>
+<div class="pill gold"><span class="dot"></span><span data-i18n="pill_price">Tarif terrain</span></div>
+</div>
+<div class="hud-links">
+<a class="hud-link" href="#bookingPanel" id="heroOrderLink">
+<div class="hud-link-main">
+<div class="hud-link-k" data-i18n="hud_order_k">Commander maintenant</div>
+<div class="hud-link-s" data-i18n="hud_order_s">Aller directement au bloc départ / destination / tarif.</div>
+</div>
+<div class="hud-link-arrow">→</div>
+</a>
+<a class="hud-link" href="#" id="heroDriversLink">
+<div class="hud-link-main">
+<div class="hud-link-k" data-i18n="hud_drivers_k">Voir les chauffeurs</div>
+<div class="hud-link-s" data-i18n="hud_drivers_s">Ouvrir la galerie DIGIY DRIVER avant de contacter.</div>
+</div>
+<div class="hud-link-arrow">→</div>
+</a>
+<a class="hud-link" href="./lexique-driver.html">
+<div class="hud-link-main">
+<div class="hud-link-k" data-i18n="hud_lex_k">🇸🇳 Lexique Wolof DRIVER</div>
+<div class="hud-link-s" data-i18n="hud_lex_s">Quelques phrases utiles avant de parler avec le chauffeur.</div>
+</div>
+<div class="hud-link-arrow">→</div>
+</a>
+<a class="hud-link" href="https://digiylyfe.com/">
+<div class="hud-link-main">
+<div class="hud-link-k" data-i18n="hud_site_k">🌍 Site DIGIYLYFE</div>
+<div class="hud-link-s" data-i18n="hud_site_s">Retourner à la vitrine principale et retrouver toutes les portes.</div>
+</div>
+<div class="hud-link-arrow">→</div>
+</a>
+<a class="hud-link" href="https://pro-espace.digiylyfe.com/">
+<div class="hud-link-main">
+<div class="hud-link-k" data-i18n="hud_hub_k">🧭 HUB</div>
+<div class="hud-link-s" data-i18n="hud_hub_s">Ouvrir le carrefour des modules et garder le circuit complet.</div>
+</div>
+<div class="hud-link-arrow">→</div>
+</a>
+<a class="hud-link" href="https://tarifs.digiylyfe.com/">
+<div class="hud-link-main">
+<div class="hud-link-k" data-i18n="hud_tarifs_k">📦 Tarifs</div>
+<div class="hud-link-s" data-i18n="hud_tarifs_s">Voir les offres DIGIYLYFE et choisir la bonne porte d’entrée.</div>
+</div>
+<div class="hud-link-arrow">→</div>
+</a>
+</div>
+</aside>
+</div>
+</section>
+<section class="panel" id="bookingPanel">
+<div class="panel-head">
+<div>
+<div class="panel-title" data-i18n="booking_title">Commander une course</div>
+<div class="panel-sub" data-i18n="booking_sub">Départ, destination, véhicule, téléphone. Puis contact direct avec le chauffeur.</div>
+</div>
+</div>
+<div class="focus-box">
+<div class="focus-k" data-i18n="focus_k">Lecture avant action</div>
+<div class="focus-v" data-i18n="focus_v">Départ + destination + téléphone = demande prête</div>
+<div class="focus-s" data-i18n="focus_s">
         Le prix affiché est un tarif terrain conseillé. Il doit aider le chauffeur à vivre, pas l'écraser.
       </div>
-    </div>
-
-    <div class="stack">
-      <div class="field" id="pickupRow">
-        <div class="field-icon pickup">📍</div>
-        <input id="pickupInput" type="text" placeholder="Point de départ" readonly>
-      </div>
-
-      <div class="field" id="dropoffRow">
-        <div class="field-icon dropoff">🏁</div>
-        <input id="dropoffInput" type="text" placeholder="Destination" readonly>
-      </div>
-
-      <div class="field static">
-        <div class="field-icon phone">📞</div>
-        <input id="clientPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Téléphone WhatsApp (+221 77...)">
-      </div>
-    </div>
-
-    <div class="vehicles" id="vehicleOptions">
-      <div class="vehicle active" data-type="eco" data-multiplier="1">
-        <div class="vehicle-ico">🚗</div>
-        <div class="vehicle-name">Éco</div>
-        <div class="vehicle-price" id="priceEco">—</div>
-        <div class="vehicle-time">terrain</div>
-      </div>
-      <div class="vehicle" data-type="confort" data-multiplier="1.2">
-        <div class="vehicle-ico">🚙</div>
-        <div class="vehicle-name">Confort</div>
-        <div class="vehicle-price" id="priceConfort">—</div>
-        <div class="vehicle-time">terrain</div>
-      </div>
-      <div class="vehicle" data-type="premium" data-multiplier="1.5">
-        <div class="vehicle-ico">🚘</div>
-        <div class="vehicle-name">Premium</div>
-        <div class="vehicle-price" id="pricePremium">—</div>
-        <div class="vehicle-time">terrain</div>
-      </div>
-      <div class="vehicle" data-type="moto" data-multiplier="0.75">
-        <div class="vehicle-ico">🏍️</div>
-        <div class="vehicle-name">Moto</div>
-        <div class="vehicle-price" id="priceMoto">—</div>
-        <div class="vehicle-time">trajets compatibles</div>
-      </div>
-    </div>
-
-    <div class="summary" id="priceSummary">
-      <div class="row"><span class="label">Distance estimée</span><span id="summaryDistance">—</span></div>
-      <div class="row"><span class="label">Durée estimée</span><span id="summaryDuration">—</span></div>
-      <div class="row"><span class="label">Véhicule</span><span id="summaryVehicle">Éco</span></div>
-      <div class="row total"><span>Tarif conseillé</span><span id="summaryTotal">—</span></div>
-    </div>
-
-    <div class="actions">
-      <button class="btn" id="confirmBtn" type="button" disabled>🚕 Préparer ma demande</button>
-      <a class="btn ghost" href="./lexique-driver.html">🇸🇳 Quelques mots Wolof</a>
-      <a class="btn ghost" href="https://digiylyfe.com">← Retour DIGIYLYFE</a>
-    </div>
-
-    <div class="foot-note">
+</div>
+<div class="stack">
+<div class="field" id="pickupRow">
+<div class="field-icon pickup">📍</div>
+<input data-i18n-placeholder="pickup_ph" id="pickupInput" placeholder="Point de départ" readonly="" type="text"/>
+</div>
+<div class="field" id="dropoffRow">
+<div class="field-icon dropoff">🏁</div>
+<input data-i18n-placeholder="dropoff_ph" id="dropoffInput" placeholder="Destination" readonly="" type="text"/>
+</div>
+<div class="field static">
+<div class="field-icon phone">📞</div>
+<input autocomplete="tel" data-i18n-placeholder="phone_ph" id="clientPhone" inputmode="tel" placeholder="Téléphone WhatsApp (+221 77...)" type="tel"/>
+</div>
+</div>
+<div class="vehicles" id="vehicleOptions">
+<div class="vehicle active" data-multiplier="1" data-type="eco">
+<div class="vehicle-ico">🚗</div>
+<div class="vehicle-name" data-i18n="veh_eco">Éco</div>
+<div class="vehicle-price" id="priceEco">—</div>
+<div class="vehicle-time" data-i18n="veh_time1">terrain</div>
+</div>
+<div class="vehicle" data-multiplier="1.2" data-type="confort">
+<div class="vehicle-ico">🚙</div>
+<div class="vehicle-name" data-i18n="veh_confort">Confort</div>
+<div class="vehicle-price" id="priceConfort">—</div>
+<div class="vehicle-time" data-i18n="veh_time2">terrain</div>
+</div>
+<div class="vehicle" data-multiplier="1.5" data-type="premium">
+<div class="vehicle-ico">🚘</div>
+<div class="vehicle-name" data-i18n="veh_premium">Premium</div>
+<div class="vehicle-price" id="pricePremium">—</div>
+<div class="vehicle-time" data-i18n="veh_time3">terrain</div>
+</div>
+<div class="vehicle" data-multiplier="0.75" data-type="moto">
+<div class="vehicle-ico">🏍️</div>
+<div class="vehicle-name" data-i18n="veh_moto">Moto</div>
+<div class="vehicle-price" id="priceMoto">—</div>
+<div class="vehicle-time" data-i18n="veh_time4">trajets compatibles</div>
+</div>
+</div>
+<div class="summary" id="priceSummary">
+<div class="row"><span class="label" data-i18n="summary_distance">Distance estimée</span><span id="summaryDistance">—</span></div>
+<div class="row"><span class="label" data-i18n="summary_duration">Durée estimée</span><span id="summaryDuration">—</span></div>
+<div class="row"><span class="label" data-i18n="summary_vehicle">Véhicule</span><span id="summaryVehicle">Éco</span></div>
+<div class="row total"><span data-i18n="summary_total">Tarif conseillé</span><span id="summaryTotal">—</span></div>
+</div>
+<div class="actions">
+<button class="btn" data-i18n="confirm_btn" disabled="" id="confirmBtn" type="button">🚕 Préparer ma demande</button>
+<a class="btn ghost" data-i18n="btn_wolof" href="./lexique-driver.html">🇸🇳 Quelques mots Wolof</a>
+<a class="btn ghost" data-i18n="btn_back" href="https://digiylyfe.com">← Retour DIGIYLYFE</a>
+</div>
+<div class="foot-note" data-i18n="foot_note">
       Paiement direct au chauffeur • 0% commission DIGIY •
-      <a href="https://digiylyfe.com" target="_blank" rel="noopener">Site principal</a>
-    </div>
-
-    <div class="contact-panel" id="contactPanel">
-      <div class="contact-head">
-        <div>
-          <div class="contact-title">Demande prête</div>
-          <div class="contact-sub">
+      <a href="https://digiylyfe.com" rel="noopener" target="_blank">Site principal</a>
+</div>
+<div class="contact-panel" id="contactPanel">
+<div class="contact-head">
+<div>
+<div class="contact-title" data-i18n="contact_title">Demande prête</div>
+<div class="contact-sub" data-i18n="contact_sub">
             Tu peux maintenant envoyer directement ta demande à un chauffeur DIGIY. Pas d’intermédiaire qui mange la marge. Le client contacte directement le chauffeur.
           </div>
-        </div>
-      </div>
-
-      <div class="contact-card">
-        <div class="row"><span class="label">Départ</span><span id="contactPickup">—</span></div>
-        <div class="row"><span class="label">Destination</span><span id="contactDropoff">—</span></div>
-        <div class="row"><span class="label">Véhicule</span><span id="contactVehicle">—</span></div>
-        <div class="row"><span class="label">Téléphone client</span><span id="contactPhone">—</span></div>
-        <div class="row"><span class="label">Tarif conseillé</span><span id="contactPrice" style="color:#fde68a;font-weight:900">—</span></div>
-      </div>
-
-      <div class="actions">
-        <button class="btn green" id="whatsappBtn" type="button">💬 Envoyer WhatsApp</button>
-        <button class="btn blue" id="callBtn" type="button">📞 Appeler</button>
-        <button class="btn red" id="resetBtn" type="button">✕ Recommencer</button>
-      </div>
-    </div>
-  </section>
 </div>
-
-<a class="driver-tarif-float"
-   href="./inscription-driver.html"
-   aria-label="Inscription chauffeur DIGIY DRIVER">
-  <span class="tarif-ico">🚕</span>
-  <span class="tarif-txt">
-    <strong>Je suis chauffeur</strong>
-    <small>M’inscrire sur DIGIY DRIVER</small>
-  </span>
+</div>
+<div class="contact-card">
+<div class="row"><span class="label" data-i18n="contact_pickup">Départ</span><span id="contactPickup">—</span></div>
+<div class="row"><span class="label" data-i18n="contact_dropoff">Destination</span><span id="contactDropoff">—</span></div>
+<div class="row"><span class="label" data-i18n="contact_vehicle">Véhicule</span><span id="contactVehicle">—</span></div>
+<div class="row"><span class="label" data-i18n="contact_phone">Téléphone client</span><span id="contactPhone">—</span></div>
+<div class="row"><span class="label" data-i18n="contact_price">Tarif conseillé</span><span id="contactPrice" style="color:#fde68a;font-weight:900">—</span></div>
+</div>
+<div class="actions">
+<button class="btn green" data-i18n="whatsapp_btn" id="whatsappBtn" type="button">💬 Envoyer WhatsApp</button>
+<button class="btn blue" data-i18n="call_btn" id="callBtn" type="button">📞 Appeler</button>
+<button class="btn red" data-i18n="reset_btn" id="resetBtn" type="button">✕ Recommencer</button>
+</div>
+</div>
+</section>
+</div>
+<a aria-label="Inscription chauffeur DIGIY DRIVER" class="driver-tarif-float" href="./inscription-driver.html">
+<span class="tarif-ico">🚕</span>
+<span class="tarif-txt">
+<strong data-i18n="float_title">Je suis chauffeur</strong>
+<small data-i18n="float_sub">M’inscrire sur DIGIY DRIVER</small>
+</span>
 </a>
-
 <!-- Overlay picker lieu -->
-<div class="overlay" id="locationOverlay" aria-hidden="true">
-  <div class="picker">
-    <div class="picker-head">
-      <div class="picker-title" id="locationTitle">Choisir un lieu</div>
-      <button class="close" id="closeLocationBtn" type="button">✕</button>
-    </div>
-
-    <div class="zones" id="locationZones"></div>
-    <div class="loc-list" id="locationList"></div>
-  </div>
+<div aria-hidden="true" class="overlay" id="locationOverlay">
+<div class="picker">
+<div class="picker-head">
+<div class="picker-title" data-i18n="location_title" id="locationTitle">Choisir un lieu</div>
+<button class="close" id="closeLocationBtn" type="button">✕</button>
 </div>
-
+<div class="zones" id="locationZones"></div>
+<div class="loc-list" id="locationList"></div>
+</div>
+</div>
 <!-- Modal chargement -->
-<div class="modal" id="searchModal" aria-hidden="true">
-  <div class="modal-card">
-    <div class="spinner"></div>
-    <div class="modal-title">Préparation de la demande…</div>
-    <div class="modal-sub">
+<div aria-hidden="true" class="modal" id="searchModal">
+<div class="modal-card">
+<div class="spinner"></div>
+<div class="modal-title" data-i18n="modal_title">Préparation de la demande…</div>
+<div class="modal-sub" data-i18n="modal_sub">
       DIGIY prépare un message propre avec ton trajet et le tarif conseillé.
     </div>
-  </div>
 </div>
-
+</div>
 <script>
 (function(){
   "use strict";
@@ -1973,10 +1964,11 @@
   }
 
   function vehicleLabel(type){
-    if (type==="confort") return "Confort";
+    const isEn = (document.documentElement.getAttribute("lang") === "en");
+    if (type==="confort") return isEn ? "Comfort" : "Confort";
     if (type==="premium") return "Premium";
     if (type==="moto")    return "Moto";
-    return "Éco";
+    return isEn ? "Eco" : "Éco";
   }
 
   function money(n){ return Number(n||0).toLocaleString("fr-FR") + " FCFA"; }
@@ -2018,7 +2010,7 @@
     if (!list.length){
       const div = document.createElement("div");
       div.className = "loc-item";
-      div.textContent = "Aucun lieu trouvé.";
+      div.textContent = (document.documentElement.getAttribute("lang")==="en" ? "No place found." : "Aucun lieu trouvé.");
       div.style.cursor = "default";
       el.locationList.appendChild(div);
       return;
@@ -2043,9 +2035,10 @@
 
   function openPicker(type){
     currentLocationType = type;
+    const isEn = (document.documentElement.getAttribute("lang") === "en");
     el.locationTitle.textContent = type==="pickup"
-      ? "Choisir le point de départ"
-      : "Choisir la destination";
+      ? (isEn ? "Choose pickup point" : "Choisir le point de départ")
+      : (isEn ? "Choose destination" : "Choisir la destination");
     el.locationOverlay.classList.add("show");
     el.locationOverlay.setAttribute("aria-hidden","false");
     selectZone(
@@ -2124,13 +2117,13 @@
   async function pingSupabase(){
     try {
       const sb = getSb();
-      if (!sb) { setDbState(false, "Mode simple"); return; }
+      if (!sb) { setDbState(false, (document.documentElement.getAttribute("lang")==="en" ? "Simple mode" : "Mode simple")); return; }
       const { error } = await sb.from("driver_profiles").select("id").limit(1);
       if (error) throw error;
-      setDbState(true, "Service prêt");
+      setDbState(true, (document.documentElement.getAttribute("lang")==="en" ? "Service ready" : "Service prêt"));
     } catch(err){
       console.error("[DIGIY DRIVER] ping error:", err);
-      setDbState(false, "Mode simple");
+      setDbState(false, (document.documentElement.getAttribute("lang")==="en" ? "Simple mode" : "Mode simple"));
     }
   }
 
@@ -2147,12 +2140,12 @@
   /* ─── CONFIRM BOOKING ────────────────────────────────────────── */
   async function confirmBooking(){
     if (!booking.pickup || !booking.dropoff){
-      alert("Choisis un départ et une destination.");
+      alert(document.documentElement.getAttribute("lang")==="en" ? "Choose a pickup point and a destination." : "Choisis un départ et une destination.");
       return;
     }
     const clientPhone = normPhone(el.clientPhone.value);
     if (!clientPhone || !clientPhone.startsWith("+221")){
-      alert("Numéro WhatsApp invalide. Exemple : +221 77 XXX XX XX");
+      alert(document.documentElement.getAttribute("lang")==="en" ? "Invalid WhatsApp number. Example: +221 77 XXX XX XX" : "Numéro WhatsApp invalide. Exemple : +221 77 XXX XX XX");
       return;
     }
 
@@ -2177,7 +2170,7 @@
         distance:     booking.distance,
         duration:     booking.duration,
         vehicle_type: booking.vehicleType,
-        note: `Demande client directe ${vehicleLabel(booking.vehicleType)} - ${booking.distance.toFixed(1)}km`
+        note: `${document.documentElement.getAttribute("lang")==="en" ? "Direct client request" : "Demande client directe"} ${vehicleLabel(booking.vehicleType)} - ${booking.distance.toFixed(1)}km`
       };
 
       /* Insert Supabase — non-bloquant, flux humain reste prioritaire */
@@ -2213,14 +2206,27 @@
     } catch(err){
       console.error(err);
       closeSearchModal();
-      alert("Impossible de préparer la demande.");
+      alert(document.documentElement.getAttribute("lang")==="en" ? "Unable to prepare the request." : "Impossible de préparer la demande.");
     }
   }
 
   /* ─── WHATSAPP / APPEL ───────────────────────────────────────── */
   function getWhatsappMessage(){
     const phone = normPhone(el.clientPhone.value);
-    return [
+    const isEn = (document.documentElement.getAttribute("lang") === "en");
+    return isEn ? [
+      "Hello, I would like to book a DIGIY DRIVER ride.",
+      "",
+      "📍 Pickup: "              + booking.pickupName,
+      "🏁 Destination: "         + booking.dropoffName,
+      "🚘 Vehicle: "             + vehicleLabel(booking.vehicleType),
+      "📏 Estimated distance: "   + booking.distance.toFixed(1) + " km",
+      "⏱️ Estimated time: "       + booking.duration + " min",
+      "💰 Recommended price: "    + money(booking.price),
+      "📞 My number: "           + phone,
+      "",
+      "Thank you."
+    ].join("\n") : [
       "Bonjour, je souhaite commander une course DIGIY DRIVER.",
       "",
       "📍 Départ : "             + booking.pickupName,
@@ -2288,8 +2294,6 @@
   window.addEventListener("load", boot);
 })();
 </script>
-
-
 <script>
 (function(){
   "use strict";
@@ -2382,9 +2386,142 @@
 })();
 </script>
 
-<script src="https://pro-action-digiy.digiylyfe.com/assets/js/digiy-retour-voix.js?v=retour-voix-20260606-v4" defer></script>
+<script>
+/* DIGIY DRIVER CLIENT — switch FR/EN robuste, FR maître par défaut */
+(function(){
+  'use strict';
+  var TXT = {
+    fr: {
+      title:'Taxi Saly — Chauffeur Mbour & Petite Côte | DIGIY DRIVER',
+      description:'Commande un taxi à Saly, Mbour, Ngaparou, Somone, AIBD. Chauffeur DIGIY — tarif terrain digne, paiement direct, 0% commission. Course Saly-AIBD dès 25 000 FCFA.',
+      brand_sub:'Client • commande simple • chauffeur direct',
+      top_site:'🌍 Site DIGIYLYFE', top_hub:'🧭 HUB', top_gallery:'🚕 Voir les chauffeurs', top_lexique:'🇸🇳 Wolof DRIVER',
+      hero_eyebrow:'Client DRIVER • commande rapide',
+      hero_title:'Commander une course <span>sans casser le métier</span>',
+      hero_sub:'Choisis ton départ, ta destination, ton type de véhicule, puis contacte directement un chauffeur. DIGIY ne prend pas la commission et ne tire pas les prix vers le bas.',
+      audio_lead:'<span class="dot"></span> Conseil DIGIY · écoute d’abord', audio_title:'🎧 Comprendre avant de commander', audio_text:'Une voix explique comment demander une course, garder le contact direct et respecter le tarif terrain du chauffeur.', audio_hint:'👉 35 secondes pour ne pas se tromper.', audio_play:'🎧 Écouter DIGIY', audio_stop:'⏹ Stop',
+      mini1_k:'En 2 gestes', mini1_v:'Départ + arrivée', mini1_s:"Le client choisit juste l'essentiel pour lancer sa demande.",
+      mini2_k:'En 1 lecture', mini2_v:'Tarif digne', mini2_s:'Le prix affiché protège le métier du chauffeur.',
+      mini3_k:'En direct', mini3_v:'WhatsApp / appel', mini3_s:'Pas d’intermédiaire lourd. Le contact se fait humainement.',
+      aside_title:'Doctrine terrain', aside_big:'Prix dignes.<br>Contact direct.<br>0% commission.', aside_sub:'DIGIY DRIVER sert à mettre en relation proprement. Le téléphone fait le reste.', pill_client:'Client DRIVER', pill_price:'Tarif terrain',
+      hud_order_k:'Commander maintenant', hud_order_s:'Aller directement au bloc départ / destination / tarif.', hud_drivers_k:'Voir les chauffeurs', hud_drivers_s:'Ouvrir la galerie DIGIY DRIVER avant de contacter.', hud_lex_k:'🇸🇳 Lexique Wolof DRIVER', hud_lex_s:'Quelques phrases utiles avant de parler avec le chauffeur.', hud_site_k:'🌍 Site DIGIYLYFE', hud_site_s:'Retourner à la vitrine principale et retrouver toutes les portes.', hud_hub_k:'🧭 HUB', hud_hub_s:'Ouvrir le carrefour des modules et garder le circuit complet.', hud_tarifs_k:'📦 Tarifs', hud_tarifs_s:'Voir les offres DIGIYLYFE et choisir la bonne porte d’entrée.',
+      booking_title:'Commander une course', booking_sub:'Départ, destination, véhicule, téléphone. Puis contact direct avec le chauffeur.', focus_k:'Lecture avant action', focus_v:'Départ + destination + téléphone = demande prête', focus_s:"Le prix affiché est un tarif terrain conseillé. Il doit aider le chauffeur à vivre, pas l'écraser.",
+      pickup_ph:'Point de départ', dropoff_ph:'Destination', phone_ph:'Téléphone WhatsApp (+221 77...)',
+      veh_eco:'Éco', veh_confort:'Confort', veh_premium:'Premium', veh_moto:'Moto', veh_time1:'terrain', veh_time2:'terrain', veh_time3:'terrain', veh_time4:'trajets compatibles',
+      summary_distance:'Distance estimée', summary_duration:'Durée estimée', summary_vehicle:'Véhicule', summary_total:'Tarif conseillé',
+      confirm_btn:'🚕 Préparer ma demande', btn_wolof:'🇸🇳 Quelques mots Wolof', btn_back:'← Retour DIGIYLYFE', foot_note:'Paiement direct au chauffeur • 0% commission DIGIY • <a href="https://digiylyfe.com" target="_blank" rel="noopener">Site principal</a>',
+      contact_title:'Demande prête', contact_sub:'Tu peux maintenant envoyer directement ta demande à un chauffeur DIGIY. Pas d’intermédiaire qui mange la marge. Le client contacte directement le chauffeur.', contact_pickup:'Départ', contact_dropoff:'Destination', contact_vehicle:'Véhicule', contact_phone:'Téléphone client', contact_price:'Tarif conseillé', whatsapp_btn:'💬 Envoyer WhatsApp', call_btn:'📞 Appeler', reset_btn:'✕ Recommencer',
+      float_title:'Je suis chauffeur', float_sub:'M’inscrire sur DIGIY DRIVER', location_title:'Choisir un lieu', modal_title:'Préparation de la demande…', modal_sub:'DIGIY prépare un message propre avec ton trajet et le tarif conseillé.',
+      db_ready:'Service prêt', db_simple:'Mode simple', no_place:'Aucun lieu trouvé.', audio_unavailable:'Audio indisponible sur ce navigateur.', audio_playing:'⏸️ Lecture en cours'
+    },
+    en: {
+      title:'Taxi in Saly — Driver in Mbour & Petite Côte | DIGIY DRIVER',
+      description:'Book a taxi in Saly, Mbour, Ngaparou, Somone and AIBD. DIGIY driver — fair field pricing, direct payment, 0% commission. Saly-AIBD ride from 25,000 FCFA.',
+      brand_sub:'Client • simple booking • direct driver',
+      top_site:'🌍 DIGIYLYFE Site', top_hub:'🧭 HUB', top_gallery:'🚕 View drivers', top_lexique:'🇸🇳 Wolof DRIVER',
+      hero_eyebrow:'DRIVER client • quick booking',
+      hero_title:'Book a ride <span>without breaking the job</span>',
+      hero_sub:'Choose your pickup, destination and vehicle type, then contact a driver directly. DIGIY does not take commission and does not push prices down.',
+      audio_lead:'<span class="dot"></span> DIGIY advice · listen first', audio_title:'🎧 Understand before booking', audio_text:'A voice explains how to request a ride, keep direct contact and respect the driver’s fair field price.', audio_hint:'👉 35 seconds to avoid mistakes.', audio_play:'🎧 Listen to DIGIY', audio_stop:'⏹ Stop',
+      mini1_k:'In 2 steps', mini1_v:'Pickup + destination', mini1_s:'The client chooses only what matters to launch the request.',
+      mini2_k:'In 1 reading', mini2_v:'Fair price', mini2_s:'The displayed price protects the driver’s work.',
+      mini3_k:'Direct', mini3_v:'WhatsApp / call', mini3_s:'No heavy middleman. Contact stays human.',
+      aside_title:'Field doctrine', aside_big:'Fair prices.<br>Direct contact.<br>0% commission.', aside_sub:'DIGIY DRIVER is here to connect people cleanly. The phone does the rest.', pill_client:'DRIVER client', pill_price:'Field price',
+      hud_order_k:'Book now', hud_order_s:'Go directly to the pickup / destination / price block.', hud_drivers_k:'View drivers', hud_drivers_s:'Open the DIGIY DRIVER gallery before contacting.', hud_lex_k:'🇸🇳 Wolof DRIVER glossary', hud_lex_s:'A few useful phrases before speaking with the driver.', hud_site_k:'🌍 DIGIYLYFE Site', hud_site_s:'Return to the main showcase and find all doors.', hud_hub_k:'🧭 HUB', hud_hub_s:'Open the module crossroads and keep the full route.', hud_tarifs_k:'📦 Pricing', hud_tarifs_s:'View DIGIYLYFE offers and choose the right entry door.',
+      booking_title:'Book a ride', booking_sub:'Pickup, destination, vehicle, phone. Then direct contact with the driver.', focus_k:'Read before action', focus_v:'Pickup + destination + phone = request ready', focus_s:'The displayed price is a recommended field price. It should help the driver live, not crush them.',
+      pickup_ph:'Pickup point', dropoff_ph:'Destination', phone_ph:'WhatsApp phone (+221 77...)',
+      veh_eco:'Eco', veh_confort:'Comfort', veh_premium:'Premium', veh_moto:'Motorbike', veh_time1:'field', veh_time2:'field', veh_time3:'field', veh_time4:'compatible routes',
+      summary_distance:'Estimated distance', summary_duration:'Estimated time', summary_vehicle:'Vehicle', summary_total:'Recommended price',
+      confirm_btn:'🚕 Prepare my request', btn_wolof:'🇸🇳 A few Wolof words', btn_back:'← Back to DIGIYLYFE', foot_note:'Direct payment to the driver • 0% DIGIY commission • <a href="https://digiylyfe.com" target="_blank" rel="noopener">Main site</a>',
+      contact_title:'Request ready', contact_sub:'You can now send your request directly to a DIGIY driver. No middleman eating the margin. The client contacts the driver directly.', contact_pickup:'Pickup', contact_dropoff:'Destination', contact_vehicle:'Vehicle', contact_phone:'Client phone', contact_price:'Recommended price', whatsapp_btn:'💬 Send WhatsApp', call_btn:'📞 Call', reset_btn:'✕ Start again',
+      float_title:'I am a driver', float_sub:'Register on DIGIY DRIVER', location_title:'Choose a place', modal_title:'Preparing the request…', modal_sub:'DIGIY prepares a clean message with your route and recommended price.',
+      db_ready:'Service ready', db_simple:'Simple mode', no_place:'No place found.', audio_unavailable:'Audio unavailable on this browser.', audio_playing:'⏸️ Playing'
+    }
+  };
+
+  function pack(lang){ return TXT[lang] || TXT.fr; }
+  function setHtml(el, value){
+    if(!el) return;
+    if(el.dataset.i18nMode === 'html') el.innerHTML = value;
+    else el.textContent = value;
+  }
+  function apply(lang, updateUrl){
+    lang = (lang === 'en') ? 'en' : 'fr';
+    var P = pack(lang);
+    document.documentElement.setAttribute('lang', lang);
+    window.DIGIY_DRIVER_CLIENT_LANG = lang;
+    document.title = P.title;
+    var desc = document.querySelector('meta[name="description"]');
+    if(desc) desc.setAttribute('content', P.description);
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      if(P[key] != null) setHtml(el, P[key]);
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el){
+      var key = el.getAttribute('data-i18n-placeholder');
+      if(P[key] != null) el.setAttribute('placeholder', P[key]);
+    });
+    var fr = document.getElementById('lang-fr');
+    var en = document.getElementById('lang-en');
+    if(fr) fr.classList.toggle('active', lang === 'fr');
+    if(en) en.classList.toggle('active', lang === 'en');
+    var dbText = document.getElementById('dbText');
+    if(dbText && (/Service|Mode|ready|simple|…/.test(dbText.textContent||''))){
+      dbText.textContent = lang === 'en' ? P.db_simple : P.db_simple;
+    }
+    try{
+      if(updateUrl){
+        var u = new URL(location.href);
+        if(lang === 'en') u.searchParams.set('lang','en');
+        else u.searchParams.delete('lang');
+        history.replaceState({}, '', u.pathname + u.search + u.hash);
+      }
+    }catch(_){ }
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var start = (new URLSearchParams(location.search).get('lang') || '').toLowerCase() === 'en' ? 'en' : 'fr';
+    apply(start, false);
+    var fr = document.getElementById('lang-fr');
+    var en = document.getElementById('lang-en');
+    if(fr) fr.addEventListener('click', function(e){ e.preventDefault(); apply('fr', true); });
+    if(en) en.addEventListener('click', function(e){ e.preventDefault(); apply('en', true); });
+  });
+
+  /* Audio EN prioritaire : intercepte l'ancien lecteur FR quand EN est actif */
+  document.addEventListener('click', function(e){
+    var play = e.target && e.target.closest && e.target.closest('#btnDriverAudio');
+    var stop = e.target && e.target.closest && e.target.closest('#btnDriverAudioStop');
+    if(!play && !stop) return;
+    if(document.documentElement.getAttribute('lang') !== 'en') return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var synth = window.speechSynthesis;
+    if(stop){ try{ if(synth) synth.cancel(); }catch(_){}; var p=pack('en'); var b=document.getElementById('btnDriverAudio'); if(b)b.textContent=p.audio_play; var bar=document.getElementById('driverAudioProgress'); if(bar)bar.style.width='0%'; return; }
+    if(!('speechSynthesis' in window)){ alert(pack('en').audio_unavailable); return; }
+    try{ synth.cancel(); }catch(_){}
+    var txt = 'Welcome to DIGIY DRIVER. Here, you request a ride simply: choose your pickup point, your destination, then your vehicle type. DIGIY shows a fair field price to protect the driver’s work. Then you contact the driver directly by WhatsApp or by call. Payment goes directly to the driver. DIGIY takes no commission. The goal is simple: find quickly, speak directly, pay fairly, and keep the job standing.';
+    var utt = new SpeechSynthesisUtterance(txt);
+    utt.lang = 'en-US'; utt.rate = 0.88; utt.pitch = 1.03; utt.volume = 1;
+    var btn = document.getElementById('btnDriverAudio');
+    var bar = document.getElementById('driverAudioProgress');
+    if(btn) btn.textContent = pack('en').audio_playing;
+    if(bar) bar.style.width = '0%';
+    var voices = synth.getVoices ? (synth.getVoices() || []) : [];
+    var voice = voices.find(function(v){ return /^en/i.test(v.lang || ''); });
+    if(voice) utt.voice = voice;
+    var tick = 0;
+    var timer = setInterval(function(){ tick += 250; if(bar) bar.style.width = Math.min(96, tick/12000*100) + '%'; },250);
+    utt.onend = utt.onerror = function(){ clearInterval(timer); if(bar)bar.style.width='100%'; setTimeout(function(){ if(btn)btn.textContent=pack('en').audio_play; if(bar)bar.style.width='0%'; },400); };
+    synth.speak(utt);
+  }, true);
+})();
+</script>
+
+<script defer="" src="https://pro-action-digiy.digiylyfe.com/assets/js/digiy-retour-voix.js?v=retour-voix-20260606-v4"></script>
 </body>
 </html>
+
 
 
 
