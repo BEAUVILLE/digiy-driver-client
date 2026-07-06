@@ -2254,11 +2254,14 @@
     try {
       const sb = getSb();
       if (!sb) { setDbState(false, (document.documentElement.getAttribute("lang")==="en" ? "Simple mode" : "Mode simple")); return; }
-      const { error } = await sb.from("driver_profiles").select("id").limit(1);
+      /* Ping via le RPC public galerie : seule lecture prévue pour un client anonyme.
+         driver_profiles est protégé par RLS, un select direct n'est pas fiable ici. */
+      const { error } = await sb.rpc("digiy_driver_public_gallery");
       if (error) throw error;
       setDbState(true, (document.documentElement.getAttribute("lang")==="en" ? "Service ready" : "Service prêt"));
     } catch(err){
-      console.error("[DIGIY DRIVER] ping error:", err);
+      console.error("[DIGIY DRIVER] ping error:",
+        err && (err.message || err.code) ? (err.code || "") + " " + (err.message || "") + " " + (err.hint || "") : err);
       setDbState(false, (document.documentElement.getAttribute("lang")==="en" ? "Simple mode" : "Mode simple"));
     }
   }
@@ -2719,6 +2722,28 @@
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
