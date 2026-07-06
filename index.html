@@ -6,7 +6,7 @@
 <title>DIGIY DRIVER — Chauffeurs directs Afrique · France · Diaspora</title>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
 <meta content="#155f43" name="theme-color"/>
-<meta content="driver-client-international-whatsapp-france-20260629" name="digiy-version"/>
+<meta content="driver-client-international-fr-sn-routing-20260706" name="digiy-version"/>
 <!-- SEO principal -->
 <meta content="DIGIY DRIVER — chauffeurs directs, courses locales, transferts et contact humain : Sénégal, Afrique, France, diaspora. Paiement direct au chauffeur, 0% commission." name="description"/>
 <meta content="chauffeur direct, taxi saly, chauffeur mbour, driver france, chauffeur diaspora, taxi petite côte, chauffeur sénégal, transfert aibd, digiy driver, course directe" name="keywords"/>
@@ -1593,7 +1593,7 @@
 
 <section class="driver-territories" id="driver-territories">
   <div class="eyebrow" data-i18n="territory_eyebrow">DIGIY DRIVER · Afrique · France · Diaspora</div>
-  <h2 data-i18n="territory_title">Un même rail DRIVER pour plusieurs territoires.</h2>
+  <h2 data-i18n="territory_title">Une même porte DRIVER pour plusieurs territoires.</h2>
   <p data-i18n="territory_text">
     DRIVER ne doit pas être lu comme une simple porte taxi à Saly. Saly, Mbour et AIBD restent la preuve terrain.
     La France ouvre les chauffeurs structurés, et la diaspora devient un pont pour commander, recommander ou organiser une course sans plateforme qui capture la relation.
@@ -2035,9 +2035,24 @@
   function normPhone(p){
     p = String(p || "").trim().replace(/\s+/g,"").replace(/[^\d+]/g,"");
     if (p.startsWith("00221")) p = "+221" + p.slice(5);
+    if (p.startsWith("0033"))  p = "+33"  + p.slice(4);
     if (!p.startsWith("+") && p.startsWith("221")) p = "+" + p;
-    if (!p.startsWith("+221") && /^7\d{8}$/.test(p)) p = "+221" + p;
+    if (!p.startsWith("+") && p.startsWith("33") && p.length === 11) p = "+" + p;
+    if (!p.startsWith("+") && /^7\d{8}$/.test(p))  p = "+221" + p;   /* mobile SN local */
+    if (!p.startsWith("+") && /^0[67]\d{8}$/.test(p)) p = "+33" + p.slice(1); /* mobile FR local */
     return p;
+  }
+
+  /* Validation : Sénégal (+221 7X, 9 chiffres) ou France (+33 6/7, 9 chiffres) */
+  function isValidClientPhone(p){
+    return /^\+2217\d{8}$/.test(p) || /^\+33[67]\d{8}$/.test(p);
+  }
+
+  /* Porte de contact selon le territoire du client */
+  function driverPhoneFor(clientPhone){
+    return String(clientPhone||"").startsWith("+33")
+      ? DIGIY_DRIVER_WHATSAPP_FRANCE
+      : DEFAULT_DRIVER_PHONE;
   }
 
   function cityFromZone(zoneId){ return ZONE_CITY[zoneId] || "Sénégal"; }
@@ -2080,8 +2095,8 @@
   function computeBaseTariff(pickupName, dropoffName, distanceKm){
     const direct = ROUTE_PRICES[getRouteKey(pickupName, dropoffName)];
     if (direct) return direct;
-    const base = 2500, perKm = 550;
-    return Math.max(base, Math.round(((base + distanceKm*perKm)/100))*100);
+    const base = 2500, perKm = 550, routeFactor = 1.28; /* vol d'oiseau -> route réelle */
+    return Math.max(base, Math.round(((base + distanceKm*routeFactor*perKm)/100))*100);
   }
 
   function vehicleLabel(type){
@@ -2265,8 +2280,8 @@
       return;
     }
     const clientPhone = normPhone(el.clientPhone.value);
-    if (!clientPhone || !clientPhone.startsWith("+221")){
-      alert(document.documentElement.getAttribute("lang")==="en" ? "Invalid WhatsApp number. Example: +221 77 XXX XX XX" : "Numéro WhatsApp invalide. Exemple : +221 77 XXX XX XX");
+    if (!clientPhone || !isValidClientPhone(clientPhone)){
+      alert(document.documentElement.getAttribute("lang")==="en" ? "Invalid WhatsApp number. Example: +221 77 XXX XX XX or +33 6 XX XX XX XX" : "Numéro WhatsApp invalide. Exemple : +221 77 XXX XX XX ou +33 6 XX XX XX XX");
       return;
     }
 
@@ -2363,11 +2378,14 @@
   }
 
   function openWhatsapp(){
-    const wa = `https://wa.me/${DEFAULT_DRIVER_PHONE.replace(/[^\d]/g,"")}?text=${encodeURIComponent(getWhatsappMessage())}`;
+    const target = driverPhoneFor(normPhone(el.clientPhone.value));
+    const wa = `https://wa.me/${target.replace(/[^\d]/g,"")}?text=${encodeURIComponent(getWhatsappMessage())}`;
     window.open(wa, "_blank", "noopener,noreferrer");
   }
 
-  function callDriver(){ window.location.href = `tel:${DEFAULT_DRIVER_PHONE}`; }
+  function callDriver(){
+    window.location.href = `tel:${driverPhoneFor(normPhone(el.clientPhone.value))}`;
+  }
 
   function resetRide(){
     currentOrder = null;
@@ -2653,7 +2671,7 @@
     driver_contact_fr:"🇫🇷 WhatsApp France · +33 6 38 32 94 23",
     driver_contact_note:"Deux portes de contact pour l’ouverture internationale. Ensuite, le chauffeur garde la relation directe avec son client.",
     territory_eyebrow:"DIGIY DRIVER · Afrique · France · Diaspora",
-    territory_title:"Un même rail DRIVER pour plusieurs territoires.",
+    territory_title:"Une même porte DRIVER pour plusieurs territoires.",
     territory_text:"DRIVER ne doit pas être lu comme une simple porte taxi à Saly. Saly, Mbour et AIBD restent la preuve terrain. La France ouvre les chauffeurs structurés, et la diaspora devient un pont pour commander, recommander ou organiser une course sans plateforme qui capture la relation.",
     territory_africa_title:"🇸🇳 Afrique · preuve terrain",
     territory_africa_text:"Courses locales, AIBD, Petite Côte, Dakar, tarifs dignes, contact direct chauffeur et paiement au chauffeur.",
@@ -2671,7 +2689,7 @@
     driver_contact_fr:"🇫🇷 WhatsApp France · +33 6 38 32 94 23",
     driver_contact_note:"Two contact doors for the international opening. Then the driver keeps the direct relationship with the customer.",
     territory_eyebrow:"DIGIY DRIVER · Africa · France · Diaspora",
-    territory_title:"One DRIVER rail for several territories.",
+    territory_title:"One DRIVER door for several territories.",
     territory_text:"DRIVER should not be read as a simple taxi door for Saly. Saly, Mbour and AIBD remain the field proof. France opens structured drivers, and the diaspora becomes a bridge to book, recommend or organize a ride without a platform capturing the relationship.",
     territory_africa_title:"🇸🇳 Africa · field proof",
     territory_africa_text:"Local rides, AIBD, Petite Côte, Dakar, fair field prices, direct driver contact and payment to the driver.",
@@ -2701,6 +2719,28 @@
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
