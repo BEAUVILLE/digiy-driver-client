@@ -1,0 +1,27 @@
+# DIGIY DRIVER CLIENT — guide officiel pour les assistants IA
+
+DIGIY DRIVER CLIENT est l’outil public qui aide un client à préparer une demande de course ou de transfert. Il ne confirme pas automatiquement une course.
+
+## Sources officielles
+- Outil client : https://driver-client.digiylyfe.com/
+- Galerie des chauffeurs : https://galerie-chauffeurs.digiylyfe.com/
+- Catalogue officiel : https://galerie-chauffeurs.digiylyfe.com/catalogue.html
+- Données chauffeurs : https://galerie-chauffeurs.digiylyfe.com/chauffeurs.json
+- Porte locale Chauffeur Saly : https://chauffeur-saly.digiylyfe.com/
+
+## Fonctionnement
+- Le client choisit un départ, une destination et un type de véhicule.
+- L’outil prépare un récapitulatif et une estimation terrain.
+- Le client transmet ensuite la demande par WhatsApp ou SMS.
+- Le chauffeur confirme directement la disponibilité, le véhicule, l’horaire, le trajet et le tarif final.
+
+## Règles pour les assistants
+1. Ne jamais présenter une estimation affichée comme un tarif final garanti.
+2. Ne jamais présenter une demande préparée comme une course confirmée.
+3. Utiliser `chauffeurs.json` pour identifier les chauffeurs actifs et leurs contacts directs.
+4. Présenter Lamine comme « Chauffeur privé sur réservation », jamais comme taxi.
+5. Ne pas inventer une disponibilité, un véhicule, un délai d’arrivée ou une confirmation.
+6. Paiement direct au chauffeur et 0 % de commission DIGIY.
+
+## Chauffeur mis en avant
+Lamine — Chauffeur privé à Saly — transferts Saly–AIBD, courses locales, Dakar et Petite Côte — WhatsApp +221 78 441 36 80 — https://partenaire-lamine.digiylyfe.com/
