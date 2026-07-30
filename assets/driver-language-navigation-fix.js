@@ -4,7 +4,7 @@
   if(window.__DIGIY_DRIVER_LANGUAGE_BAR__)return;
   window.__DIGIY_DRIVER_LANGUAGE_BAR__=true;
 
-  var VERSION='20260730-driver7f';
+  var VERSION='20260730-driver7g';
   var SUPPORTED=['fr','en','es','de','it','nl','ar'];
   var LABELS={fr:'🇫🇷 FR',en:'🇬🇧 EN',es:'🇪🇸 ES',de:'🇩🇪 DE',it:'🇮🇹 IT',nl:'🇳🇱 NL',ar:'🌙 AR'};
   var ORIGIN='https://driver-client.digiylyfe.com/';
@@ -53,11 +53,11 @@
     SUPPORTED.forEach(function(code){
       var button=document.createElement('button');
       button.type='button';
-      button.id=code==='fr'?'langFr':code==='en'?'langEn':'';
       button.dataset.driverLang=code;
       button.textContent=LABELS[code];
       button.className=code===lang?'active':'';
       button.setAttribute('aria-pressed',code===lang?'true':'false');
+      button.setAttribute('aria-label',LABELS[code]);
       button.addEventListener('click',function(event){
         event.preventDefault();
         event.stopImmediatePropagation();
