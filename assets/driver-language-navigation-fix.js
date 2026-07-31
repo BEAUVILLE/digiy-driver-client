@@ -4,7 +4,7 @@
   if(window.__DIGIY_DRIVER_LANGUAGE_BAR__)return;
   window.__DIGIY_DRIVER_LANGUAGE_BAR__=true;
 
-  var VERSION='20260730-driver7g';
+  var VERSION='20260731-driver7-passport-v1';
   var SUPPORTED=['fr','en','es','de','it','nl','ar'];
   var LABELS={fr:'🇫🇷 FR',en:'🇬🇧 EN',es:'🇪🇸 ES',de:'🇩🇪 DE',it:'🇮🇹 IT',nl:'🇳🇱 NL',ar:'🌙 AR'};
   var ORIGIN='https://driver-client.digiylyfe.com/';
