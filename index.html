@@ -5,29 +5,32 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta name="robots" content="index,follow">
-  <title>DIGIY DRIVER — module multilingue</title>
+  <title>DIGIY DRIVER — module multilingue WORLD8</title>
   <style>html,body{margin:0;min-height:100%;background:#06140f;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}body{display:grid;place-items:center;text-align:center}.loading{padding:24px;font-weight:900}</style>
 </head>
 <body>
   <p class="loading">DIGIY DRIVER — chargement…</p>
   <script>
   (function(){
-    var VERSION='20260731-driver7-passport-v1';
-    var allowed=/^(fr|en|es|de|it|nl|ar)$/;
+    var VERSION='20260811-driver-world8-v1';
+    var allowed=/^(fr|en|es|pt|de|it|nl|ar)$/;
     var params=new URLSearchParams(location.search);
     var lang=(params.get('lang')||'').toLowerCase();
     try{if(!allowed.test(lang))lang=(localStorage.getItem('digiy-lang')||'').toLowerCase()}catch(e){}
     if(!allowed.test(lang))lang=(navigator.language||'fr').slice(0,2).toLowerCase();
     if(!allowed.test(lang))lang='fr';
-    try{localStorage.setItem('digiy-lang',lang)}catch(e){}
+    try{localStorage.setItem('digiy-lang',lang);localStorage.setItem('digiy_lang',lang)}catch(e){}
     fetch('./app.html?v='+VERSION,{cache:'no-store'}).then(function(r){
       if(!r.ok)throw new Error('load');
       return r.text();
     }).then(function(html){
       var inject='<base href="./">'+
-        '<script>try{localStorage.setItem("digiy-lang","'+lang+'") }catch(e){}<\/script>'+ 
+        '<script>try{localStorage.setItem("digiy-lang","'+lang+'");localStorage.setItem("digiy_lang","'+lang+'") }catch(e){}<\/script>'+ 
         '<script src="./assets/driver-i18n-full.js?v='+VERSION+'" defer><\/script>'+ 
-        '<script src="./assets/driver-language-navigation-fix.js?v='+VERSION+'" defer><\/script>';
+        '<script src="./assets/driver-language-navigation-fix.js?v='+VERSION+'" defer><\/script>'+ 
+        '<script src="./world8-dict.js?v='+VERSION+'" defer><\/script>'+ 
+        '<script src="https://digiylyfe.com/assets/i18n/digiy-world8.js?v=20260811-world8" defer><\/script>'+ 
+        '<script src="https://digiylyfe.com/assets/i18n/digiy-world8-runtime.js?v=20260811-world8" defer><\/script>';
       html=html.replace(/<head([^>]*)>/i,'<head$1>'+inject);
       document.open();document.write(html);document.close();
     }).catch(function(){
