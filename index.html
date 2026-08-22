@@ -35,7 +35,9 @@
         '<script src="./assets/driver-adhesion-19900.js?v='+VERSION+'" defer><\/script>';
       var returnHome='<div data-digiy-return-home="1" style="width:min(920px,100%);margin:12px auto 0;padding:0 14px;box-sizing:border-box"><a href="https://digiylyfe.com/" aria-label="Retour DIGIYLYFE.COM" style="width:100%;min-height:52px;display:flex;align-items:center;justify-content:center;padding:11px 18px;border:2px solid #facc15;border-radius:999px;background:#0b3b24;color:#fff;text-decoration:none;font:950 15px/1.2 system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:.02em;box-shadow:0 8px 20px rgba(0,0,0,.22);box-sizing:border-box">← RETOUR DIGIYLYFE.COM</a></div>';
       html=html.replace(/<head([^>]*)>/i,'<head$1>'+inject);
-      html=html.replace(/<body([^>]*)>/i,'<body$1>'+returnHome);
+      if(html.indexOf('data-digiy-return-home="1"')===-1){
+        html=html.replace(/<body([^>]*)>/i,'<body$1>'+returnHome);
+      }
       document.open();document.write(html);document.close();
     }).catch(function(){
       location.replace('./app.html?lang='+encodeURIComponent(lang)+'&v='+VERSION);
