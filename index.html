@@ -5,48 +5,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta name="robots" content="index,follow">
-  <title>DIGIY DRIVER — module multilingue WORLD8</title>
-  <style>html,body{margin:0;min-height:100%;background:#06140f;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}body{display:grid;place-items:center;text-align:center}.loading{padding:24px;font-weight:900}</style>
+  <title>DIGIY DRIVER — Chauffeurs indépendants</title>
+  <script>
+    (function(){
+      var q=location.search||'';
+      location.replace('./app.html'+q);
+    })();
+  </script>
+  <noscript><meta http-equiv="refresh" content="0;url=./app.html"></noscript>
 </head>
 <body>
-  <p class="loading">DIGIY DRIVER — chargement…</p>
-  <script>
-  (function(){
-    var VERSION='20260822-driver-return-v7';
-    var allowed=/^(fr|en|es|pt|de|it|nl|ar)$/;
-    var params=new URLSearchParams(location.search);
-    var lang=(params.get('lang')||'').toLowerCase();
-    try{if(!allowed.test(lang))lang=(localStorage.getItem('digiy-lang')||'').toLowerCase()}catch(e){}
-    if(!allowed.test(lang))lang=(navigator.language||'fr').slice(0,2).toLowerCase();
-    if(!allowed.test(lang))lang='fr';
-    try{localStorage.setItem('digiy-lang',lang);localStorage.setItem('digiy_lang',lang)}catch(e){}
-    fetch('./app.html?v='+VERSION,{cache:'no-store'}).then(function(r){
-      if(!r.ok)throw new Error('load');
-      return r.text();
-    }).then(function(html){
-      var inject='<base href="./">'+
-        '<link rel="stylesheet" href="./assets/driver-mobile-compact.css?v='+VERSION+'">'+
-        '<script>try{localStorage.setItem("digiy-lang","'+lang+'");localStorage.setItem("digiy_lang","'+lang+'") }catch(e){}<\/script>'+ 
-        '<script src="./assets/driver-i18n-full.js?v='+VERSION+'" defer><\/script>'+ 
-        '<script src="./assets/driver-language-navigation-fix.js?v='+VERSION+'" defer><\/script>'+ 
-        '<script src="./world8-dict.js?v='+VERSION+'" defer><\/script>'+ 
-        '<script src="https://digiylyfe.com/assets/i18n/digiy-world8.js?v=20260811-world8" defer><\/script>'+ 
-        '<script src="https://digiylyfe.com/assets/i18n/digiy-world8-runtime.js?v=20260811-world8" defer><\/script>'+ 
-        '<script src="./assets/driver-adhesion-19900.js?v='+VERSION+'" defer><\/script>';
-      var returnHome='<div data-digiy-return-home="1" style="width:min(920px,100%);margin:12px auto 0;padding:0 14px;box-sizing:border-box"><a href="https://digiylyfe.com/" aria-label="Retour DIGIYLYFE.COM" style="width:100%;min-height:52px;display:flex;align-items:center;justify-content:center;padding:11px 18px;border:2px solid #facc15;border-radius:999px;background:#0b3b24;color:#fff;text-decoration:none;font:950 15px/1.2 system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:.02em;box-shadow:0 8px 20px rgba(0,0,0,.22);box-sizing:border-box">← RETOUR DIGIYLYFE.COM</a></div>';
-      html=html.replace(/<head([^>]*)>/i,'<head$1>'+inject);
-      if(html.indexOf('data-digiy-return-home="1"')===-1){
-        html=html.replace(/<body([^>]*)>/i,'<body$1>'+returnHome);
-      }
-      document.open();document.write(html);document.close();
-    }).catch(function(){
-      location.replace('./app.html?lang='+encodeURIComponent(lang)+'&v='+VERSION);
-    });
-  })();
-  </script>
-
-<div class="digiy-global-home-return" style="max-width:980px;margin:18px auto;padding:0 14px;text-align:center">
-  <a href="https://digiylyfe.com/" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 15px;border-radius:999px;text-decoration:none;font:900 14px/1.2 system-ui,-apple-system,Segoe UI,sans-serif;border:1px solid rgba(127,127,127,.28);background:rgba(255,255,255,.08);color:inherit">🏠 Retour à l’accueil DIGIYLYFE</a>
-</div>
+  <p><a href="./app.html">Ouvrir DIGIY DRIVER</a></p>
 </body>
 </html>
