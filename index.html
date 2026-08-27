@@ -6,15 +6,20 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta name="robots" content="index,follow">
   <title>DIGIY DRIVER — Chauffeurs indépendants</title>
-  <script>
-    (function(){
-      var q=location.search||'';
-      location.replace('./app.html'+q);
-    })();
-  </script>
-  <noscript><meta http-equiv="refresh" content="0;url=./app.html"></noscript>
+  <style>html,body{margin:0;min-height:100%;background:#061912;color:#effcf5;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}body{display:grid;place-items:center;text-align:center}.loading{padding:24px;font-weight:900}</style>
 </head>
 <body>
-  <p><a href="./app.html">Ouvrir DIGIY DRIVER</a></p>
+  <p class="loading">DIGIY DRIVER — chargement…</p>
+  <script>
+  (function(){
+    var V='20260827-driver-sos-top-v1';
+    fetch('./app.html?v='+V,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('load');return r.text()}).then(function(html){
+      var inject='<base href="./"><script src="./assets/driver-safety-top.js?v='+V+'" defer></'+'script>';
+      html=html.replace(/<head([^>]*)>/i,'<head$1>'+inject);
+      document.open();document.write(html);document.close();
+    }).catch(function(){location.replace('./app.html'+(location.search||''))});
+  })();
+  </script>
+  <noscript><p><a href="./app.html">Ouvrir DIGIY DRIVER</a></p></noscript>
 </body>
 </html>
