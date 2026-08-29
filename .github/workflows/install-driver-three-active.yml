@@ -1,0 +1,60 @@
+name: Install DRIVER three active drivers
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/install-driver-three-active.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch app surgically
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('app.html')
+          s=p.read_text(encoding='utf-8')
+          old='  const DRIVERS=[{id:"lamine",name:"Lamine",zones:["saly","mbour","aibd","petite-cote"],services:["transfer","ride"],profile:"https://partenaire-lamine.digiylyfe.com/",phone:"+221784413680",whatsapp:"221784413680"}];'
+          new='''  const DRIVERS=[
+            {id:"lamine",name:"Lamine",designation:"Chauffeur privé sur réservation",zones:["saly","mbour","aibd","dakar","petite-cote"],services:["transfer","ride"],profile:"https://partenaire-lamine.digiylyfe.com/",phone:"+221784413680",whatsapp:"221784413680"},
+            {id:"baptiste-ambassadeur",name:"Baptiste",designation:"Chauffeur ambassadeur · Adhérent DIGIYLYFE",zones:["saly","mbour","aibd","dakar","petite-cote"],services:["transfer","ride"],profile:"https://digiy-driver-part-bapt.digiylyfe.com/",phone:"+221771342889",whatsapp:"221771342889"},
+            {id:"nazir-driver",name:"Nazir Driver",designation:"Chauffeur · Adhérent DIGIYLYFE",zones:["saly","mbour","aibd","petite-cote"],services:["transfer","ride"],profile:"https://galerie-chauffeurs.digiylyfe.com/nazir-driver.html",phone:"+221778310298",whatsapp:"221778310298"}
+          ];'''
+          if old not in s:
+              raise SystemExit('STOP: canonical DRIVERS line not found; no write performed')
+          s=s.replace(old,new,1)
+          tag='<script src="./assets/driver-client-master-v1.js?v=20260829-v1"></script>'
+          if tag not in s:
+              if '</body>' not in s:
+                  raise SystemExit('STOP: closing body not found')
+              s=s.replace('</body>',tag+'\n</body>',1)
+          for protected in ['id="sosOverlay"','id="shareLocation"','Paiement direct au chauffeur','0 % commission DIGIYLYFE']:
+              if protected not in s:
+                  raise SystemExit('STOP: protected DRIVER feature missing: '+protected)
+          if s.count('name:"Lamine"') != 1 or s.count('name:"Baptiste"') != 1 or s.count('name:"Nazir Driver"') != 1:
+              raise SystemExit('STOP: unexpected active-driver count')
+          p.write_text(s,encoding='utf-8')
+          PY
+          git diff --check
+          git diff -- app.html
+      - name: Commit production patch
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo 'No changes required.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app.html
+          git commit -m 'DRIVER: show three active drivers and open places [skip ci]'
+          git push origin main
