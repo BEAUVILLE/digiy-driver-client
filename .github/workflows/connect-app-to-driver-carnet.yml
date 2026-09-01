@@ -1,0 +1,44 @@
+name: Brancher app client au carnet DRIVER
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/connect-app-to-driver-carnet.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Brancher le bouton WhatsApp
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('app.html')
+          s=p.read_text()
+          tag='<script src="./assets/driver-request-carnet-v1.js?v=20260901-v1" defer></script>'
+          if tag not in s:
+              s=s.replace('</body>',tag+'\n</body>',1)
+          old='card.querySelector(".wa").addEventListener("click",()=>window.open("https://wa.me/"+d.whatsapp+"?text="+encodeURIComponent(tripMessage()),"_blank","noopener"));'
+          new='card.querySelector(".wa").addEventListener("click",function(){window.DIGIY_DRIVER_REQUEST_CARNET_V1.send(d.id,d.whatsapp,tripMessage(),this)});'
+          if old in s:
+              s=s.replace(old,new,1)
+          elif 'DIGIY_DRIVER_REQUEST_CARNET_V1.send' not in s:
+              raise SystemExit('Action WhatsApp introuvable')
+          p.write_text(s)
+          PY
+      - name: Publier app.html uniquement
+        run: |
+          if git diff --quiet -- app.html; then
+            echo "Aucun changement"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.html
+          git commit -m "Relier la demande client au carnet DRIVER"
+          git push
