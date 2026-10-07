@@ -105,6 +105,40 @@
       phone:d.phone,
       whatsapp:d.whatsapp
     }));
+    updateDriverMachineMetadata();
+  }
+  function updateDriverMachineMetadata(){
+    const graph=DRIVERS.map(d=>({
+      "@type":"LocalBusiness",
+      "@id":d.profile||("https://driver-client.digiylyfe.com/#"+d.id),
+      "name":d.name||undefined,
+      "description":d.designation||undefined,
+      "url":d.profile||undefined,
+      "telephone":d.phone||d.whatsapp||undefined,
+      "areaServed":(d.zones||[]).filter(Boolean),
+      "knowsAbout":["Chauffeur privé","Transfert","Course / déplacement"]
+    }));
+    const schema={
+      "@context":"https://schema.org",
+      "@graph":[
+        {
+          "@type":"WebPage",
+          "@id":"https://driver-client.digiylyfe.com/",
+          "name":"DIGIY DRIVER — Chauffeurs indépendants",
+          "description":"Trouvez un chauffeur, consultez sa carte et contactez-le directement. Paiement direct au chauffeur, 0 % commission DIGIYLYFE.",
+          "url":"https://driver-client.digiylyfe.com/"
+        },
+        ...graph
+      ]
+    };
+    let jsonLd=document.getElementById("digiy-driver-schema");
+    if(!jsonLd){
+      jsonLd=document.createElement("script");
+      jsonLd.type="application/ld+json";
+      jsonLd.id="digiy-driver-schema";
+      document.head.appendChild(jsonLd);
+    }
+    jsonLd.textContent=JSON.stringify(schema);
   }
   const qs=s=>document.querySelector(s),qsa=s=>[...document.querySelectorAll(s)];
   let lang=(new URLSearchParams(location.search).get("lang")||localStorage.getItem("digiy-lang")||navigator.language||"fr").slice(0,2).toLowerCase();if(!T[lang])lang="fr";
