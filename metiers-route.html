@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071b14"><meta name="description" content="DIGIY ROUTE : chauffeurs et métiers de la route, accès direct aux professionnels, sans commission.">
+<title>DIGIY ROUTE — Les métiers de la route</title>
+<style>
+:root{color-scheme:dark;--bg:#061912;--card:#0c2b20;--line:#38604d;--gold:#facc15;--text:#f4fff6;--muted:#c4d9ca}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top right,#175d3d,var(--bg) 60%);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:inherit}main,header,footer{max-width:1050px;margin:auto;padding:20px}header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:900;color:var(--gold);text-decoration:none}.back{border:1px solid var(--line);padding:10px 14px;border-radius:14px;text-decoration:none}
+h1{font-size:clamp(2rem,6vw,3.5rem);line-height:1.12;margin:22px 0 12px}h2{margin:28px 0 12px;font-size:1.35rem}.lead{color:var(--muted);max-width:720px}
+.pill{display:inline-block;border:1px solid var(--gold);border-radius:20px;padding:4px 12px;color:var(--gold);font-size:.8rem;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,275px),1fr));gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}.card h3{margin:0 0 8px}.card p{color:var(--muted);margin:0 0 15px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;background:var(--gold);color:#102015;border-radius:12px;text-decoration:none;font-weight:850}.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}
+.search{width:100%;max-width:540px;background:#102e23;border:1px solid #648a70;color:white;border-radius:13px;padding:14px;font-size:1rem}.small{font-size:.9rem;color:var(--muted)}.note{border-left:3px solid var(--gold);padding:10px 15px;background:#10261b;border-radius:8px}
+footer{border-top:1px solid var(--line);margin-top:25px}.hidden{display:none}
+</style></head>
+<body>
+<header><a class="brand" href="https://digiylyfe.com/">🌍 DIGIYLYFE · DIGIY ROUTE</a><a class="back" href="./app.html">← DIGIY DRIVER</a></header>
+<main>
+<span class="pill">V1 terrain · sans API externe · 0 % commission</span>
+<h1>Les métiers de la route.<br>Les contacts restent directs.</h1>
+<p class="lead">Chauffeurs, transporteurs, garages, dépannage, logistique, emplois : une porte d'entrée utile pour les professionnels de la route. Les coordonnées sont publiées uniquement lorsque leur fiche est connue et vérifiée.</p>
+<h2>Trouver un service</h2>
+<label for="filter">Filtrer les métiers</label><br>
+<input id="filter" class="search" type="search" autocomplete="off" placeholder="Ex. chauffeur, garage, emploi" aria-label="Rechercher un métier">
+<div class="grid" id="services">
+<article class="card" data-keywords="chauffeur taxi vtc transfert aibd transport"><h3>🚗 Chauffeurs & transferts</h3><p>Consultez les fiches, les zones et les contacts publiés dans DIGIY DRIVER.</p><a class="btn" href="./app.html">Voir les chauffeurs</a></article>
+<article class="card" data-keywords="camion poids lourd routier transporteur fret logistique"><h3>🚚 Transport & logistique</h3><p>Une rubrique ouverte aux transporteurs et métiers du fret. Aucun professionnel affiché sans fiche validée.</p><a class="btn secondary" href="#rejoindre">Proposer une activité</a></article>
+<article class="card" data-keywords="garage mécanique mécanicien réparation pneu dépannage"><h3>🔧 Garages & dépannage</h3><p>Les garages, mécaniciens et dépanneurs pourront rejoindre l'annuaire territorial après validation.</p><a class="btn secondary" href="#rejoindre">Référencer un service</a></article>
+<article class="card" data-keywords="emploi jobs chauffeur livreur mécanicien recrutement"><h3>💼 Emploi & recrutement</h3><p>Une passerelle vers les métiers et opportunités du territoire, sans annonces ni postes fictifs.</p><a class="btn secondary" href="https://digiylyfe.com/">Explorer DIGIYLYFE</a></article>
+<article class="card" data-keywords="aire repos carburant station sécurité arrêt"><h3>🛑 Services de route</h3><p>Aires, stations et services utiles : référencement uniquement sur information réelle vérifiée. Pas de disponibilité en temps réel.</p><a class="btn secondary" href="#rejoindre">Proposer une adresse</a></article>
+</div>
+<p class="small hidden" id="empty" role="status">Aucun métier correspondant. Essayez un autre mot.</p>
+<h2>Premier contact du réseau</h2>
+<div class="grid">
+<article class="card"><h3>🚗 Lamine — Chauffeur, AIBD / Saly</h3><p>Fiche professionnelle DIGIYLYFE existante. Consultez-la pour connaître les coordonnées et prestations déclarées. Disponibilité à confirmer directement.</p><a class="btn" href="https://partenaire-lamine.digiylyfe.com/" rel="noopener">Ouvrir sa fiche</a></article>
+</div>
+<section id="rejoindre"><h2>Professionnel de la route ?</h2><p class="lead">Chauffeur, transporteur, garage, dépanneur, station, recruteur : contactez l'équipe DIGIYLYFE depuis notre site principal pour demander la création ou la validation d'une fiche. Aucune inscription automatisée ni donnée collectée par cette page.</p><a class="btn" href="https://digiylyfe.com/">Accéder à DIGIYLYFE</a></section>
+<p class="note"><strong>Notre engagement :</strong> la plateforme relie, le professionnel décide, le client choisit. Pas de GPS poids lourd, pas de promesse de disponibilité, pas de données de trafic en direct. Les prix et conditions sont discutés directement entre les personnes.</p>
+</main>
+<footer><p>🌍 DIGIY ROUTE · La force du réseau. La liberté de chacun. La relation humaine au centre.</p></footer>
+<script>
+(function(){'use strict';const input=document.getElementById('filter'),cards=[...document.querySelectorAll('#services .card')],empty=document.getElementById('empty');function normalize(x){return x.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}function run(){let visible=0;const q=normalize(input.value.trim());for(const card of cards){const found=normalize(card.textContent+' '+card.dataset.keywords).includes(q);card.classList.toggle('hidden',!found);if(found)visible++}empty.classList.toggle('hidden',visible>0)}input.addEventListener('input',run)})();
+</script>
+</body></html>
