@@ -4,6 +4,8 @@
 const API='https://wesqmwjjtsefyjnluosj.supabase.co/functions/v1/driver-client-request';
 const SLUGS={lamine:'lamine-saly','baptiste-ambassadeur':'baptiste-driver-ambassador','nazir-driver':'nazir-driver'};
 const T={
+wo:{"name":"Turu kiliyaan bi","phone":"Telefon","namePh":"Sa tur","phonePh":"+221… / +33…","missing":"Bindal sa tur, telefon, fu ngay jóge, fu ngay dem ak bés bi bala ngay yónnee laaj bi.","saving":"Yónnee laaj bi…"},
+zh:{"name":"客户姓名","phone":"联系电话","namePh":"您的姓名","phonePh":"+221… / +33…","missing":"发送前请填写姓名、电话、出发地、目的地和日期。","saving":"正在保存…"},
 fr:{name:'Nom du client',phone:'Téléphone',namePh:'Votre nom',phonePh:'+221… / +33…',missing:"Merci de renseigner nom, téléphone, départ, destination et date avant d'envoyer la demande.",saving:'Enregistrement…'},
 en:{name:'Customer name',phone:'Phone',namePh:'Your name',phonePh:'+221… / +33…',missing:'Please enter name, phone, pickup, destination and date before sending the request.',saving:'Saving…'},
 es:{name:'Nombre del cliente',phone:'Teléfono',namePh:'Su nombre',phonePh:'+221… / +33…',missing:'Indique nombre, teléfono, salida, destino y fecha antes de enviar la solicitud.',saving:'Guardando…'},
