@@ -23,6 +23,6 @@ assert.ok(page.includes('🚑 SAMU 1515'));
 assert.ok(page.includes('0 % commission')||page.includes('0% commission'));
 assert.ok(page.includes('digiy_driver_public_list_v1'));
 assert.ok(page.includes('window.DIGIY_DRIVER_REQUEST_CARNET_V1'));
-const scripts=[...page.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script>/g)].filter(m=>m[2].trim()&&!m[1].includes('application/ld+json'));
-for(const m of scripts)new Function(m[2]);
+const scripts=page.split('<script').slice(1).map(x=>{const a=x.indexOf('>'),b=x.indexOf('</script>');return [x.slice(0,a),x.slice(a+1,b)]}).filter(x=>x[1].trim()&&!x[0].includes('application/ld+json'));
+for(const m of scripts)new Function(m[1]);
 console.log('DIGIY DRIVER: 10/10 langues, JS et doctrines contrôlés');
