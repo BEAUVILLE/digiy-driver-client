@@ -42,6 +42,21 @@ footer{border-top:1px solid var(--line);margin-top:25px}.hidden{display:none}
 </main>
 <footer><p>🌍 DIGIY ROUTE · La force du réseau. La liberté de chacun. La relation humaine au centre.</p></footer>
 <script>
-(function(){'use strict';const input=document.getElementById('filter'),cards=[...document.querySelectorAll('#services .card')],empty=document.getElementById('empty');function normalize(x){return x.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}function run(){let visible=0;const q=normalize(input.value.trim());for(const card of cards){const found=normalize(card.textContent+' '+card.dataset.keywords).includes(q);card.classList.toggle('hidden',!found);if(found)visible++}empty.classList.toggle('hidden',visible>0)}input.addEventListener('input',run)})();
+(function(){'use strict';const input=document.getElementById('filter'),cards=[...document.querySelectorAll('#services .card')],empty=document.getElementById('empty');const requestedLang=new URLSearchParams(location.search).get('lang')||localStorage.getItem('digiy-lang');
+if(requestedLang==='wo'){
+  document.documentElement.lang='wo';
+  document.title='DIGIY ROUTE — Liggéeyu yoon yi';
+  input.placeholder='Misaal: dawalkat, garaas, liggéey';
+  input.setAttribute('aria-label','Seet liggéey');
+  for(const [selector,title,description,action] of [["header .back","← Galerii dawalkat yi"],[".pill","V1 ci suuf · amul API bu biti · 0 % komisioŋ"],["h1","Liggéeyu yoon yi. Jokkoo yi dañuy jub."],["main > .lead","Dawalkat, yóbbaalekat, garaas, wallu masin, logistig ak liggéey. Bunt la bu ñu ubbi ngir ñiy liggéey ci yoon. Xibaaru jokkoo yi dañuy feeñ su ñu xamee te dëggalee fiche bi."],["main > h2","Gis sarwiis"],["label[for=filter]","Seet ci liggéey yi"],["#services article:nth-child(1)","🚗 Dawalkat ak yóbbu","Xoolal fiche yi, gox yi ak xibaaru jokkoo yi DIGIY DRIVER siiwal.","Ubbi galerii bi"],["#services article:nth-child(2)","🚚 Yóbbaale ak logistig","Xaaj bii ubbiku na ñiy yóbbaale ak ñiy liggéey ci yóbbu alal. Kenn du feeñ fii ba ñu dëggal fiche-am.","Joxe xalaat ci liggéey"],["#services article:nth-child(3)","🔧 Garaas ak wallu masin","Garaas yi ak ñiy defar oto mën nañu bokk ci annuwaaru gox bi gannaaw dëggal.","Bind sarwiis"],["#services article:nth-child(4)","💼 Liggéey ak jël liggéeykat","Bunt ngir gis liggéey ak yoon yi am ci gox bi. Amul yégle walla liggéey bu ñu sos.","Seet ci DIGIYLYFE"],["#services article:nth-child(5)","🛑 Sarwiisu yoon yi","Bérab yu ñuy noppalu, estaasiyoŋ ak sarwiis. Xibaar yu ñu dëggal rekk lañuy bind. Xamloo bu saa si amul.","Joxe adrees"],["#empty","Amul liggéey bu méngoo. Jéemal beneen baat."],["main > h2:nth-of-type(2)","Ki ñu jëkk a jokkoo ci réseau bi"],["#empty + h2 + .grid article","🚗 Lamine — Dawalkat, AIBD / Saly","Xoolal fiche DIGIYLYFE bi ngir gis jokkoo ak sarwiis yi mu bind. Laajal ko ci boppam ndax am na jot.","Ubbi fiche-am"],["#rejoindre h2","Yaa ngi liggéey ci yoon?"],["#rejoindre p","Dawalkat, yóbbaalekat, garaas, defarkatu oto, estaasiyoŋ walla ku di jël liggéeykat, jokko Ci saytub DIGIYLYFE ngir laaj ñu defar walla dëggal sa fiche. Xët wii du bind kenn ci boppam te du dajale xibaar."],["#rejoindre a","Dugg ci DIGIYLYFE"],[".note","Réseau bi day jokkale. Profesioneel bi mooy dogal, kiliyaan bi mooy tànn. Amul GPS ngir kamiyoŋ, digeb disponibilité walla xibaaru doxalinu oto ci saa si. Ñi ci bokk ñoo waxtaan seen njëg ak seen sart."],["footer p","🌍 DIGIY ROUTE · Doole réseaubi. Sañ-sañu ku nekk. Jokkoo ci diggante nit ñi."]]){
+    const el=document.querySelector(selector);
+    if(description){
+      el.querySelector('h3').textContent=title;
+      el.querySelector('p').textContent=description;
+      el.querySelector('a').textContent=action;
+    }else el.textContent=title;
+  }
+}
+function normalize(x){return x.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}function run(){let visible=0;const q=normalize(input.value.trim());for(const card of cards){const found=normalize(card.textContent+' '+card.dataset.keywords).includes(q);card.classList.toggle('hidden',!found);if(found)visible++}empty.classList.toggle('hidden',visible>0)}input.addEventListener('input',run)})();
 </script>
 </body></html>

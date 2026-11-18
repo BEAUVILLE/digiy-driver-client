@@ -27,7 +27,7 @@
 
   <nav class="owner-access">
     <a id="driverOwnerAccess" href="https://driver.digiylyfe.com/acces-proprietaire.html">🔐 Accès propriétaire chauffeur</a>
-    <a href="./metiers-route.html">🚚 Métiers de la route</a>
+    <a id="roadTradesLink" href="./metiers-route.html">🚚 Métiers de la route</a>
   </nav>
 
   <section class="hero">
@@ -145,6 +145,9 @@ function updateOwnerAccess(lang){
   url.searchParams.set("lang",lang);
   link.href=url.href;
   link.textContent="🔐 "+ownerLabels[lang];
+  const roadLink=document.getElementById("roadTradesLink");
+  roadLink.href="./metiers-route.html?lang="+encodeURIComponent(lang);
+  roadLink.textContent=lang==="wo"?"🚚 Liggéeyu yoon yi":"🚚 Métiers de la route";
 }
 function applyLang(next){lang=T[next]?next:"fr";updateOwnerAccess(lang);try{localStorage.setItem("digiy-lang",lang)}catch(_){ }document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";qsa("[data-t]").forEach(el=>{const v=tr(el.dataset.t);if(v!==undefined)el.innerHTML=v});qsa("[data-lang]").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));renderDrivers()}
   function tripMessage(){const p=qs("#pickup").value.trim(),d=qs("#dropoff").value.trim(),date=qs("#date").value,time=qs("#time").value,note=qs("#note").value.trim();return [tr("msg"),p?"📍 "+tr("pickup")+": "+p:"",d?"🏁 "+tr("dropoff")+": "+d:"",date?"📅 "+tr("date")+": "+date:"",time?"⏰ "+tr("time")+": "+time:"",note?"ℹ️ "+note:""].filter(Boolean).join("\n")}
