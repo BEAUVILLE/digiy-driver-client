@@ -157,7 +157,7 @@ function applyLang(next){lang=T[next]?next:"fr";updateOwnerAccess(lang);try{loca
   qsa("[data-lang]").forEach(b=>b.addEventListener("click",()=>applyLang(b.dataset.lang)));qs("#zone").addEventListener("change",renderDrivers);qs("#service").addEventListener("change",renderDrivers);qs("#sosOpen").addEventListener("click",openSOS);qs("#sosClose").addEventListener("click",closeSOS);overlay.addEventListener("click",e=>{if(e.target===overlay)closeSOS()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSOS()});qs("#shareLocation").addEventListener("click",shareCurrentLocation);loadDrivers().then(()=>applyLang(lang)).catch(()=>applyLang(lang));
 })();
 </script>
-<script src="./assets/driver-client-master-v1.js?v=20260829-v1"></script>
-<script src="./assets/driver-request-carnet-v1.js?v=20260901-v1" defer></script>
+<script src="./assets/driver-client-master-v1.js?v=20261118-world10"></script>
+<script src="./assets/driver-request-carnet-v1.js?v=20261118-world10" defer></script>
 </body>
 </html>
