@@ -11,6 +11,8 @@ pt:{name:'Nome do cliente',phone:'Telefone',namePh:'O seu nome',phonePh:'+221…
 de:{name:'Kundenname',phone:'Telefon',namePh:'Ihr Name',phonePh:'+221… / +33…',missing:'Bitte Name, Telefon, Abfahrt, Ziel und Datum eingeben.',saving:'Speichern…'},
 it:{name:'Nome cliente',phone:'Telefono',namePh:'Il tuo nome',phonePh:'+221… / +33…',missing:'Inserisci nome, telefono, partenza, destinazione e data.',saving:'Salvataggio…'},
 nl:{name:'Naam klant',phone:'Telefoon',namePh:'Uw naam',phonePh:'+221… / +33…',missing:'Vul naam, telefoon, vertrek, bestemming en datum in.',saving:'Opslaan…'},
+wo:{"name":"Turu kiliyaan bi","phone":"Nimero telefon","namePh":"Sa tur","phonePh":"+221… / +33…","missing":"Bindal sa tur, sa nimero, fa nga jóge, fa ngay dem ak bés bi bala ngay yónnee laaj bi.","saving":"Mi ngi denc…"},
+zh:{"name":"客户姓名","phone":"电话号码","namePh":"您的姓名","phonePh":"+221… / +33…","missing":"发送请求前，请填写姓名、电话、出发地、目的地和日期。","saving":"正在保存…"},
 ar:{name:'اسم العميل',phone:'الهاتف',namePh:'اسمك',phonePh:'+221… / +33…',missing:'يرجى إدخال الاسم والهاتف والانطلاق والوجهة والتاريخ.',saving:'جارٍ الحفظ…'}
 };
 const $=s=>document.querySelector(s);
